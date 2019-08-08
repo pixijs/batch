@@ -1,0 +1,24 @@
+{
+  "name": "pixi-batch-renderer",
+  "version": "1.0.0",
+  "description": "Batch rendering library for WebGL/PixiJS applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shukant Pal",
+  "license": "MIT",
+  "peerDependencies": {
+    "pixi.js": "^5.1.0"
+  },
+  "dependencies": {
+    "pixi.js": "^5.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.1.0"
+  }
+}
