@@ -1,5 +1,3 @@
-import { Batch } from './Batch';
-
 /**
  * Used to generate discrete groups/batches of display-objects
  * that can be drawn together. It also keeps a parallel buffer
@@ -34,23 +32,34 @@ export class BatchGenerator
         enableTextureReduction = true
     )
     {
-        /** @private */ this._state = null;
-        /** @private */ this._textureIncrement = textureIncrement;
-        /** @private */ this._textureLimit = textureLimit;
-        /** @private */ this._textureProperty = textureProperty;
-        /** @private */ this._batchBuffer = [];
-        /** @private */ this._textureBuffer = {}; // uid : texture map
-        /** @private */ this._textureBufferLength = 0;
-        /** @private */ this._textureIndexedBuffer = []; // array of textures
-        /** @private */ this._textureIndexMap = {}; // uid : index in above
-        /** @protected */ this.enableTextureReduction = enableTextureReduction;
+        /** @private */
+        this._state = null;
+        /** @private */
+        this._textureIncrement = textureIncrement;
+        /** @private */
+        this._textureLimit = textureLimit;
+        /** @private */
+        this._textureProperty = textureProperty;
+        /** @private */
+        this._batchBuffer = [];
+        /** @private */
+        this._textureBuffer = {}; // uid : texture map
+        /** @private */
+        this._textureBufferLength = 0;
+        /** @private */
+        this._textureIndexedBuffer = []; // array of textures
+        /** @private */
+        this._textureIndexMap = {}; // uid : index in above
+        /** @protected */
+        this.enableTextureReduction = enableTextureReduction;
 
         // this._putTexture is used to handle texture buffering!
         if (enableTextureReduction)
         {
             if (textureIncrement === 1)
             {
-                /** @private */ this._putTexture = this._putOnlyTexture;
+                /** @private */
+                this._putTexture = this._putOnlyTexture;
             }
             else
             {
@@ -116,52 +125,11 @@ export class BatchGenerator
     }
 
     /**
-     * @return the state required for all batched objects
-     *  to be drawn.
-     */
-    state()
-    {
-        return this._state;
-    }
-
-    /**
-     * @return Array of objects for this batch.
-     */
-    batchBuffer()
-    {
-        return this._batchBuffer;
-    }
-
-    /**
-     * @return Array of textures for this batch. If `enableTextureReduction`
-     * is true, then you will need to use the UID map to get the
-     * location of textures for each object. Otherwise, the textures
-     * are in the same order as the objects in `batchBuffer`.
-     */
-    textureBuffer()
-    {
-        return this._textureIndexedBuffer;
-    }
-
-    /**
-     * @return baseTexture.uid -> index map for textures.
+     * Finalize this batch by getting its data into a
+     * `Batch` object.
      *
-     * This is used to find the location of a texture in a
-     * reduction-enabled batch using its UID.
+     * @param batch {PIXI.brend.Batch}
      */
-    textureBufferUIDMap()
-    {
-        if (!this.enableTextureReduction)
-        {
-            throw new Error('If enableTextureReduction=false, then '
-                + 'the UID -> index map does not exist. You can get the '
-                + 'index of the texture(s) of an object using '
-                + 'batchBuffer.indexOf(targetObject) * texturePerObject.');
-        }
-
-        return this._textureIndexMap;
-    }
-
     finalize(batch)
     {
         batch.batchBuffer = this._batchBuffer;

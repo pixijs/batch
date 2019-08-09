@@ -41,21 +41,32 @@ export class GeometryPacker
         vertexSize = AttributeRedirect.vertexSizeFor(attributeRedirects),
         texturePerObject)
     {
-        vertexSize += texturePerObject * 4;// texture id is an Uint32
+        vertexSize += texturePerObject * 4;// texture indices are also passed
 
-        /** @private */ this._targetCompositeAttributeBuffer = null;
-        /** @private */ this._targetCompositeIndexBuffer = null;
-        /** @private */ this._aIndex = 0;
-        /** @private */ this._iIndex = 0;
+        /** @private */
+        this._targetCompositeAttributeBuffer = null;
+        /** @private */
+        this._targetCompositeIndexBuffer = null;
+        /** @private */
+        this._aIndex = 0;
+        /** @private */
+        this._iIndex = 0;
 
-        /** @private */ this._attributeRedirects = attributeRedirects;
-        /** @private */ this._indexProperty = indexProperty;
-        /** @private */ this._vertexCountProperty = vertexCountProperty;
-        /** @private */ this._vertexSize = vertexSize;
-        /** @private */ this._texturePerObject = texturePerObject;
+        /** @private */
+        this._attributeRedirects = attributeRedirects;
+        /** @private */
+        this._indexProperty = indexProperty;
+        /** @private */
+        this._vertexCountProperty = vertexCountProperty;
+        /** @private */
+        this._vertexSize = vertexSize;
+        /** @private */
+        this._texturePerObject = texturePerObject;
 
-        /** @private */ this._aBuffers = [];// @see _getAttributeBuffer
-        /** @private */ this._iBuffers = [];// @see _getIndexBuffer
+        /** @private */
+        this._aBuffers = [];// @see _getAttributeBuffer
+        /** @private */
+        this._iBuffers = [];// @see _getIndexBuffer
     }
 
     /**
@@ -138,7 +149,8 @@ export class GeometryPacker
         this._iIndex += deltaVertices;
     }
 
-    /** @private */ _getAttributeBuffer(size)
+    /** @private */
+    _getAttributeBuffer(size)
     {
         // 8 vertices is enough for 2 quads
         const roundedP2 = PIXI.utils.nextPow2(Math.ceil(size / 8));
@@ -161,7 +173,8 @@ export class GeometryPacker
         return buffer;
     }
 
-    /** @private */ _getIndexBuffer(size)
+    /** @private */
+    _getIndexBuffer(size)
     {
         // 12 indices is enough for 2 quads
         const roundedP2 = PIXI.utils.nextPow2(Math.ceil(size / 12));
@@ -202,7 +215,8 @@ export class GeometryPacker
      * @see PIXI.brend.GeometryPacker#packerFunction
      */
 
-    /** @private */ static FunctionCompiler = class
+    /** @private */
+    static FunctionCompiler = class
     {
         constructor(packer)
         {

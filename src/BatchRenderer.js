@@ -23,18 +23,25 @@ export class BatchRenderer extends PIXI.ObjectRenderer
             undefined, // auto-calculate
             texturePerObject
         ),
-        BatchGeneratorClass
+        BatchGeneratorClass = BatchGenerator
     )
     {
         super(renderer);
 
-        /** @protected */ this._attributeRedirects = attributeRedirects;
-        /** @protected */ this._indexProperty = indexProperty;
-        /** @protected */ this._vertexCountProperty = vertexCountProperty;
-        /** @protected */ this._textureProperty = textureProperty;
-        /** @protected */ this._texturePerObject = texturePerObject;
-        /** @protected */ this._textureAttribute = textureAttribute;
-        /** @protected */ this._stateFunction = stateFunction;
+        /** @protected */
+        this._attributeRedirects = attributeRedirects;
+        /** @protected */
+        this._indexProperty = indexProperty;
+        /** @protected */
+        this._vertexCountProperty = vertexCountProperty;
+        /** @protected */
+        this._textureProperty = textureProperty;
+        /** @protected */
+        this._texturePerObject = texturePerObject;
+        /** @protected */
+        this._textureAttribute = textureAttribute;
+        /** @protected */
+        this._stateFunction = stateFunction;
 
         this.renderer.runners.contextChange.add(this);
 
@@ -43,37 +50,43 @@ export class BatchRenderer extends PIXI.ObjectRenderer
             this.contextChange();
         }
 
-        /** @protected */ this._packer = packer;
+        /** @protected */
+        this._packer = packer;
 
-        /** @protected */ this._geom = BatchRenderer
-            .generateCompositeGeometry(
-                attributeRedirects,
-                !!indexProperty,
-                textureAttribute,
-                texturePerObject
-            );
+        /** @protected */
+        this._geom = BatchRenderer.generateCompositeGeometry(
+            attributeRedirects,
+            !!indexProperty,
+            textureAttribute,
+            texturePerObject);
 
-        /** @protected */ this._batchGenerator = BatchGeneratorClass
-            ? new BatchGeneratorClass(texturePerObject, this.MAX_TEXTURE,
-                textureProperty, true)// NOTE: Force texture reduction
-            : new BatchGenerator(texturePerObject, this.MAX_TEXTURES,
-                textureProperty, true);
+        /** @protected */
+        this._batchGenerator = new BatchGeneratorClass(
+            texturePerObject, this.MAX_TEXTURE,
+            textureProperty, true); // NOTE: Force texture reduction
 
-        /** @protected */ this._objectBuffer = [];
-        /** @protected */ this._bufferedVertices = 0;
-        /** @protected */ this._bufferedIndices = 0;
+        /** @protected */
+        this._objectBuffer = [];
+        /** @protected */
+        this._bufferedVertices = 0;
+        /** @protected */
+        this._bufferedIndices = 0;
 
-        /** @protected */ this._batchPool = [];
-        /** @protected */ this._batchCount = 0;
+        /** @protected */
+        this._batchPool = [];
+        /** @protected */
+        this._batchCount = 0;
     }
 
-    /** @override */ contextChange()
+    /** @override */
+    contextChange()
     {
         const gl = this.renderer.gl;
 
         if (PIXI.settings.PREFER_ENV === PIXI.ENV.WEBGL_LEGACY)
         {
-            /** @protected */ this.MAX_TEXTURES = 1;
+            /** @protected */
+            this.MAX_TEXTURES = 1;
         }
         else
         {
@@ -83,14 +96,16 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         }
     }
 
-    /** @override */ start()
+    /** @override */
+    start()
     {
         this._objectBuffer.length = 0;
         this._bufferedVertices = 0;
         this._bufferedIndices = 0;
     }
 
-    /** @override */ render(targetObject)
+    /** @override */
+    render(targetObject)
     {
         this._objectBuffer.push(targetObject);
 
@@ -108,7 +123,8 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         }
     }
 
-    /** @override */ flush()
+    /** @override */
+    flush()
     {
         const {
             _batchGenerator: batchGenerator,
@@ -173,7 +189,6 @@ export class BatchRenderer extends PIXI.ObjectRenderer
             for (let j = 0; j < batchLength; j++)// loop-per(targetObject)
             {
                 const targetObject = batchBuffer[j];
-
 
                 if (this._indexProperty)
                 {
@@ -258,7 +273,8 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         }
     }
 
-    /** @private */ _newBatch(batchStart)
+    /** @private */
+    _newBatch(batchStart)
     {
         if (this._batchCount === this._batchPool.length)
         {
@@ -278,9 +294,9 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         return batch;
     }
 
-    /** @protected */ static generateCompositeGeometry(
-        attributeRedirects, hasIndex, textureAttribute, texturePerObject
-    )
+    /** @protected */
+    static generateCompositeGeometry(attributeRedirects, hasIndex,
+        textureAttribute, texturePerObject)
     {
         const geom = new PIXI.Geometry();
         const attributeBuffer = new PIXI.Buffer(null, false, false);

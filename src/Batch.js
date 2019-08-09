@@ -11,10 +11,6 @@ export class Batch
         this.uidMap = null;
         this.state = null;
 
-        // Remembers the location in the geometry where this
-        // batch starts. This can be in the attribute or
-        // index buffer.
-        //
         this.geometryOffset = geometryOffset;
     }
 
