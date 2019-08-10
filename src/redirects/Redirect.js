@@ -4,7 +4,7 @@
  */
 export class Redirect
 {
-    constructor(source, glslIdentifier)
+    constructor(source, glslIdentifer)
     {
         /**
          * Source property on the `BatchableObject` that
@@ -20,7 +20,7 @@ export class Redirect
          *
          * @member {string}
          */
-        this.glslIdentifier = glslIdentifier;
+        this.glslIdentifer = glslIdentifer;
     }
 }
 

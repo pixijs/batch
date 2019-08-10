@@ -227,24 +227,16 @@ export class GeometryPacker
         {
             const packer = this.packer;
 
-            let packerBody = `
-                ${this._compileSourceBufferFunction()}
-            `;
+            let packerBody = ``;
 
             /* Source offset variables for attribute buffers &
                 the corresponding buffer-view references. */
-            this.attributeRedirects.forEach((redirect, i) =>
+            packer._attributeRedirects.forEach((redirect, i) =>
             {
                 packerBody += `
                     let __offset_${i} = 0;
-                    const __buffer_${i} =
-                        ${CompilerConstants.FUNC_SOURCE_BUFFER}(
-                            attributeRedirects[i],
-                            targetObject
-                        )[${redirect.type}View];
-                    const __size_${i} = attributeRedirects.size;
-                    const __sizeOf_${i} =
-                        ${PIXI.ViewableBuffer.sizeOf(redirect.type)};
+                    const __buffer_${i} = (
+                        ${this._compileSourceBufferExpression(redirect, i)});
                 `;
             });
 
@@ -262,44 +254,88 @@ export class GeometryPacker
 
                 const vertexCount = ${this._compileVertexCountExpression()};
 
+                let adjustedAIndex = 0;
+
                 for (let vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
                 {
-                    let adjustedAIndex = 0;
             `;
 
-            /* Packing for-loop body. */
-            this.attributeRedirects.forEach((redirect, i) =>
-            {
-                /* Initialize adjsutedAIndex in terms of source type. */
-                packerBody += `
-                    adjustedAIndex = aIndex / __sizeOf_${i});
-                `;
+            // Eliminate offset conversion when adjacent attributes
+            // have similar source-types.
+            let skipReverseTransformation = false;
 
-                for (let j = 0; j < redirect.size; j++)
+            /* Packing for-loop body. */
+            for (let i = 0; i < packer._attributeRedirects.length; i++)
+            {
+                const redirect = packer._attributeRedirects[i];
+
+                /* Initialize adjsutedAIndex in terms of source type. */
+                if (!skipReverseTransformation)
                 {
                     packerBody += `
-                        ${redirect[i].type}View[adjustedAIndex++] =
-                            __buffer_${i}[__offset_${i}++ % vertexCount];
+                        adjustedAIndex = aIndex / ${this._sizeOf(i)};
                     `;
                 }
 
-                packerBody += `
-                    aIndex = adjustedAIndex * __sizeOf_${i};
-                `;
-            });
+                if (typeof redirect.size === 'number')
+                {
+                    for (let j = 0; j < redirect.size; j++)
+                    {
+                        packerBody += `
+                            ${redirect.type}View[adjustedAIndex++] =
+                                __buffer_${i}[__offset_${i}++];
+                        `;
+                    }
+                }
+                else
+                {
+                    packerBody += `
+                            ${redirect.type}View[adjustedAIndex++] =
+                                __buffer_${i};
+                    `;
+                }
+
+                if (packer._attributeRedirects[i + 1]
+                    && (this._sizeOf(i + 1) !== this._sizeOf(i)))
+                {
+                    packerBody += `
+                        aIndex = adjustedAIndex * ${this._sizeOf(i)};
+                    `;
+                }
+                else
+                {
+                    skipReverseTransformation = true;
+                }
+            }
+
+            if (skipReverseTransformation)
+            {
+                if (this._sizeOf(packer._attributeRedirects.length - 1)
+                        !== 4)
+                {
+                    packerBody += `
+                        aIndex = adjustedAIndex * ${this._sizeOf(
+                        packer._attributeRedirects.length - 1)}
+                    `;
+                    skipReverseTransformation = false;
+                }
+            }
 
             if (packer._texturePerObject > 0)
             {
                 if (packer._texturePerObject > 1)
                 {
-                    packerBody += `
-                        adjustedAIndex = aIndex / 4;
-                    `;
+                    if (!skipReverseTransformation)
+                    {
+                        packerBody += `
+                            adjustedAIndex = aIndex / 4;
+                        `;
+                    }
 
                     for (let k = 0; k < packer._texturePerObject; k++)
                     {
                         packerBody += `
-                            uint32View[adjustedAIndex++] = textureId[${k}];
+                            float32View[adjustedAIndex++] = textureId[${k}];
                         `;
                     }
 
@@ -307,11 +343,18 @@ export class GeometryPacker
                         aIndex = adjustedAIndex * 4;
                     `;
                 }
+                else if (!skipReverseTransformation)
+                {
+                    packerBody += `
+                        float32View[aIndex] = textureId;
+                        aIndex += 4;
+                    `;
+                }
                 else
                 {
-                    packerBody = `
-                        uint32View[aIndex] = textureId;
-                        aIndex += 4;
+                    packerBody += `
+                        float32View[adjustedAIndex++] = textureId;
+                        aIndex = adjustedAIndex * 4;
                     `;
                 }
             }
@@ -340,26 +383,34 @@ export class GeometryPacker
                 packerBody);
         }
 
-        _compileSourceBufferFunction()
+        _compileSourceBufferExpression(redirect, i)
         {
-            return `
-                function ${CompilerConstants.FUNC_SOURCE_BUFFER}(
-                    redirect, targetObject)
-                {
-                    return (typeof redirect.source === 'string') ?
-                        targetObject[redirect.source] :
-                        redirect.source(targetObject);
-                }
-            `;
+            return (typeof redirect.source === 'string')
+                ? `targetObject[${redirect.source}]`
+                : `attributeRedirects[${i}].source(targetObject)`;
         }
 
         _compileVertexCountExpression()
         {
+            if (!this.packer._vertexCountProperty)
+            {
+                // auto-calculate based on primary attribute
+                return `__buffer_0.length / __size_0`;
+            }
+
             return (
                 (typeof this.packer._vertexCountProperty === 'string')
                     ? `targetObject.${this.packer._vertexCountProperty}`
                     : `${this.packer._vertexCountProperty}`
             );
         }
+
+        _sizeOf(i)
+        {
+            return PIXI.ViewableBuffer.sizeOf(
+                this.packer._attributeRedirects[i].type);
+        }
     }
 }
+
+export default GeometryPacker;

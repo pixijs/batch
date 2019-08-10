@@ -1,13 +1,26 @@
-import Batch from './Batch';
-import BatchGenerator from './BatchGenerator';
-import GeometryPacker from './GeometryPacker';
+import { Batch } from './Batch';
+import { BatchGenerator } from './BatchGenerator';
+import { GeometryPacker } from './GeometryPacker';
 import * as PIXI from 'pixi.js';
+import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve';
 
 /**
  * @memberof PIXI.brend
  */
 export class BatchRenderer extends PIXI.ObjectRenderer
 {
+    /**
+     * @param {PIXI.Renderer} renderer - renderer to attach to
+     * @param {Array<PIXI.brend.AttributeRedirect>} attributeRedirects
+     * @param {string | null} indexProperty
+     * @param {string | number} vertexCountProperty
+     * @param {string | null} textureProperty
+     * @param {number} texturePerObject
+     * @param {string} textureAttribute - name of texture-id attribute variable
+     * @param {Function} stateFunction - returns a {PIXI.State} for an object
+     * @param {PIXI.brend.GeometryPacker} [packer=new PIXI.brend.GeometryPacker]
+     * @param {Class} [BatchGeneratorClass=PIXI.brend.BatchGenerator]
+     */
     constructor(
         renderer,
         attributeRedirects,
@@ -20,7 +33,8 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         packer = new GeometryPacker(
             attributeRedirects,
             indexProperty,
-            undefined, // auto-calculate
+            vertexCountProperty, // auto-calculate
+            undefined,
             texturePerObject
         ),
         BatchGeneratorClass = BatchGenerator
@@ -73,7 +87,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         this._bufferedIndices = 0;
 
         /** @protected */
-        this._batchPool = [];
+        this._batchPool = [];// may contain garbage after _batchCount
         /** @protected */
         this._batchCount = 0;
     }
@@ -109,17 +123,13 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     {
         this._objectBuffer.push(targetObject);
 
-        this._bufferedVertices
-            += (typeof this._vertexCountProperty === 'string')
-                ? targetObject[this._vertexCountProperty]
-                : this._vertexCountProperty;
+        this._bufferedVertices += resolveConstantOrProperty(
+            targetObject, this._vertexCountProperty);
 
         if (this._indexProperty)
         {
-            this._bufferedIndices
-                += (typeof this._indexProperty === 'string')
-                    ? targetObject[this._indexProperty].length
-                    : this._indexProperty.length;
+            this._bufferedIndices += resolveConstantOrProperty(
+                targetObject, this._indexProperty).length;
         }
     }
 
@@ -133,7 +143,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
             renderer,
             _stateFunction: stateFunction,
             _textureProperty: textureProperty,
-            _texturePerObject: texturePerObject
+            _texturePerObject: texturePerObject,
         } = this;
 
         const gl = renderer.gl;
@@ -151,7 +161,8 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         for (let objectIndex = 0; objectIndex < bufferLength;)
         {
             const target = buffer[objectIndex];
-            const wasPut = batchGenerator.put(target, stateFunction(target));
+            const wasPut = batchGenerator.put(target,
+                resolveFunctionOrProperty(target, stateFunction));
 
             if (!wasPut)
             {
@@ -192,15 +203,13 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
                 if (this._indexProperty)
                 {
-                    indexCount += (typeof this._indexProperty === 'string')
-                        ? targetObject[this._indexProperty].length
-                        : this._indexProperty.length;
+                    indexCount += resolveConstantOrProperty(
+                        targetObject, this._indexProperty).length;
                 }
                 else
                 {
-                    vertexCount += (typeof this._vertexCountProperty === 'string')
-                        ? targetObject[this._vertexCountProperty]
-                        : this._vertexCountProperty;
+                    vertexCount += resolveConstantOrProperty(
+                        targetObject, this._vertexCountProperty);
                 }
 
                 // externally-defined properties for draw calls

@@ -7,12 +7,12 @@ import { Redirect } from './Redirect';
  */
 export class AttributeRedirect extends Redirect
 {
-    constructor(source, glslIdentifier,
+    constructor(source, glslIdentifer,
         type = 'float32', size = 0,
         glType = PIXI.TYPES.FLOAT, glSize,
         normalize = false)
     {
-        super(source, glslIdentifier);
+        super(source, glslIdentifer);
 
         /**
          * View on the source buffer that should be used to
@@ -27,7 +27,10 @@ export class AttributeRedirect extends Redirect
          * Number of elements to extract out of `source` with
          * the given view type, for one vertex.
          *
-         * @member {number}
+         * If source isn't an array (only one element), then
+         * you can set this to `'%notarray%'`.
+         *
+         * @member {number | '%notarray%'}
          */
         this.size = size;
 
@@ -67,7 +70,9 @@ export class AttributeRedirect extends Redirect
     {
         return attributeRedirects.reduce(
             (acc, redirect) =>
-                (PIXI.ViewableBuffer.sizeOf(redirect.type) *
-                    redirect.size) + acc);
+                (PIXI.ViewableBuffer.sizeOf(redirect.type)
+                    * redirect.size) + acc);
     }
 }
+
+export default AttributeRedirect;
