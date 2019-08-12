@@ -12,6 +12,7 @@ const CompilerConstants = {
         'aIndex',
         'iIndex',
         'textureId',
+        'attributeRedirects',
     ],
 };
 
@@ -35,14 +36,13 @@ export class GeometryPacker
      *      no. of vertices for each object are kept. This could also
      *      be a constant.
      * @param vertexSize {number} - vertex size, calculated by
-     *     default. This should exclude the vertex attribute.
+     *     default. This should exclude the vertex attribute
      */
     constructor(attributeRedirects, indexProperty, vertexCountProperty,
         vertexSize = AttributeRedirect.vertexSizeFor(attributeRedirects),
         texturePerObject)
     {
         vertexSize += texturePerObject * 4;// texture indices are also passed
-
         /** @private */
         this._targetCompositeAttributeBuffer = null;
         /** @private */
@@ -114,6 +114,8 @@ export class GeometryPacker
      * buffer. It may contain garbage in unused locations.
      *
      * It will be `null` if `indexProperty` was not given.
+     *
+     * @member {Uint16Array}
      */
     get compositeIndices()
     {
@@ -125,7 +127,7 @@ export class GeometryPacker
         this._targetCompositeAttributeBuffer
             = this._getAttributeBuffer(batchVertexCount);
 
-        if (this.indexProperty)
+        if (this._indexProperty)
         {
             this._targetCompositeIndexBuffer
                 = this._getIndexBuffer(batchIndexCount);
@@ -136,17 +138,15 @@ export class GeometryPacker
 
     pack(targetObject, textureId)
     {
-        const deltaVertices = this.packerFunction(
+        this.packerFunction(
             targetObject,
             this._targetCompositeAttributeBuffer,
             this._targetCompositeIndexBuffer,
             this._aIndex,
             this._iIndex,
-            textureId
+            textureId,
+            this._attributeRedirects
         );
-
-        this._aIndex += deltaVertices * this._vertexSize;
-        this._iIndex += deltaVertices;
     }
 
     /** @private */
@@ -159,10 +159,10 @@ export class GeometryPacker
 
         if (this._aBuffers.length <= roundedSizeIndex)
         {
-            this._iBuffers.length = roundedSizeIndex + 1;
+            this._aBuffers.length = roundedSizeIndex + 1;
         }
 
-        let buffer = this._aBuffers[roundedSize];
+        let buffer = this._aBuffers[roundedSizeIndex];
 
         if (!buffer)
         {
@@ -204,6 +204,9 @@ export class GeometryPacker
      *
      * This function type is used by `GeometryPacker#packerFunction`.
      *
+     * It should add to this._aIndex and this._iIndex the number
+     * of vertices and indices appended.
+     *
      * @param targetObject {PIXI.DisplayObject} - object to pack
      * @param compositeAttributes {PIXI.ViewableBuffer}
      * @param compositeIndices {Uint16Array}
@@ -211,7 +214,6 @@ export class GeometryPacker
      *      in bytes at which the object's geometry should be inserted.
      * @param iIndex {number} - Number of vertices already packed in the
      *      composite index buffer.
-     * @return No. of vertices added
      * @see PIXI.brend.GeometryPacker#packerFunction
      */
 
@@ -360,20 +362,27 @@ export class GeometryPacker
             }
 
             /* Close the packing for-loop. */
-            packerBody += '}';
+            packerBody += `}
+                ${this.packer._indexProperty
+                ? `const oldAIndex = this._aIndex;`
+                : ''}
+                this._aIndex = aIndex;
+            `;
 
             if (this.packer._indexProperty)
             {
                 packerBody += `
-                    const initialIndicesCount = iIndex;
+                    const verticesBefore = oldAIndex / ${this.packer._vertexSize}
                     const indexCount
-                        = targetObject[${this.packer._indexProperty}].length;
+                        = targetObject['${this.packer._indexProperty}'].length;
 
                     for (let j = 0; j < indexCount; j++)
                     {
-                        compositeIndices[iIndex++] = initialIndicesCount +
-                            targetObject[${this.packer._indexProperty}][j];
+                        compositeIndices[iIndex++] = verticesBefore +
+                            targetObject['${this.packer._indexProperty}'][j];
                     }
+
+                    this._iIndex = iIndex;
                 `;
             }
 
@@ -386,7 +395,7 @@ export class GeometryPacker
         _compileSourceBufferExpression(redirect, i)
         {
             return (typeof redirect.source === 'string')
-                ? `targetObject[${redirect.source}]`
+                ? `targetObject['${redirect.source}']`
                 : `attributeRedirects[${i}].source(targetObject)`;
         }
 
@@ -395,7 +404,8 @@ export class GeometryPacker
             if (!this.packer._vertexCountProperty)
             {
                 // auto-calculate based on primary attribute
-                return `__buffer_0.length / __size_0`;
+                return `__buffer_0.length / ${
+                    this.packer._attributeRedirects[0].size}`;
             }
 
             return (

@@ -1,5 +1,7 @@
 import * as PIXI_CORE from 'pixi.js';
 import * as PIXI_BREND from '../../lib/index.js';
+import vertexShaderSrc from './vertexShader.glsl';
+import fragmentShaderSrc from './fragmentShader.glsl';
 
 const PIXI = {
     ...PIXI_CORE,
@@ -21,7 +23,7 @@ class BatchableSprite extends PIXI.Sprite
 const redirects = [
     new PIXI.brend.AttributeRedirect(
         'vertexData',
-        'aTexturePosition',
+        'aVertexPosition',
         'float32',
         2,
         PIXI.TYPES.FLOAT,
@@ -46,8 +48,9 @@ const redirects = [
         'aColor',
         'uint32',
         '%notarray%', // we don't return it wrapped in an array
-        PIXI.TYPES.BYTE,
-        4
+        PIXI.TYPES.UNSIGNED_BYTE,
+        4,
+        true
     ),
 ];
 
@@ -62,24 +65,26 @@ const OverrideSpriteRenderer = new PIXI.brend.BatchRendererPluginFactory.from(
     1,
     'aTextureId',
     stateFunction,
+    (new PIXI.brend.ShaderGenerator(
+        vertexShaderSrc, fragmentShaderSrc,
+        {
+            tint: new Float32Array([1, 1, 1, 1]),
+            translationMatrix: PIXI.Matrix.IDENTITY,
+        }
+    )).generateFunction(),
 );
 
 PIXI.Renderer.registerPlugin('overrideRender', OverrideSpriteRenderer);
 
 window.onload = () =>
 {
-    const app = new PIXI.Application({ width: 400 * 0.9, height: 400 });
+    const app = new PIXI.Application({ width: 20 + (400 * 0.9), height: 20 + 400 });
     const root = document.getElementById('root-app');
 
     root.appendChild(app.view);
+    const texture = PIXI.Texture.from(document.getElementById('bunny-gif'));
 
-    const packer = app.renderer.plugins.overrideRender._packer.packerFunction;
-
-    console.log(packer);
-
-    if (true) return;// eslint-disable-line
-
-    const texture = PIXI.Texture.from('assets/bunny.jp2');
+    const sprites = [];
 
     for (let i = 0; i < 5; i++)
     {
@@ -90,10 +95,20 @@ window.onload = () =>
             sprite.width = 75 * 0.9;
             sprite.height = 75;
 
-            sprite.x = (sprite.width + 4.5) * i;
-            sprite.y = (sprite.height + 5) * j;
+            sprite.anchor.set(0.5, 0.5);
+            sprite.x = 10 + ((sprite.width + 4.5) * i) + 75*0.45;// eslint-disable-line
+            sprite.y = 10 + ((sprite.height + 5) * j) + 75/2;// eslint-disable-line
 
+            sprites.push(sprite);
             app.stage.addChild(sprite);
         }
     }
+
+    app.ticker.add((delta) =>
+    {
+        sprites.forEach((sprite) =>
+        {
+            sprite.angle += 180 * delta / 50;
+        });
+    });
 };

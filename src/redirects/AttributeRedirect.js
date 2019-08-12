@@ -35,6 +35,13 @@ export class AttributeRedirect extends Redirect
         this.size = size;
 
         /**
+         * This is equal to `size` or 1 if size is `%notarray%`.
+         *
+         * @member {number}
+         */
+        this.properSize = (size === '%notarray%') ? 1 : size;
+
+        /**
          * Type of attribute, when uploading.
          *
          * Normally, you would use the corresponding type for
@@ -71,7 +78,9 @@ export class AttributeRedirect extends Redirect
         return attributeRedirects.reduce(
             (acc, redirect) =>
                 (PIXI.ViewableBuffer.sizeOf(redirect.type)
-                    * redirect.size) + acc);
+                    * redirect.properSize)
+                + acc,
+            0);
     }
 }
 

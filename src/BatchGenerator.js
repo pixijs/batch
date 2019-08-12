@@ -139,11 +139,11 @@ export class BatchGenerator
         batch.state = this._state;
 
         this._state = null;
-        this._batchBuffer.length = 0;
+        this._batchBuffer = [];
         this._textureBuffer = {};
         this._textureIndexMap = {};
         this._textureBufferLength = 0;
-        this._textureIndexedBuffer.length = 0;
+        this._textureIndexedBuffer = [];
     }
 
     _putOnlyTexture(texture)

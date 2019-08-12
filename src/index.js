@@ -8,3 +8,4 @@ export { BatchRenderer } from './BatchRenderer';
 export { BatchRendererPluginFactory } from './BatchRendererPluginFactory';
 export { GeometryPacker } from './GeometryPacker';
 export { Redirect } from './redirects/Redirect';
+export { ShaderGenerator } from './ShaderGenerator';
