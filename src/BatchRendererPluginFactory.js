@@ -15,7 +15,8 @@ class BatchRendererPluginFactory
      * @param {string} textureProperty
      * @param {number} texturePerObject
      * @param {string} textureAttribute
-     * @param {Function | string} stateFunction
+     * @param {Function} stateFunction
+     * @param {Function} shaderFunction
      * @param {PIXI.brend.GeometryPacker} [packer]
      * @param {Class} [BatchGeneratorClass]
      * @param {Class} [BatchRendererClass]
@@ -28,6 +29,7 @@ class BatchRendererPluginFactory
         texturePerObject,
         textureAttribute,
         stateFunction,
+        shaderFunction,
         packer,
         BatchGeneratorClass,
         BatchRendererClass = BatchRenderer
@@ -45,6 +47,7 @@ class BatchRendererPluginFactory
                     texturePerObject,
                     textureAttribute,
                     stateFunction,
+                    shaderFunction,
                     packer,
                     BatchGeneratorClass);
             }
