@@ -1,13 +1,15 @@
 /**
  * A redirect is used to transfer data from the display
  * object to the shader program.
+ *
+ * @memberof PIXI.brend
  */
-export class Redirect
+class Redirect
 {
     constructor(source, glslIdentifer)
     {
         /**
-         * Source property on the `BatchableObject` that
+         * Source property on a `PIXI.DisplayObject` that
          * holds the data being transferred. This can also
          * be a callback that returns the data.
          *
@@ -23,5 +25,7 @@ export class Redirect
         this.glslIdentifer = glslIdentifer;
     }
 }
+
+export { Redirect };
 
 export default Redirect;

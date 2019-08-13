@@ -7,11 +7,11 @@ import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve'
 /**
  * @memberof PIXI.brend
  */
-export class BatchRenderer extends PIXI.ObjectRenderer
+class BatchRenderer extends PIXI.ObjectRenderer
 {
     /**
      * @param {PIXI.Renderer} renderer - renderer to attach to
-     * @param {Array<PIXI.brend.AttributeRedirect>} attributeRedirects
+     * @param {PIXI.brend.AttributeRedirect[]} attributeRedirects
      * @param {string | null} indexProperty
      * @param {string | number} vertexCountProperty
      * @param {string | null} textureProperty
@@ -21,8 +21,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
      * @param {Function} shaderFunction - generates a shader given this instance
      * @param {PIXI.brend.GeometryPacker} [packer=new PIXI.brend.GeometryPacker]
      * @param {Class} [BatchGeneratorClass=PIXI.brend.BatchGenerator]
-     *
-     * @see
+     * @see PIXI.brend.ShaderGenerator
      */
     constructor(// eslint-disable-line max-params
         renderer,
@@ -109,7 +108,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
         if (PIXI.settings.PREFER_ENV === PIXI.ENV.WEBGL_LEGACY)
         {
-            /** @protected */
+        /** @protected */
             this.MAX_TEXTURES = 1;
         }
         else
@@ -351,7 +350,15 @@ export class BatchRenderer extends PIXI.ObjectRenderer
                     / this._attributeRedirects[0].size;
     }
 
-    /** @protected */
+    /**
+     * Generates a `PIXI.Geometry` that can be used for rendering
+     * multiple display objects at once.
+     *
+     * @param {Array<PIXI.brend.AttributeRedirect>} attributeRedirects
+     * @param {boolean} hasIndex - whether to include an index property
+     * @param {string} textureAttribute - name of the texture-id attribute
+     * @param {number} texturePerObject - no. of textures per object
+     */
     static generateCompositeGeometry(attributeRedirects, hasIndex,
         textureAttribute, texturePerObject)
     {
@@ -388,7 +395,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         return geom;
     }
 
-    /** @protected */
+    /** @private */
     static generateTextureArray(count)
     {
         const array = new Int32Array(count);
@@ -402,4 +409,5 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     }
 }
 
+export { BatchRenderer };
 export default BatchRenderer;

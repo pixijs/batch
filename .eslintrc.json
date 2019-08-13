@@ -13,6 +13,9 @@
         "sourceType": "module"
     },
     "parser": "babel-eslint",
+    "plugins": [
+        "eslint-plugin-jsdoc"
+    ],
     "rules": {
         // Possible Errors
         "comma-dangle": [1, "always-multiline"],

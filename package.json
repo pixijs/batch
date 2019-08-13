@@ -4,8 +4,9 @@
   "description": "Batch rendering library for WebGL/PixiJS applications",
   "main": "index.js",
   "scripts": {
-    "build": "babel src --out-dir lib --source-maps",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run compile; npm run build-docs",
+    "build-docs": "jsdoc -c ./.jsdoc.conf.json --verbose",
+    "compile": "babel src --out-dir lib --source-maps"
   },
   "author": "Shukant Pal",
   "license": "MIT",
@@ -20,8 +21,13 @@
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/runtime": "^7.5.5",
+    "@pixi/jsdoc-template": "^2.4.2",
     "babel-eslint": "^10.0.2",
     "eslint": "^6.1.0",
+    "jsdoc": "^3.6.3",
     "pixi.js": "^5.1.1"
+  },
+  "dependencies": {
+    "eslint-plugin-jsdoc": "^15.8.0"
   }
 }

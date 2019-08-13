@@ -1,0 +1,47 @@
+{
+    "tags": {
+        "allowUnknownTags": false
+    },
+    "source": {
+        "include": ["src"],
+        "includePattern": ".+\\.js(doc)?$"
+    },
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "templates": {
+        "cleverLinks"   : false,
+        "monospaceLinks": false,
+        "default"       : {
+            "outputSourceFiles" : true
+        },
+        "applicationName": "PixiJS Batch Renderer Library",
+        "footer"        : "Made with ♥ by Shukant Pal",
+        "copyright"     : "Copyright © 2019 Shukant Pal",
+        "disqus": "",
+        "openGraph": {
+            "title": "",
+            "type": "website",
+            "image": "",
+            "site_name": "",
+            "url": ""
+        },
+        "meta": {
+            "title": "PixiJS Batch Rendering Library API Documentation",
+            "description": "Documentation for pixi-batch-renderer library",
+            "keyword": "docs, documentation, pixi, pixijs, renderer, html5, javascript, jsdoc"
+        },
+        "linenums"      : true
+    },
+    "markdown"  : {
+        "parser"        : "gfm",
+        "hardwrap"      : false
+    },
+    "opts": {
+        "encoding"      : "utf8",
+        "recurse"       : true,
+        "lenient"       : true,
+        "destination"   : "./dist/docs",
+        "template"      : "./node_modules/@pixi/jsdoc-template"
+    }
+}

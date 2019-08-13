@@ -4,9 +4,22 @@ import { BatchRenderer } from './BatchRenderer';
  * Generates a batch-renderer plugin.
  *
  * @memberof PIXI.brend
+ * @hideconstructor
  */
-export class BatchRendererPluginFactory
+class BatchRendererPluginFactory
 {
+    /**
+     * @param {PIXI.brend.AttributeRedirect[]} attributeRedirects
+     * @param {string | Array<number>} indexProperty
+     * @param {string | number} vertexCountProperty
+     * @param {string} textureProperty
+     * @param {number} texturePerObject
+     * @param {string} textureAttribute
+     * @param {Function | string} stateFunction
+     * @param {PIXI.brend.GeometryPacker} [packer]
+     * @param {Class} [BatchGeneratorClass]
+     * @param {Class} [BatchRendererClass]
+     */
     static from(
         attributeRedirects,
         indexProperty,
@@ -38,3 +51,6 @@ export class BatchRendererPluginFactory
         };
     }
 }
+
+export { BatchRendererPluginFactory };
+export default BatchRendererPluginFactory;

@@ -4,8 +4,10 @@ import { Redirect } from './Redirect';
 /**
  * An attribute-redirect describes how the batch renderer will
  * aggregate shader attributes.
+ *
+ * @memberof PIXI.brend
  */
-export class AttributeRedirect extends Redirect
+class AttributeRedirect extends Redirect
 {
     constructor(source, glslIdentifer,
         type = 'float32', size = 0,
@@ -19,7 +21,7 @@ export class AttributeRedirect extends Redirect
          * extract data.
          *
          * @member {string}
-         * @see {PIXI.ViewableBuffer#view}
+         * @see PIXI.ViewableBuffer#view
          */
         this.type = type;
 
@@ -83,5 +85,7 @@ export class AttributeRedirect extends Redirect
             0);
     }
 }
+
+export { AttributeRedirect };
 
 export default AttributeRedirect;

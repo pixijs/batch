@@ -8,10 +8,12 @@
  * texture registers on the GPU. You can extend it and add
  * constraints by overriding `onPut`.
  *
- * // WARNING: `BatchRenderer` does not support geometry
+ * WARNING: `BatchRenderer` does not support geometry
  *              packing with texture reduction disabled.
+ *
+ * @memberOf PIXI.brend
  */
-export class BatchGenerator
+class BatchGenerator
 {
     /**
      * @param {number} textureIncrement - textures per object
@@ -252,5 +254,7 @@ export class BatchGenerator
         return true;
     }
 }
+
+export { BatchGenerator };
 
 export default BatchGenerator;

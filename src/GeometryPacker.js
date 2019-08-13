@@ -22,21 +22,24 @@ const CompilerConstants = {
  *
  * It works by generating an optimized packer function,
  * which can add objects to the composite geometry. This
- * geometry is interleaved.
+ * geometry is interleaved and is in accordance with
+ * what {@link PIXI.brend.BatchRenderer.generateCompositeGeometry}
+ * would return.
  *
  * @memberof PIXI.brend
  */
-export class GeometryPacker
+class GeometryPacker
 {
     /**
-     * @param attributeRedirects {Array<AttributeRedirect>}
-     * @param indexProperty {string} - property where indicies are
+     * @param {PIXI.brend.AttributeRedirect[]} attributeRedirects
+     * @param {string} indexProperty - property where indicies are
      *     kept; null/undefined if not required.
-     * @param vertexCountProperty {string | number} - property where
+     * @param {string | number} vertexCountProperty - property where
      *      no. of vertices for each object are kept. This could also
      *      be a constant.
-     * @param vertexSize {number} - vertex size, calculated by
+     * @param {number} vertexSize - vertex size, calculated by
      *     default. This should exclude the vertex attribute
+     * @param {number} texturePerObject - no. of textures per object
      */
     constructor(attributeRedirects, indexProperty, vertexCountProperty,
         vertexSize = AttributeRedirect.vertexSizeFor(attributeRedirects),
@@ -81,13 +84,15 @@ export class GeometryPacker
      *
      * You can overwrite this property with a custom packer
      * function.
+     *
+     * @member {PIXI.brend.PackerFunction}
      */
     get packerFunction()
     {
         if (!this._packerFunction)
         {
             this._packerFunction
-                = new GeometryPacker.FunctionCompiler(this).compile();
+                = new FunctionCompiler(this).compile();// eslint-disable-line
         }
 
         return this._packerFunction;
@@ -122,6 +127,10 @@ export class GeometryPacker
         return this._targetCompositeIndexBuffer;
     }
 
+    /**
+     * @param {number} batchVertexCount
+     * @param {number} batchIndexCount
+     */
     reset(batchVertexCount, batchIndexCount)
     {
         this._targetCompositeAttributeBuffer
@@ -136,6 +145,10 @@ export class GeometryPacker
         this._aIndex = this.iIndex = 0;
     }
 
+    /**
+     * @param {PIXI.DisplayObject} targetObject
+     * @param {number} textureId
+     */
     pack(targetObject, textureId)
     {
         this.packerFunction(
@@ -196,231 +209,241 @@ export class GeometryPacker
 
         return buffer;
     }
+}
 
+// FunctionCompiler was intented to be a static inner
+// class in GeometryPacker. However, due to a bug in
+// JSDoc (3.6.3), I've put it down here :)
+//
+// https://github.com/jsdoc/jsdoc/issues/1673
+
+/** @private */
+const FunctionCompiler = class
+{
     /**
-     * @function
-     * @name PackerFunction
-     * @memberof PIXI.brend
-     *
-     * This function type is used by `GeometryPacker#packerFunction`.
-     *
-     * It should add to this._aIndex and this._iIndex the number
-     * of vertices and indices appended.
-     *
-     * @param targetObject {PIXI.DisplayObject} - object to pack
-     * @param compositeAttributes {PIXI.ViewableBuffer}
-     * @param compositeIndices {Uint16Array}
-     * @param aIndex {number} - Offset in the composite attribute buffer
-     *      in bytes at which the object's geometry should be inserted.
-     * @param iIndex {number} - Number of vertices already packed in the
-     *      composite index buffer.
-     * @see PIXI.brend.GeometryPacker#packerFunction
+     * @param {PIXI.brend.GeometryPacker} packer
      */
-
-    /** @private */
-    static FunctionCompiler = class
+    constructor(packer)
     {
-        constructor(packer)
+        this.packer = packer;
+    }
+
+    compile()
+    {
+        const packer = this.packer;
+
+        let packerBody = ``;
+
+        /* Source offset variables for attribute buffers &
+            the corresponding buffer-view references. */
+        packer._attributeRedirects.forEach((redirect, i) =>
         {
-            this.packer = packer;
-        }
+            packerBody += `
+                let __offset_${i} = 0;
+                const __buffer_${i} = (
+                    ${this._compileSourceBufferExpression(redirect, i)});
+            `;
+        });
 
-        compile()
+        /* Basis for the "packing" for-loop. */
+        packerBody += `
+            const {
+                int8View,
+                uint8View,
+                int16View,
+                uint16View,
+                int32View,
+                uint32View,
+                float32View,
+            } = compositeAttributes;
+
+            const vertexCount = ${this._compileVertexCountExpression()};
+
+            let adjustedAIndex = 0;
+
+            for (let vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
+            {
+        `;
+
+        // Eliminate offset conversion when adjacent attributes
+        // have similar source-types.
+        let skipReverseTransformation = false;
+
+        /* Packing for-loop body. */
+        for (let i = 0; i < packer._attributeRedirects.length; i++)
         {
-            const packer = this.packer;
+            const redirect = packer._attributeRedirects[i];
 
-            let packerBody = ``;
-
-            /* Source offset variables for attribute buffers &
-                the corresponding buffer-view references. */
-            packer._attributeRedirects.forEach((redirect, i) =>
+            /* Initialize adjsutedAIndex in terms of source type. */
+            if (!skipReverseTransformation)
             {
                 packerBody += `
-                    let __offset_${i} = 0;
-                    const __buffer_${i} = (
-                        ${this._compileSourceBufferExpression(redirect, i)});
+                    adjustedAIndex = aIndex / ${this._sizeOf(i)};
                 `;
-            });
+            }
 
-            /* Basis for the "packing" for-loop. */
-            packerBody += `
-                const {
-                    int8View,
-                    uint8View,
-                    int16View,
-                    uint16View,
-                    int32View,
-                    uint32View,
-                    float32View,
-                } = compositeAttributes;
-
-                const vertexCount = ${this._compileVertexCountExpression()};
-
-                let adjustedAIndex = 0;
-
-                for (let vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
-                {
-            `;
-
-            // Eliminate offset conversion when adjacent attributes
-            // have similar source-types.
-            let skipReverseTransformation = false;
-
-            /* Packing for-loop body. */
-            for (let i = 0; i < packer._attributeRedirects.length; i++)
+            if (typeof redirect.size === 'number')
             {
-                const redirect = packer._attributeRedirects[i];
+                for (let j = 0; j < redirect.size; j++)
+                {
+                    packerBody += `
+                        ${redirect.type}View[adjustedAIndex++] =
+                            __buffer_${i}[__offset_${i}++];
+                    `;
+                }
+            }
+            else
+            {
+                packerBody += `
+                        ${redirect.type}View[adjustedAIndex++] =
+                            __buffer_${i};
+                `;
+            }
 
-                /* Initialize adjsutedAIndex in terms of source type. */
+            if (packer._attributeRedirects[i + 1]
+                && (this._sizeOf(i + 1) !== this._sizeOf(i)))
+            {
+                packerBody += `
+                    aIndex = adjustedAIndex * ${this._sizeOf(i)};
+                `;
+            }
+            else
+            {
+                skipReverseTransformation = true;
+            }
+        }
+
+        if (skipReverseTransformation)
+        {
+            if (this._sizeOf(packer._attributeRedirects.length - 1)
+                    !== 4)
+            {
+                packerBody += `
+                    aIndex = adjustedAIndex * ${this._sizeOf(
+        packer._attributeRedirects.length - 1)}
+                `;
+                skipReverseTransformation = false;
+            }
+        }
+
+        if (packer._texturePerObject > 0)
+        {
+            if (packer._texturePerObject > 1)
+            {
                 if (!skipReverseTransformation)
                 {
                     packerBody += `
-                        adjustedAIndex = aIndex / ${this._sizeOf(i)};
+                        adjustedAIndex = aIndex / 4;
                     `;
                 }
 
-                if (typeof redirect.size === 'number')
-                {
-                    for (let j = 0; j < redirect.size; j++)
-                    {
-                        packerBody += `
-                            ${redirect.type}View[adjustedAIndex++] =
-                                __buffer_${i}[__offset_${i}++];
-                        `;
-                    }
-                }
-                else
+                for (let k = 0; k < packer._texturePerObject; k++)
                 {
                     packerBody += `
-                            ${redirect.type}View[adjustedAIndex++] =
-                                __buffer_${i};
+                        float32View[adjustedAIndex++] = textureId[${k}];
                     `;
                 }
 
-                if (packer._attributeRedirects[i + 1]
-                    && (this._sizeOf(i + 1) !== this._sizeOf(i)))
-                {
-                    packerBody += `
-                        aIndex = adjustedAIndex * ${this._sizeOf(i)};
-                    `;
-                }
-                else
-                {
-                    skipReverseTransformation = true;
-                }
-            }
-
-            if (skipReverseTransformation)
-            {
-                if (this._sizeOf(packer._attributeRedirects.length - 1)
-                        !== 4)
-                {
-                    packerBody += `
-                        aIndex = adjustedAIndex * ${this._sizeOf(
-                        packer._attributeRedirects.length - 1)}
-                    `;
-                    skipReverseTransformation = false;
-                }
-            }
-
-            if (packer._texturePerObject > 0)
-            {
-                if (packer._texturePerObject > 1)
-                {
-                    if (!skipReverseTransformation)
-                    {
-                        packerBody += `
-                            adjustedAIndex = aIndex / 4;
-                        `;
-                    }
-
-                    for (let k = 0; k < packer._texturePerObject; k++)
-                    {
-                        packerBody += `
-                            float32View[adjustedAIndex++] = textureId[${k}];
-                        `;
-                    }
-
-                    packerBody += `
-                        aIndex = adjustedAIndex * 4;
-                    `;
-                }
-                else if (!skipReverseTransformation)
-                {
-                    packerBody += `
-                        float32View[aIndex] = textureId;
-                        aIndex += 4;
-                    `;
-                }
-                else
-                {
-                    packerBody += `
-                        float32View[adjustedAIndex++] = textureId;
-                        aIndex = adjustedAIndex * 4;
-                    `;
-                }
-            }
-
-            /* Close the packing for-loop. */
-            packerBody += `}
-                ${this.packer._indexProperty
-                ? `const oldAIndex = this._aIndex;`
-                : ''}
-                this._aIndex = aIndex;
-            `;
-
-            if (this.packer._indexProperty)
-            {
                 packerBody += `
-                    const verticesBefore = oldAIndex / ${this.packer._vertexSize}
-                    const indexCount
-                        = targetObject['${this.packer._indexProperty}'].length;
-
-                    for (let j = 0; j < indexCount; j++)
-                    {
-                        compositeIndices[iIndex++] = verticesBefore +
-                            targetObject['${this.packer._indexProperty}'][j];
-                    }
-
-                    this._iIndex = iIndex;
+                    aIndex = adjustedAIndex * 4;
                 `;
             }
-
-            // eslint-disable-next-line no-new-func
-            return new Function(
-                ...CompilerConstants.packerArguments,
-                packerBody);
-        }
-
-        _compileSourceBufferExpression(redirect, i)
-        {
-            return (typeof redirect.source === 'string')
-                ? `targetObject['${redirect.source}']`
-                : `attributeRedirects[${i}].source(targetObject)`;
-        }
-
-        _compileVertexCountExpression()
-        {
-            if (!this.packer._vertexCountProperty)
+            else if (!skipReverseTransformation)
             {
-                // auto-calculate based on primary attribute
-                return `__buffer_0.length / ${
-                    this.packer._attributeRedirects[0].size}`;
+                packerBody += `
+                    float32View[aIndex] = textureId;
+                    aIndex += 4;
+                `;
             }
-
-            return (
-                (typeof this.packer._vertexCountProperty === 'string')
-                    ? `targetObject.${this.packer._vertexCountProperty}`
-                    : `${this.packer._vertexCountProperty}`
-            );
+            else
+            {
+                packerBody += `
+                    float32View[adjustedAIndex++] = textureId;
+                    aIndex = adjustedAIndex * 4;
+                `;
+            }
         }
 
-        _sizeOf(i)
+        /* Close the packing for-loop. */
+        packerBody += `}
+            ${this.packer._indexProperty
+        ? `const oldAIndex = this._aIndex;`
+        : ''}
+            this._aIndex = aIndex;
+        `;
+
+        if (this.packer._indexProperty)
         {
-            return PIXI.ViewableBuffer.sizeOf(
-                this.packer._attributeRedirects[i].type);
+            packerBody += `
+                const verticesBefore = oldAIndex / ${this.packer._vertexSize}
+                const indexCount
+                    = targetObject['${this.packer._indexProperty}'].length;
+
+                for (let j = 0; j < indexCount; j++)
+                {
+                    compositeIndices[iIndex++] = verticesBefore +
+                        targetObject['${this.packer._indexProperty}'][j];
+                }
+
+                this._iIndex = iIndex;
+            `;
         }
+
+        // eslint-disable-next-line no-new-func
+        return new Function(
+            ...CompilerConstants.packerArguments,
+            packerBody);
     }
-}
+
+    _compileSourceBufferExpression(redirect, i)
+    {
+        return (typeof redirect.source === 'string')
+            ? `targetObject['${redirect.source}']`
+            : `attributeRedirects[${i}].source(targetObject)`;
+    }
+
+    _compileVertexCountExpression()
+    {
+        if (!this.packer._vertexCountProperty)
+        {
+            // auto-calculate based on primary attribute
+            return `__buffer_0.length / ${
+                this.packer._attributeRedirects[0].size}`;
+        }
+
+        return (
+            (typeof this.packer._vertexCountProperty === 'string')
+                ? `targetObject.${this.packer._vertexCountProperty}`
+                : `${this.packer._vertexCountProperty}`
+        );
+    }
+
+    _sizeOf(i)
+    {
+        return PIXI.ViewableBuffer.sizeOf(
+            this.packer._attributeRedirects[i].type);
+    }
+};
+
+/**
+ * @typedef { Function } PackerFunction
+ * @memberof PIXI.brend
+ *
+ * This function type is used by `GeometryPacker#packerFunction`.
+ *
+ * It should add to this._aIndex and this._iIndex the number
+ * of vertices and indices appended.
+ *
+ * @param targetObject {PIXI.DisplayObject} - object to pack
+ * @param compositeAttributes {PIXI.ViewableBuffer}
+ * @param compositeIndices {Uint16Array}
+ * @param aIndex {number} - Offset in the composite attribute buffer
+ *      in bytes at which the object's geometry should be inserted.
+ * @param iIndex {number} - Number of vertices already packed in the
+ *      composite index buffer.
+ * @see PIXI.brend.GeometryPacker#packerFunction
+ */
+
+export { GeometryPacker };
 
 export default GeometryPacker;

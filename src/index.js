@@ -1,5 +1,9 @@
 /**
- * @namespace PIXI.brend
+ * @namespace PIXI
+ */
+/**
+ * @namespace brend
+ * @memberof PIXI
  */
 
 export { AttributeRedirect } from './redirects/AttributeRedirect';

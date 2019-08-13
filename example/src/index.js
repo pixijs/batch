@@ -78,7 +78,7 @@ PIXI.Renderer.registerPlugin('overrideRender', OverrideSpriteRenderer);
 
 window.onload = () =>
 {
-    const app = new PIXI.Application({ width: 20 + (400 * 0.9), height: 20 + 400 });
+    const app = new PIXI.Application({ width: 20 + (1000 * 0.9), height: 20 + 1000 });
     const root = document.getElementById('root-app');
 
     root.appendChild(app.view);
@@ -86,18 +86,18 @@ window.onload = () =>
 
     const sprites = [];
 
-    for (let i = 0; i < 5; i++)
+    for (let i = 0; i < 10; i++)
     {
-        for (let j = 0; j < 5; j++)
+        for (let j = 0; j < 10; j++)
         {
             const sprite = new BatchableSprite(texture);
 
-            sprite.width = 75 * 0.9;
-            sprite.height = 75;
+            sprite.width = 80 * 0.9;
+            sprite.height = 80;
 
             sprite.anchor.set(0.5, 0.5);
-            sprite.x = 10 + ((sprite.width + 4.5) * i) + 75*0.45;// eslint-disable-line
-            sprite.y = 10 + ((sprite.height + 5) * j) + 75/2;// eslint-disable-line
+            sprite.x = 20 + ((sprite.width + 18) * i) + 80*0.45;// eslint-disable-line
+            sprite.y = 20 + ((sprite.height + 20) * j) + 80/2;// eslint-disable-line
 
             sprites.push(sprite);
             app.stage.addChild(sprite);
