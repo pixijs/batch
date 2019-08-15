@@ -15,7 +15,7 @@
         "default"       : {
             "outputSourceFiles" : true
         },
-        "applicationName": "PixiJS Batch Renderer Library",
+        "applicationName": "pixi-batch-renderer",
         "footer"        : "Made with ♥ by Shukant Pal",
         "copyright"     : "Copyright © 2019 Shukant Pal",
         "disqus": "",

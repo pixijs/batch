@@ -97,7 +97,7 @@ class BatchGenerator
      * @param targetObject {PIXI.DisplayObject} - object to add
      * @param state {PIXI.State} - state required by that object
      * @return {boolean} whether the object was added to the
-     *     batch.
+     *     batch. If it wasn't, you should finalize it.
      */
     put(targetObject, state)
     {

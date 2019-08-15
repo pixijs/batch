@@ -425,25 +425,6 @@ const FunctionCompiler = class
     }
 };
 
-/**
- * @typedef { Function } PackerFunction
- * @memberof PIXI.brend
- *
- * This function type is used by `GeometryPacker#packerFunction`.
- *
- * It should add to this._aIndex and this._iIndex the number
- * of vertices and indices appended.
- *
- * @param targetObject {PIXI.DisplayObject} - object to pack
- * @param compositeAttributes {PIXI.ViewableBuffer}
- * @param compositeIndices {Uint16Array}
- * @param aIndex {number} - Offset in the composite attribute buffer
- *      in bytes at which the object's geometry should be inserted.
- * @param iIndex {number} - Number of vertices already packed in the
- *      composite index buffer.
- * @see PIXI.brend.GeometryPacker#packerFunction
- */
-
 export { GeometryPacker };
 
 export default GeometryPacker;

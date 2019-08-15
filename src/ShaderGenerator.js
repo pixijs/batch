@@ -37,7 +37,7 @@ class ShaderGenerator
      * @param {string} vertexShaderTemplate
      * @param {string} fragmentShaderTemplate
      * @param {UniformGroup | Map<string, object>} uniforms
-     * @param {Object.<String, InjectorFunction>} [templateInjectors={'%texturesPerBatch%': (bRenderer) => `${bRenderer.MAX_TEXTURES}`}]
+     * @param {Object.<String, PIXI.brend.InjectorFunction>} [templateInjectors]
      * @param {boolean} [disableVertexShaderTemplate=true] - turn off (true)
      *      if you aren't using macros in the vertex shader
      */
@@ -158,12 +158,3 @@ class ShaderGenerator
 
 export { ShaderGenerator };
 export default ShaderGenerator;
-
-/**
- * @function
- * @name InjectorFunction
- * @memberof PIXI.brend
- *
- * @param {PIXI.brend.BatchRenderer} batchRenderer
- * @return {string} value of the macro for this renderer
- */

@@ -31,7 +31,7 @@
     
     
     <script>
-    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"PixiJS Batch Renderer Library","footer":"Made with ♥ by Shukant Pal","copyright":"Copyright © 2019 Shukant Pal","disqus":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"PixiJS Batch Rendering Library API Documentation","description":"Documentation for pixi-batch-renderer library","keyword":"docs, documentation, pixi, pixijs, renderer, html5, javascript, jsdoc"},"linenums":true};
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"pixi-batch-renderer","footer":"Made with ♥ by Shukant Pal","copyright":"Copyright © 2019 Shukant Pal","disqus":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"PixiJS Batch Rendering Library API Documentation","description":"Documentation for pixi-batch-renderer library","keyword":"docs, documentation, pixi, pixijs, renderer, html5, javascript, jsdoc"},"linenums":true};
     </script>
     
 
@@ -41,7 +41,7 @@
 <div id="wrap" class="clearfix">
     
 <div class="navigation">
-    <h3 class="applicationName"><a href="index.html">PixiJS Batch Renderer Library</a></h3>
+    <h3 class="applicationName"><a href="index.html">pixi-batch-renderer</a></h3>
     <button id="menuToggle" class="btn btn-link btn-lg menu-toggle">
         <span class="glyphicon glyphicon-menu-hamburger"></span>
     </button>
@@ -100,6 +100,8 @@
             
                 <li class="parent  " data-name="PIXI.brend.InjectorFunction"><a href="PIXI.brend.html#.InjectorFunction">InjectorFunction</a></li>
             
+                <li class="parent  " data-name="PIXI.brend.PackerFunction"><a href="PIXI.brend.html#.PackerFunction">PackerFunction</a></li>
+            
             </ul>
             <ul class="events itemMembers">
             
@@ -135,6 +137,44 @@
             
             </ul>
             <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="PIXI.brend.Batch">
+            <span class="title  ">
+                
+                <a href="PIXI.brend.Batch.html">PIXI.brend.Batch</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="PIXI.brend.Batch#geometryOffset"><a href="PIXI.brend.Batch.html#geometryOffset">geometryOffset</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.Batch#state"><a href="PIXI.brend.Batch.html#state">state</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.Batch#textureBuffer"><a href="PIXI.brend.Batch.html#textureBuffer">textureBuffer</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.Batch#uidMap"><a href="PIXI.brend.Batch.html#uidMap">uidMap</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="PIXI.brend.Batch#reset"><a href="PIXI.brend.Batch.html#reset">reset</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.Batch#upload"><a href="PIXI.brend.Batch.html#upload">upload</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -274,28 +314,6 @@
             </ul>
         </li>
     
-        <li class="item" data-name="PIXI.brend.exports.Batch">
-            <span class="title  ">
-                
-                <a href="PIXI.brend.exports.Batch.html">PIXI.brend.exports.Batch</a>
-            </span>
-            <ul class="members itemMembers">
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="PIXI.brend.GeometryPacker">
             <span class="title  ">
                 
@@ -415,6 +433,10 @@
         <h2><span class="ancestors"><a href="PIXI.html">PIXI</a><a href="PIXI.brend.html">.brend</a>~</span>BatchRenderer
         </h2>
         
+            <div class="class-description"><p>Core class that renders objects in batches. Clients should
+defer rendering to a <code>BatchRenderer</code> instance by registering
+it as a plugin.</p></div>
+        
     </div>
 </header>  
 
@@ -440,7 +462,7 @@
     
         
         <div class="tag-source">
-            <a href="BatchRenderer.js.html#line26">BatchRenderer.js:26</a>
+            <a href="BatchRenderer.js.html#line30">BatchRenderer.js:30</a>
         </div>
         
     </div>
@@ -1780,7 +1802,7 @@
     
         
         <div class="tag-source">
-            <a href="BatchRenderer.js.html#line362">BatchRenderer.js:362</a>
+            <a href="BatchRenderer.js.html#line356">BatchRenderer.js:356</a>
         </div>
         
     </div>
@@ -1971,7 +1993,7 @@ multiple display objects at once.</p>
     
         
         <div class="tag-source">
-            <a href="BatchRenderer.js.html#line105">BatchRenderer.js:105</a>
+            <a href="BatchRenderer.js.html#line107">BatchRenderer.js:107</a>
         </div>
         
     </div>
@@ -2043,7 +2065,7 @@ multiple display objects at once.</p>
     
         
         <div class="tag-source">
-            <a href="BatchRenderer.js.html#line165">BatchRenderer.js:165</a>
+            <a href="BatchRenderer.js.html#line167">BatchRenderer.js:167</a>
         </div>
         
     </div>
@@ -2115,7 +2137,7 @@ multiple display objects at once.</p>
     
         
         <div class="tag-source">
-            <a href="BatchRenderer.js.html#line151">BatchRenderer.js:151</a>
+            <a href="BatchRenderer.js.html#line153">BatchRenderer.js:153</a>
         </div>
         
     </div>
@@ -2187,7 +2209,7 @@ multiple display objects at once.</p>
     
         
         <div class="tag-source">
-            <a href="BatchRenderer.js.html#line133">BatchRenderer.js:133</a>
+            <a href="BatchRenderer.js.html#line135">BatchRenderer.js:135</a>
         </div>
         
     </div>
@@ -2261,7 +2283,7 @@ multiple display objects at once.</p>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Aug 13 2019 14:07:02 GMT-0400 (Eastern Daylight Time)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Aug 15 2019 17:19:15 GMT-0400 (Eastern Daylight Time)
             </div>
         </footer>
     </div>

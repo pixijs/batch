@@ -5,6 +5,10 @@ import * as PIXI from 'pixi.js';
 import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve';
 
 /**
+ * Core class that renders objects in batches. Clients should
+ * defer rendering to a `BatchRenderer` instance by registering
+ * it as a plugin.
+ *
  * @memberof PIXI.brend
  */
 class BatchRenderer extends PIXI.ObjectRenderer
@@ -97,8 +101,6 @@ class BatchRenderer extends PIXI.ObjectRenderer
         this._batchPool = [];// may contain garbage after _batchCount
         /** @protected */
         this._batchCount = 0;
-
-        this._renderId = 0;
     }
 
     /** @override */
@@ -108,7 +110,7 @@ class BatchRenderer extends PIXI.ObjectRenderer
 
         if (PIXI.settings.PREFER_ENV === PIXI.ENV.WEBGL_LEGACY)
         {
-        /** @protected */
+            /** @protected */
             this.MAX_TEXTURES = 1;
         }
         else
@@ -281,20 +283,12 @@ class BatchRenderer extends PIXI.ObjectRenderer
         renderer.geometry.bind(geom);
         renderer.geometry.updateBuffers();
 
-        if (this._renderId === 0)
-        { console.log(this._batchPool); console.log(this._packer); }
-
         // Now draw each batch
         for (let i = 0; i < this._batchCount; i++)
         {
             const batch = this._batchPool[i];
 
-            batch.textureBuffer.forEach((texture, j) =>
-            {
-                renderer.texture.bind(texture, j);
-            });
-
-            renderer.state.set(batch.state);
+            batch.upload();
 
             if (this._indexProperty)
             {
@@ -309,9 +303,9 @@ class BatchRenderer extends PIXI.ObjectRenderer
                     batch.geometryOffset,
                     batch.$vertexCount);// TODO: *vertexSize
             }
-        }
 
-        ++this._renderId;
+            batch.reset();
+        }
     }
 
     stop()
