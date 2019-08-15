@@ -21,7 +21,7 @@ class BatchRendererPluginFactory
      * @param {Class} [BatchGeneratorClass]
      * @param {Class} [BatchRendererClass]
      */
-    static from(
+    static from(// eslint-disable-line max-params
         attributeRedirects,
         indexProperty,
         vertexCountProperty,

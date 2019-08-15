@@ -1,4 +1,4 @@
-`pixi-batch-renderer` is a PixiJS plugin that allows you to add batch rendering to your custom display objects. I have documented each class in the `PIXI.brend` namespace. 
+`pixi-batch-renderer` is a PixiJS plugin that allows you to add batch rendering to your custom display objects. I have documented each class in the `PIXI.brend` namespace.
 
 # Concepts
 
@@ -39,13 +39,16 @@ An example implementation would look like:
 // vertices and uvs properties in this object. The indices are in the indices property.
 class BatchedView extends PIXI.Container
 {
-  _render()
+  _render(renderer)
   {
     this.vertices = [x0,y0, x1,y1, x2,y2, ..., xn,yn];// variable number of vertices
     this.uvs = [u0,v0, u1,v1, u2, v2, ..., un,yn];// however, all other attributes must have equal length
     this.texture = PIXI.Texture.from("url:example");
-    
+
     this.indices = [0, 1, 2, ..., n];// we could also tell our batch renderer to not use indices too :)
+
+    renderer.plugins["bvbr"].render(this);
+    // NOTE: bvbr is the plugin we register at the bottom
   }
 }
 
@@ -73,10 +76,10 @@ const BatchedViewBatchRenderer = BatchRendererPluginFactory.from(
     ` attribute vec2 aVertex;
       attribute vec2 aTextureCoord;
       attribute float aTextureId;
-      
+
       varying float vTextureId;
       varying vec2 vTextureCoord;
-      
+
       main() {
         gl_Position = vec4(aVertex.xy, 0, 0);
         vTextureId = aTextureId;
@@ -87,7 +90,7 @@ const BatchedViewBatchRenderer = BatchRendererPluginFactory.from(
       uniform uSamplers[%texturesPerBatch%];/* %texturesPerBatch% is a macro and will become a number */\
       varying float vTextureId;
       varying vec2 vTextureCoord;
-      
+
       void main(void){
         vec4 color;
 
@@ -95,7 +98,7 @@ const BatchedViewBatchRenderer = BatchRendererPluginFactory.from(
         for (int k = 0; k < %texturesPerBatch%; ++k)
           if (int(vTextureId) == k)
             color = texture2D(uSamplers[k], vTextureCoord);
-            
+
         gl_FragColor = color;
       }
      `,
