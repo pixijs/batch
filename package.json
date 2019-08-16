@@ -5,12 +5,21 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run compile; npm run build-docs",
-    "build-docs": "jsdoc -c ./.jsdoc.conf.json --verbose",
+    "docs": "jsdoc -c ./.jsdoc.conf.json --verbose",
+    "predeploy": "npm run docs",
+    "deploy": "gh-pages -d docs",
     "compile": "babel src --out-dir lib --source-maps"
   },
   "author": "Shukant Pal",
   "license": "MIT",
-  "keywords": ["pixi", "pixijs", "webgl", "rendering", "canvas", "batching"],
+  "keywords": [
+    "pixi",
+    "pixijs",
+    "webgl",
+    "rendering",
+    "canvas",
+    "batching"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/SukantPal/pixi-batch-renderer"
@@ -30,6 +39,7 @@
     "babel-eslint": "^10.0.2",
     "eslint": "^6.1.0",
     "eslint-plugin-jsdoc": "^15.8.0",
+    "gh-pages": "^2.1.1",
     "jsdoc": "^3.6.3",
     "pixi.js": "^5.1.1"
   }
