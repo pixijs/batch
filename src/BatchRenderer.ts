@@ -6,13 +6,63 @@ import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve'
 import { AttributeRedirect } from './redirects/AttributeRedirect';
 
 /**
- * Core class that renders objects in batches. Clients should
- * defer rendering to a `BatchRenderer` instance by registering
- * it as a plugin.
+ * This object renderer renders multiple display-objects in batches. It can greatly
+ * reduce the number of draw calls issued per frame.
+ *
+ * ## Batch Rendering Pipeline
+ *
+ * The batch rendering pipeline consists of the following stages:
+ *
+ * * **Display-object buffering**: Each display-object is kept in a buffer until it fills
+ * up or a flush is required.
+ *
+ * * **Geometry compositing**: The geometries of each display-object are merged together
+ * in one interleaved composite geometry.
+ *
+ * * **Batch accumulation**: In a sliding window, display-object batches are generated based
+ * off of certain constraints like GPU texture units and the uniforms used in each display-object.
+ *
+ * * **Rendering**: Each batch is rendered in-order using `gl.draw*`. The textures and
+ * uniforms of each display-object are uploaded as arrays.
+ *
+ * ## Shaders
+ *
+ * ### Shader templates
+ *
+ * Since the max. display-object count per batch is not known until the WebGL context is created,
+ * shaders are generated at runtime by processing shader templates. A shader templates has "%macros%"
+ * that are replaced by constants at runtime.
+ *
+ * ### Textures
+ *
+ * The batch renderer uploads textures in the `uniform sampler2D uSamplers[%texturesPerBatch%];`. The
+ * `varying float vTextureId` defines the index into this array that holds the current display-object's
+ * texture.
+ *
+ * ### Uniforms
+ *
+ * This renderer currently does not support customized uniforms for display-objects. This is a
+ * work-in-progress feature.
  *
  * @memberof PIXI.brend
  * @class
  * @extends PIXI.ObjectRenderer
+ * @example
+ * import * as PIXI from 'pixi.js';
+ * import { BatchRendererPluginFactory } from 'pixi-batch-renderer';
+ *
+ * // Define the geometry of your display-object and create a BatchRenderer using
+ * // BatchRendererPluginFactory. Register it as a plugin with PIXI.Renderer.
+ * PIXI.Renderer.registerPlugin('ExampleBatchRenderer', BatchRendererPluginFactory.from(...));
+ *
+ * class ExampleObject extends PIXI.Container
+ * {
+ *     _render(renderer: PIXI.Renderer): void
+ *     {
+ *          // BatchRenderer will handle the whole rendering process for you!
+ *          renderer.plugins['ExampleBatchRenderer'].render(this);
+ *     }
+ * }
  */
 export class BatchRenderer extends PIXI.ObjectRenderer
 {
@@ -43,6 +93,12 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     MAX_TEXTURES: number;
 
     /**
+     * Creates a batch renderer the renders display-objects with the described
+     * geometry.
+     *
+     * To register a batch-renderer plugin, you must use the API provided by
+     * `PIXI.brend.BatchRendererPluginFactory`.
+     *
      * @param {PIXI.Renderer} renderer - renderer to attach to
      * @param {PIXI.brend.AttributeRedirect[]} attributeRedirects
      * @param {string | null} indexProperty
@@ -64,8 +120,8 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         textureProperty: string,
         texturePerObject: number,
         textureAttribute: string,
-        stateFunction: (BatchRenderer) => PIXI.State,
-        shaderFunction: (BatchRenderer) => PIXI.Shader,
+        stateFunction: (renderer: BatchRenderer) => PIXI.State,
+        shaderFunction: (renderer: BatchRenderer) => PIXI.Shader,
         packer = new GeometryPacker(
             attributeRedirects,
             indexProperty,
@@ -90,9 +146,13 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         this._BatchGeneratorClass = BatchGeneratorClass;
         this._batchGenerator = null;// @see this#contextChange
 
+        // Although the runners property is not a public API, it is required to
+        // handle contextChange events.
         this.renderer.runners.contextChange.add(this);
 
-        if (this.renderer.gl)// we are late to the party!
+        // If the WebGL context has already been created, initialization requires a
+        // syntheic call to contextChange.
+        if (this.renderer.gl)
         {
             this.contextChange();
         }
@@ -114,6 +174,9 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         this._batchCount = 0;
     }
 
+    /**
+     * Internal method that is called whenever the renderer's WebGL context changes.
+     */
     contextChange(): void
     {
         const gl = this.renderer.gl;
@@ -140,6 +203,13 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         }
     }
 
+    /**
+     * This is an internal method. It ensures that the batch renderer is ready
+     * to start buffering display-objects. This is automatically invoked by the
+     * renderer's batch system.
+     *
+     * @override
+     */
     start(): void
     {
         this._objectBuffer.length = 0;
@@ -157,19 +227,36 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         this.renderer.shader.bind(this._shader, false);
     }
 
-    render(targetObject: PIXI.DisplayObject): void
+    /**
+     * Adds the display-object to be rendered in a batch.
+     *
+     * @param {PIXI.DisplayObject} displayObject
+     * @override
+     */
+    render(displayObject: PIXI.DisplayObject): void
     {
-        this._objectBuffer.push(targetObject);
+        this._objectBuffer.push(displayObject);
 
-        this._bufferedVertices += this._vertexCountFor(targetObject);
+        this._bufferedVertices += this._vertexCountFor(displayObject);
 
         if (this._indexProperty)
         {
             this._bufferedIndices += resolveConstantOrProperty(
-                targetObject, this._indexProperty).length;
+                displayObject, this._indexProperty).length;
         }
     }
 
+    /**
+     * Forces buffered display-objects to be rendered immediately. This should not
+     * be called unless absolutely necessary like the following scenarios:
+     *
+     * * before directly rendering your display-object, to preserve render-order.
+     *
+     * * to do a nested render pass (calling `Renderer#render` inside a `render` method)
+     *   because the PixiJS renderer is not re-entrant.
+     *
+     * @override
+     */
     flush(): void
     {
         const {
@@ -314,6 +401,12 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         }
     }
 
+    /**
+     * Internal method that stops buffering of display-objects and flushes any existing
+     * buffers.
+     *
+     * @override
+     */
     stop(): void
     {
         if (this._bufferedVertices)
@@ -352,16 +445,21 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     }
 
     /**
-     * Generates a `PIXI.Geometry` that can be used for rendering
-     * multiple display objects at once.
+     * Constructs an interleaved geometry that can be used to upload a whole buffer
+     * of display-object primitives at once.
      *
+     * @private
      * @param {Array<PIXI.brend.AttributeRedirect>} attributeRedirects
      * @param {boolean} hasIndex - whether to include an index property
      * @param {string} textureAttribute - name of the texture-id attribute
      * @param {number} texturePerObject - no. of textures per object
      */
-    static generateCompositeGeometry(attributeRedirects, hasIndex,
-        textureAttribute, texturePerObject): PIXI.Geometry
+    static generateCompositeGeometry(
+        attributeRedirects: AttributeRedirect[],
+        hasIndex: boolean,
+        textureAttribute: string,
+        texturePerObject: number,
+    ): PIXI.Geometry
     {
         const geom = new PIXI.Geometry();
         const attributeBuffer = new PIXI.Buffer(null, false, false);
@@ -396,6 +494,10 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         return geom;
     }
 
+    /**
+     * @private
+     * @param {number} count
+     */
     static generateTextureArray(count: number): Int32Array
     {
         const array = new Int32Array(count);

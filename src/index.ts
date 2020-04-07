@@ -13,6 +13,7 @@ export { BatchRendererPluginFactory } from './BatchRendererPluginFactory';
 export { GeometryPacker } from './GeometryPacker';
 export { Redirect } from './redirects/Redirect';
 export { ShaderGenerator } from './ShaderGenerator';
+export { Batch } from './Batch';
 
 /**
  * This function type is used by `GeometryPacker#packerFunction`.

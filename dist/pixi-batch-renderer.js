@@ -1,6 +1,6 @@
 /*!
  * pixi-batch-renderer
- * Compiled Tue, 07 Apr 2020 17:54:42 UTC
+ * Compiled Tue, 07 Apr 2020 19:36:34 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -10,271 +10,84 @@ this.PIXI.brend = this.PIXI.brend || {}
 var __batch_renderer = (function (exports, PIXI) {
     'use strict';
 
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation. All rights reserved.
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-    this file except in compliance with the License. You may obtain a copy of the
-    License at http://www.apache.org/licenses/LICENSE-2.0
-
-    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-    MERCHANTABLITY OR NON-INFRINGEMENT.
-
-    See the Apache Version 2.0 License for specific language governing permissions
-    and limitations under the License.
-    ***************************************************************************** */
-    /* global Reflect, Promise */
-
-    var extendStatics = function(d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-
-    function __extends(d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    }
-
-    var __assign = function() {
-        __assign = Object.assign || function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
-        return __assign.apply(this, arguments);
-    };
-
-    function __rest(s, e) {
-        var t = {};
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-            t[p] = s[p];
-        if (s != null && typeof Object.getOwnPropertySymbols === "function")
-            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-                if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                    t[p[i]] = s[p[i]];
-            }
-        return t;
-    }
-
-    function __decorate(decorators, target, key, desc) {
-        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-        return c > 3 && r && Object.defineProperty(target, key, r), r;
-    }
-
-    function __param(paramIndex, decorator) {
-        return function (target, key) { decorator(target, key, paramIndex); }
-    }
-
-    function __metadata(metadataKey, metadataValue) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
-    }
-
-    function __awaiter(thisArg, _arguments, P, generator) {
-        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-        return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-            step((generator = generator.apply(thisArg, _arguments || [])).next());
-        });
-    }
-
-    function __generator(thisArg, body) {
-        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-        function verb(n) { return function (v) { return step([n, v]); }; }
-        function step(op) {
-            if (f) throw new TypeError("Generator is already executing.");
-            while (_) try {
-                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-                if (y = 0, t) op = [op[0] & 2, t.value];
-                switch (op[0]) {
-                    case 0: case 1: t = op; break;
-                    case 4: _.label++; return { value: op[1], done: false };
-                    case 5: _.label++; y = op[1]; op = [0]; continue;
-                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                    default:
-                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                        if (t[2]) _.ops.pop();
-                        _.trys.pop(); continue;
-                }
-                op = body.call(thisArg, _);
-            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-        }
-    }
-
-    function __exportStar(m, exports) {
-        for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-    }
-
-    function __values(o) {
-        var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-        if (m) return m.call(o);
-        if (o && typeof o.length === "number") return {
-            next: function () {
-                if (o && i >= o.length) o = void 0;
-                return { value: o && o[i++], done: !o };
-            }
-        };
-        throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-    }
-
-    function __read(o, n) {
-        var m = typeof Symbol === "function" && o[Symbol.iterator];
-        if (!m) return o;
-        var i = m.call(o), r, ar = [], e;
-        try {
-            while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-        }
-        catch (error) { e = { error: error }; }
-        finally {
-            try {
-                if (r && !r.done && (m = i["return"])) m.call(i);
-            }
-            finally { if (e) throw e.error; }
-        }
-        return ar;
-    }
-
-    function __spread() {
-        for (var ar = [], i = 0; i < arguments.length; i++)
-            ar = ar.concat(__read(arguments[i]));
-        return ar;
-    }
-
-    function __spreadArrays() {
-        for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-        for (var r = Array(s), k = 0, i = 0; i < il; i++)
-            for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-                r[k] = a[j];
-        return r;
-    };
-
-    function __await(v) {
-        return this instanceof __await ? (this.v = v, this) : new __await(v);
-    }
-
-    function __asyncGenerator(thisArg, _arguments, generator) {
-        if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-        var g = generator.apply(thisArg, _arguments || []), i, q = [];
-        return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
-        function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
-        function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
-        function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
-        function fulfill(value) { resume("next", value); }
-        function reject(value) { resume("throw", value); }
-        function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
-    }
-
-    function __asyncDelegator(o) {
-        var i, p;
-        return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
-        function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
-    }
-
-    function __asyncValues(o) {
-        if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-        var m = o[Symbol.asyncIterator], i;
-        return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
-        function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-        function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
-    }
-
-    function __makeTemplateObject(cooked, raw) {
-        if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
-        return cooked;
-    };
-
-    function __importStar(mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-        result.default = mod;
-        return result;
-    }
-
-    function __importDefault(mod) {
-        return (mod && mod.__esModule) ? mod : { default: mod };
-    }
-
-    function __classPrivateFieldGet(receiver, privateMap) {
-        if (!privateMap.has(receiver)) {
-            throw new TypeError("attempted to get private field on non-instance");
-        }
-        return privateMap.get(receiver);
-    }
-
-    function __classPrivateFieldSet(receiver, privateMap, value) {
-        if (!privateMap.has(receiver)) {
-            throw new TypeError("attempted to set private field on non-instance");
-        }
-        privateMap.set(receiver, value);
-        return value;
-    }
-
     /**
-     * A redirect is used to transfer data from the display
-     * object to the shader program.
+     * Redirects are used to aggregate the resources needed by the WebGL pipeline to render
+     * a display-object. This includes the base primitives (geometry), uniforms, and
+     * textures (which are handled as "special" uniforms).
      *
      * @memberof PIXI.brend
      * @class
+     * @abstract
+     * @see PIXI.brend.AttributeRedirect
      */
-    var Redirect = /** @class */ (function () {
-        function Redirect(source, glslIdentifer) {
+    class Redirect {
+        constructor(source, glslIdentifer) {
             /**
-             * Source property on a `PIXI.DisplayObject` that
-             * holds the data being transferred. This can also
-             * be a callback that returns the data.
+             * The property on the display-object that holds the resource.
+             *
+             * Instead of a property, you can provide a callback that generates the resource
+             * on invokation.
              *
              * @member {string | Function}
              */
             this.source = source;
             /**
-             * GLSL variable that will hold the data.
-             *
+             * The shader variable that references the resource, e.g. attribute or uniform
+             * name.
              * @member {string}
              */
             this.glslIdentifer = glslIdentifer;
         }
-        return Redirect;
-    }());
+    }
 
     /**
-     * An attribute-redirect describes how the batch renderer will
-     * aggregate shader attributes.
+     * This redirect defines an attribute of a display-object's geometry. The attribute
+     * data is expected to be stored in a `PIXI.ViewableBuffer`, in an array, or (if
+     * just one element) as the property itself.
      *
      * @memberof PIXI.brend
      * @class
      * @extends PIXI.brend.Redirect
+     * @example
+     * // This attribute redirect calculates the tint used on top of a texture. Since the
+     * // tintMode can change anytime, it is better to use a derived source (function).
+     * //
+     * // Furthermore, the color is uploaded as four bytes (`attribute vec4 aTint`) while the
+     * // source returns an integer. This is done by splitting the 32-bit integer into four
+     * // 8-bit bytes.
+     * new PIXI.brend.AttributeRedirect(
+     *     (tgt: ExampleDisplay) => (tgt.alpha < 1.0 && tgt.tintMode === PREMULTIPLY)
+     *          ? premultiplyTint(tgt.rgb, tgt.alpha)
+     *          : tgt.rgb + (tgt.alpha << 24);
+     *     'aTint',
+     *     'int32',
+     *     '%notarray%',
+     *     PIXI.TYPES.UNSIGNED_BYTE,
+     *     4,
+     *     true
+     * );
      */
-    var AttributeRedirect = /** @class */ (function (_super) {
-        __extends(AttributeRedirect, _super);
-        function AttributeRedirect(source, glslIdentifer, type, size, glType, glSize, normalize) {
-            if (type === void 0) { type = 'float32'; }
-            if (size === void 0) { size = 0; }
-            if (glType === void 0) { glType = PIXI.TYPES.FLOAT; }
-            if (normalize === void 0) { normalize = false; }
-            var _this = _super.call(this, source, glslIdentifer) || this;
+    class AttributeRedirect extends Redirect {
+        /**
+         * @param {string | Function} source - redirect source
+         * @param {string} glslIdentifer - shader attribute variable
+         * @param {string}[type='float32'] - the type of data stored in the source
+         * @param {number | '%notarray%'}[size=0] - size of the source array ('%notarray' if not an array & just one element)
+         * @param {PIXI.TYPES}[glType=PIXI.TYPES.FLOAT] - data format to be uploaded in
+         * @param {number} glSize - number of elements to be uploaded as (size of source and upload must match)
+         * @param {boolean}[normalize=false] - whether to normalize the data before uploading
+         */
+        constructor(source, glslIdentifer, type = 'float32', size = 0, glType = PIXI.TYPES.FLOAT, glSize, normalize = false) {
+            super(source, glslIdentifer);
             /**
-             * View on the source buffer that should be used to
-             * extract data.
+             * The type of data stored in the source buffer. This can be any of: `int8`, `uint8`,
+             * `int16`, `uint16`, `int32`, `uint32`, or (by default) `float32`.
              *
              * @member {string}
-             * @see PIXI.ViewableBuffer#view
+             * @see [PIXI.ViewableBuffer#view]{@link https://pixijs.download/dev/docs/PIXI.ViewableBuffer.html}
+             * @default 'float32'
              */
-            _this.type = type;
+            this.type = type;
             /**
              * Number of elements to extract out of `source` with
              * the given view type, for one vertex.
@@ -284,13 +97,13 @@ var __batch_renderer = (function (exports, PIXI) {
              *
              * @member {number | '%notarray%'}
              */
-            _this.size = size;
+            this.size = size;
             /**
              * This is equal to `size` or 1 if size is `%notarray%`.
              *
              * @member {number}
              */
-            _this.properSize = (size === '%notarray%') ? 1 : size;
+            this.properSize = (size === '%notarray%') ? 1 : size;
             /**
              * Type of attribute, when uploading.
              *
@@ -303,7 +116,7 @@ var __batch_renderer = (function (exports, PIXI) {
              *
              * @member {PIXI.TYPES}
              */
-            _this.glType = glType;
+            this.glType = glType;
             /**
              * Size of attribute in terms of `glType`.
              *
@@ -311,25 +124,21 @@ var __batch_renderer = (function (exports, PIXI) {
              *
              * @readonly
              */
-            _this.glSize = glSize;
+            this.glSize = glSize;
             /**
              * Whether to normalize the attribute values.
              *
              * @member {boolean}
              * @readonly
              */
-            _this.normalize = normalize;
-            return _this;
+            this.normalize = normalize;
         }
-        AttributeRedirect.vertexSizeFor = function (attributeRedirects) {
-            return attributeRedirects.reduce(function (acc, redirect) {
-                return (PIXI.ViewableBuffer.sizeOf(redirect.type)
-                    * redirect.properSize)
-                    + acc;
-            }, 0);
-        };
-        return AttributeRedirect;
-    }(Redirect));
+        static vertexSizeFor(attributeRedirects) {
+            return attributeRedirects.reduce((acc, redirect) => (PIXI.ViewableBuffer.sizeOf(redirect.type)
+                * redirect.properSize)
+                + acc, 0);
+        }
+    }
 
     /**
      * Used to generate discrete groups/batches of display-objects
@@ -347,7 +156,7 @@ var __batch_renderer = (function (exports, PIXI) {
      * @memberof PIXI.brend
      * @class
      */
-    var BatchGenerator = /** @class */ (function () {
+    class BatchGenerator {
         /**
          * @param {number} textureIncrement - textures per object
          * @param {number} textureLimit - no. of texture registers in GPU
@@ -360,8 +169,7 @@ var __batch_renderer = (function (exports, PIXI) {
          *      randomly, then they can be drawn together. (provided other
          *      constraints like state are satisfied.)
          */
-        function BatchGenerator(textureIncrement, textureLimit, textureProperty, enableTextureReduction) {
-            if (enableTextureReduction === void 0) { enableTextureReduction = true; }
+        constructor(textureIncrement, textureLimit, textureProperty, enableTextureReduction = true) {
             /** @private */
             this._state = null;
             /** @private */
@@ -407,9 +215,9 @@ var __batch_renderer = (function (exports, PIXI) {
          * @param targetObject {PIXI.DisplayObject} - object being added
          * @protected
          */
-        BatchGenerator.prototype.onPut = function (targetObject) {
+        onPut(targetObject) {
             return true;
-        };
+        }
         /**
          * Put an object into this batch.
          *
@@ -418,7 +226,7 @@ var __batch_renderer = (function (exports, PIXI) {
          * @return {boolean} whether the object was added to the
          *     batch. If it wasn't, you should finalize it.
          */
-        BatchGenerator.prototype.put = function (targetObject, state) {
+        put(targetObject, state) {
             if (!this._state) {
                 this._state = state;
             }
@@ -434,14 +242,14 @@ var __batch_renderer = (function (exports, PIXI) {
             }
             this._batchBuffer.push(targetObject);
             return true;
-        };
+        }
         /**
          * Finalize this batch by getting its data into a
          * `Batch` object.
          *
          * @param batch {PIXI.brend.Batch}
          */
-        BatchGenerator.prototype.finalize = function (batch) {
+        finalize(batch) {
             batch.batchBuffer = this._batchBuffer;
             batch.textureBuffer = this._textureIndexedBuffer;
             batch.uidMap = this.enableTextureReduction
@@ -453,29 +261,29 @@ var __batch_renderer = (function (exports, PIXI) {
             this._textureIndexMap = {};
             this._textureBufferLength = 0;
             this._textureIndexedBuffer = [];
-        };
-        BatchGenerator.prototype._putOnlyTexture = function (texture) {
+        }
+        _putOnlyTexture(texture) {
             if (texture.baseTexture) {
                 texture = texture.baseTexture;
             }
-            var baseTexture = texture;
+            const baseTexture = texture;
             if (this._textureBuffer[baseTexture.uid]) {
                 return true;
             }
             else if (this._textureBufferLength + 1 <= this._textureLimit) {
                 this._textureBuffer[baseTexture.uid] = texture;
                 this._textureBufferLength += 1;
-                var newLength = this._textureIndexedBuffer.push(baseTexture);
-                var index = newLength - 1;
+                const newLength = this._textureIndexedBuffer.push(baseTexture);
+                const index = newLength - 1;
                 this._textureIndexMap[baseTexture.uid] = index;
                 return true;
             }
             return false;
-        };
-        BatchGenerator.prototype._putTextureArray = function (textureArray) {
-            var deltaBufferLength = 0;
-            for (var i = 0; i < textureArray.length; i++) {
-                var texture = textureArray[i].baseTexture
+        }
+        _putTextureArray(textureArray) {
+            let deltaBufferLength = 0;
+            for (let i = 0; i < textureArray.length; i++) {
+                const texture = textureArray[i].baseTexture
                     ? textureArray[i].baseTexture
                     : textureArray[i];
                 if (!this._textureBuffer[texture.uid]) {
@@ -485,21 +293,21 @@ var __batch_renderer = (function (exports, PIXI) {
             if (deltaBufferLength + this._textureBufferLength > this._textureLimit) {
                 return false;
             }
-            for (var i = 0; i < textureArray.length; i++) {
-                var texture = textureArray[i].baseTexture
+            for (let i = 0; i < textureArray.length; i++) {
+                const texture = textureArray[i].baseTexture
                     ? textureArray[i].baseTexture
                     : textureArray[i];
                 if (!this._textureBuffer[texture.uid]) {
                     this._textureBuffer[texture.uid] = texture;
                     this._textureBufferLength += 1;
-                    var newLength = this._textureIndexedBuffer.push(texture);
-                    var index = newLength - 1;
+                    const newLength = this._textureIndexedBuffer.push(texture);
+                    const index = newLength - 1;
                     this._textureIndexMap[texture.uid] = index;
                 }
             }
             return true;
-        };
-        BatchGenerator.prototype._putTextureWithoutReduction = function (texture) {
+        }
+        _putTextureWithoutReduction(texture) {
             if (texture.baseTexture) {
                 texture = texture.baseTexture;
             }
@@ -508,21 +316,20 @@ var __batch_renderer = (function (exports, PIXI) {
             }
             this._textureIndexedBuffer.push(texture);
             return true;
-        };
-        BatchGenerator.prototype._putTextureArrayWithoutReduction = function (textureArray) {
+        }
+        _putTextureArrayWithoutReduction(textureArray) {
             if (this._textureBufferLength + textureArray.length
                 > this._textureLimit) {
                 return false;
             }
-            for (var i = 0; i < textureArray.length; i++) {
+            for (let i = 0; i < textureArray.length; i++) {
                 this._textureIndexedBuffer.push(textureArray[i].baseTexture
                     ? textureArray[i].baseTexture
                     : textureArray[i]);
             }
             return true;
-        };
-        return BatchGenerator;
-    }());
+        }
+    }
 
     /**
      * Resources that need to be uploaded to WebGL to render
@@ -531,8 +338,8 @@ var __batch_renderer = (function (exports, PIXI) {
      * @memberof PIXI.brend
      * @class
      */
-    var Batch = /** @class */ (function () {
-        function Batch(geometryOffset) {
+    class Batch {
+        constructor(geometryOffset) {
             /**
              * Offset in the geometry (set by `BatchRenderer`)
              * where this batch is located.
@@ -564,26 +371,25 @@ var __batch_renderer = (function (exports, PIXI) {
          * Uploads the resources required before rendering this
          * batch.
          */
-        Batch.prototype.upload = function (renderer) {
-            this.textureBuffer.forEach(function (tex, i) {
+        upload(renderer) {
+            this.textureBuffer.forEach((tex, i) => {
                 renderer.texture.bind(tex, i);
             });
             renderer.state.set(this.state);
-        };
+        }
         /**
          * Resets all properties to `null` to free up references
          * to resources.
          */
-        Batch.prototype.reset = function () {
+        reset() {
             this.textureBuffer
                 = this.uidMap
                     = this.state
                         = null;
-        };
-        return Batch;
-    }());
+        }
+    }
 
-    var CompilerConstants = {
+    const CompilerConstants = {
         INDICES_OFFSET: '__offset_indices_',
         FUNC_SOURCE_BUFFER: 'getSourceBuffer',
         packerArguments: [
@@ -609,7 +415,7 @@ var __batch_renderer = (function (exports, PIXI) {
      * @memberof PIXI.brend
      * @class
      */
-    var GeometryPacker = /** @class */ (function () {
+    class GeometryPacker {
         /**
          * @param {PIXI.brend.AttributeRedirect[]} attributeRedirects
          * @param {string} indexProperty - property where indicies are
@@ -621,8 +427,7 @@ var __batch_renderer = (function (exports, PIXI) {
          *     default. This should exclude the vertex attribute
          * @param {number} texturePerObject - no. of textures per object
          */
-        function GeometryPacker(attributeRedirects, indexProperty, vertexCountProperty, vertexSize, texturePerObject) {
-            if (vertexSize === void 0) { vertexSize = AttributeRedirect.vertexSizeFor(attributeRedirects); }
+        constructor(attributeRedirects, indexProperty, vertexCountProperty, vertexSize = AttributeRedirect.vertexSizeFor(attributeRedirects), texturePerObject) {
             vertexSize += texturePerObject * 4; // texture indices are also passed
             this._targetCompositeAttributeBuffer = null;
             this._targetCompositeIndexBuffer = null;
@@ -636,68 +441,56 @@ var __batch_renderer = (function (exports, PIXI) {
             this._aBuffers = []; // @see _getAttributeBuffer
             this._iBuffers = []; // @see _getIndexBuffer
         }
-        Object.defineProperty(GeometryPacker.prototype, "packerFunction", {
-            /**
-             * A generated function that will append an object's
-             * attributes and indices to composite buffers.
-             *
-             * The composite attribute buffer is interleaved.
-             *
-             * The composite index buffer has adjusted indices. It
-             * accounts for the new positions of vertices in the
-             * composite attribute buffer.
-             *
-             * You can overwrite this property with a custom packer
-             * function.
-             *
-             * @member {PIXI.brend.PackerFunction}
-             */
-            get: function () {
-                if (!this._packerFunction) {
-                    this._packerFunction
-                        = new FunctionCompiler(this).compile(); // eslint-disable-line
-                }
-                return this._packerFunction;
-            },
-            set: function (func) {
-                this._packerFunction = func;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(GeometryPacker.prototype, "compositeAttributes", {
-            /**
-             * This is the currently active composite attribute
-             * buffer. It may contain garbage in unused locations.
-             *
-             * @member {PIXI.ViewableBuffer}
-             */
-            get: function () {
-                return this._targetCompositeAttributeBuffer;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(GeometryPacker.prototype, "compositeIndices", {
-            /**
-             * This is the currently active composite index
-             * buffer. It may contain garbage in unused locations.
-             *
-             * It will be `null` if `indexProperty` was not given.
-             *
-             * @member {Uint16Array}
-             */
-            get: function () {
-                return this._targetCompositeIndexBuffer;
-            },
-            enumerable: true,
-            configurable: true
-        });
+        /**
+         * A generated function that will append an object's
+         * attributes and indices to composite buffers.
+         *
+         * The composite attribute buffer is interleaved.
+         *
+         * The composite index buffer has adjusted indices. It
+         * accounts for the new positions of vertices in the
+         * composite attribute buffer.
+         *
+         * You can overwrite this property with a custom packer
+         * function.
+         *
+         * @member {PIXI.brend.PackerFunction}
+         */
+        get packerFunction() {
+            if (!this._packerFunction) {
+                this._packerFunction
+                    = new FunctionCompiler(this).compile(); // eslint-disable-line
+            }
+            return this._packerFunction;
+        }
+        set packerFunction(func) {
+            this._packerFunction = func;
+        }
+        /**
+         * This is the currently active composite attribute
+         * buffer. It may contain garbage in unused locations.
+         *
+         * @member {PIXI.ViewableBuffer}
+         */
+        get compositeAttributes() {
+            return this._targetCompositeAttributeBuffer;
+        }
+        /**
+         * This is the currently active composite index
+         * buffer. It may contain garbage in unused locations.
+         *
+         * It will be `null` if `indexProperty` was not given.
+         *
+         * @member {Uint16Array}
+         */
+        get compositeIndices() {
+            return this._targetCompositeIndexBuffer;
+        }
         /**
          * @param {number} batchVertexCount
          * @param {number} batchIndexCount
          */
-        GeometryPacker.prototype.reset = function (batchVertexCount, batchIndexCount) {
+        reset(batchVertexCount, batchIndexCount) {
             this._targetCompositeAttributeBuffer
                 = this.getAttributeBuffer(batchVertexCount);
             if (this._indexProperty) {
@@ -705,90 +498,119 @@ var __batch_renderer = (function (exports, PIXI) {
                     = this.getIndexBuffer(batchIndexCount);
             }
             this._aIndex = this._iIndex = 0;
-        };
+        }
         /**
          * @param {PIXI.DisplayObject} targetObject
          * @param {number} textureId
          */
-        GeometryPacker.prototype.pack = function (targetObject, textureId) {
+        pack(targetObject, textureId) {
             this.packerFunction(targetObject, this._targetCompositeAttributeBuffer, this._targetCompositeIndexBuffer, this._aIndex, this._iIndex, textureId, this._attributeRedirects);
-        };
-        GeometryPacker.prototype.getAttributeBuffer = function (size) {
+        }
+        getAttributeBuffer(size) {
             // 8 vertices is enough for 2 quads
-            var roundedP2 = PIXI.utils.nextPow2(Math.ceil(size / 8));
-            var roundedSizeIndex = PIXI.utils.log2(roundedP2);
-            var roundedSize = roundedP2 * 8;
+            const roundedP2 = PIXI.utils.nextPow2(Math.ceil(size / 8));
+            const roundedSizeIndex = PIXI.utils.log2(roundedP2);
+            const roundedSize = roundedP2 * 8;
             if (this._aBuffers.length <= roundedSizeIndex) {
                 this._aBuffers.length = roundedSizeIndex + 1;
             }
-            var buffer = this._aBuffers[roundedSizeIndex];
+            let buffer = this._aBuffers[roundedSizeIndex];
             if (!buffer) {
                 this._aBuffers[roundedSize] = buffer
                     = new PIXI.ViewableBuffer(roundedSize * this._vertexSize);
             }
             return buffer;
-        };
-        GeometryPacker.prototype.getIndexBuffer = function (size) {
+        }
+        getIndexBuffer(size) {
             // 12 indices is enough for 2 quads
-            var roundedP2 = PIXI.utils.nextPow2(Math.ceil(size / 12));
-            var roundedSizeIndex = PIXI.utils.log2(roundedP2);
-            var roundedSize = roundedP2 * 12;
+            const roundedP2 = PIXI.utils.nextPow2(Math.ceil(size / 12));
+            const roundedSizeIndex = PIXI.utils.log2(roundedP2);
+            const roundedSize = roundedP2 * 12;
             if (this._iBuffers.length <= roundedSizeIndex) {
                 this._iBuffers.length = roundedSizeIndex + 1;
             }
-            var buffer = this._iBuffers[roundedSizeIndex];
+            let buffer = this._iBuffers[roundedSizeIndex];
             if (!buffer) {
                 this._iBuffers[roundedSizeIndex] = buffer
                     = new Uint16Array(roundedSize);
             }
             return buffer;
-        };
-        return GeometryPacker;
-    }());
+        }
+    }
     // FunctionCompiler was intented to be a static inner
     // class in GeometryPacker. However, due to a bug in
     // JSDoc (3.6.3), I've put it down here :)
     //
     // https://github.com/jsdoc/jsdoc/issues/1673
-    var FunctionCompiler = /** @class */ (function () {
+    const FunctionCompiler = class {
         /**
          * @param {PIXI.brend.GeometryPacker} packer
          */
-        function class_1(packer) {
+        constructor(packer) {
             this.packer = packer;
         }
-        class_1.prototype.compile = function () {
-            var _this = this;
-            var packer = this.packer;
-            var packerBody = "";
+        compile() {
+            const packer = this.packer;
+            let packerBody = ``;
             /* Source offset variables for attribute buffers &
                 the corresponding buffer-view references. */
-            packer._attributeRedirects.forEach(function (redirect, i) {
-                packerBody += "\n                let __offset_" + i + " = 0;\n                const __buffer_" + i + " = (\n                    " + _this._compileSourceBufferExpression(redirect, i) + ");\n            ";
+            packer._attributeRedirects.forEach((redirect, i) => {
+                packerBody += `
+                let __offset_${i} = 0;
+                const __buffer_${i} = (
+                    ${this._compileSourceBufferExpression(redirect, i)});
+            `;
             });
             /* Basis for the "packing" for-loop. */
-            packerBody += "\n            const {\n                int8View,\n                uint8View,\n                int16View,\n                uint16View,\n                int32View,\n                uint32View,\n                float32View,\n            } = compositeAttributes;\n\n            const vertexCount = " + this._compileVertexCountExpression() + ";\n\n            let adjustedAIndex = 0;\n\n            for (let vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)\n            {\n        ";
+            packerBody += `
+            const {
+                int8View,
+                uint8View,
+                int16View,
+                uint16View,
+                int32View,
+                uint32View,
+                float32View,
+            } = compositeAttributes;
+
+            const vertexCount = ${this._compileVertexCountExpression()};
+
+            let adjustedAIndex = 0;
+
+            for (let vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
+            {
+        `;
             // Eliminate offset conversion when adjacent attributes
             // have similar source-types.
-            var skipReverseTransformation = false;
+            let skipReverseTransformation = false;
             /* Packing for-loop body. */
-            for (var i = 0; i < packer._attributeRedirects.length; i++) {
-                var redirect = packer._attributeRedirects[i];
+            for (let i = 0; i < packer._attributeRedirects.length; i++) {
+                const redirect = packer._attributeRedirects[i];
                 /* Initialize adjsutedAIndex in terms of source type. */
                 if (!skipReverseTransformation) {
-                    packerBody += "\n                    adjustedAIndex = aIndex / " + this._sizeOf(i) + ";\n                ";
+                    packerBody += `
+                    adjustedAIndex = aIndex / ${this._sizeOf(i)};
+                `;
                 }
                 if (typeof redirect.size === 'number') {
-                    for (var j = 0; j < redirect.size; j++) {
-                        packerBody += "\n                        " + redirect.type + "View[adjustedAIndex++] =\n                            __buffer_" + i + "[__offset_" + i + "++];\n                    ";
+                    for (let j = 0; j < redirect.size; j++) {
+                        packerBody += `
+                        ${redirect.type}View[adjustedAIndex++] =
+                            __buffer_${i}[__offset_${i}++];
+                    `;
                     }
                 }
                 else {
-                    packerBody += "\n                        " + redirect.type + "View[adjustedAIndex++] =\n                            __buffer_" + i + ";\n                ";
+                    packerBody += `
+                        ${redirect.type}View[adjustedAIndex++] =
+                            __buffer_${i};
+                `;
                 }
                 if (packer._attributeRedirects[i + 1]
                     && (this._sizeOf(i + 1) !== this._sizeOf(i))) {
-                    packerBody += "\n                    aIndex = adjustedAIndex * " + this._sizeOf(i) + ";\n                ";
+                    packerBody += `
+                    aIndex = adjustedAIndex * ${this._sizeOf(i)};
+                `;
                 }
                 else {
                     skipReverseTransformation = true;
@@ -797,56 +619,84 @@ var __batch_renderer = (function (exports, PIXI) {
             if (skipReverseTransformation) {
                 if (this._sizeOf(packer._attributeRedirects.length - 1)
                     !== 4) {
-                    packerBody += "\n                    aIndex = adjustedAIndex * " + this._sizeOf(packer._attributeRedirects.length - 1) + "\n                ";
+                    packerBody += `
+                    aIndex = adjustedAIndex * ${this._sizeOf(packer._attributeRedirects.length - 1)}
+                `;
                     skipReverseTransformation = false;
                 }
             }
             if (packer._texturePerObject > 0) {
                 if (packer._texturePerObject > 1) {
                     if (!skipReverseTransformation) {
-                        packerBody += "\n                        adjustedAIndex = aIndex / 4;\n                    ";
+                        packerBody += `
+                        adjustedAIndex = aIndex / 4;
+                    `;
                     }
-                    for (var k = 0; k < packer._texturePerObject; k++) {
-                        packerBody += "\n                        float32View[adjustedAIndex++] = textureId[" + k + "];\n                    ";
+                    for (let k = 0; k < packer._texturePerObject; k++) {
+                        packerBody += `
+                        float32View[adjustedAIndex++] = textureId[${k}];
+                    `;
                     }
-                    packerBody += "\n                    aIndex = adjustedAIndex * 4;\n                ";
+                    packerBody += `
+                    aIndex = adjustedAIndex * 4;
+                `;
                 }
                 else if (!skipReverseTransformation) {
-                    packerBody += "\n                    float32View[aIndex] = textureId;\n                    aIndex += 4;\n                ";
+                    packerBody += `
+                    float32View[aIndex] = textureId;
+                    aIndex += 4;
+                `;
                 }
                 else {
-                    packerBody += "\n                    float32View[adjustedAIndex++] = textureId;\n                    aIndex = adjustedAIndex * 4;\n                ";
+                    packerBody += `
+                    float32View[adjustedAIndex++] = textureId;
+                    aIndex = adjustedAIndex * 4;
+                `;
                 }
             }
             /* Close the packing for-loop. */
-            packerBody += "}\n            " + (this.packer._indexProperty
-                ? "const oldAIndex = this._aIndex;"
-                : '') + "\n            this._aIndex = aIndex;\n        ";
+            packerBody += `}
+            ${this.packer._indexProperty
+            ? `const oldAIndex = this._aIndex;`
+            : ''}
+            this._aIndex = aIndex;
+        `;
             if (this.packer._indexProperty) {
-                packerBody += "\n                const verticesBefore = oldAIndex / " + this.packer._vertexSize + "\n                const indexCount\n                    = targetObject['" + this.packer._indexProperty + "'].length;\n\n                for (let j = 0; j < indexCount; j++)\n                {\n                    compositeIndices[iIndex++] = verticesBefore +\n                        targetObject['" + this.packer._indexProperty + "'][j];\n                }\n\n                this._iIndex = iIndex;\n            ";
+                packerBody += `
+                const verticesBefore = oldAIndex / ${this.packer._vertexSize}
+                const indexCount
+                    = targetObject['${this.packer._indexProperty}'].length;
+
+                for (let j = 0; j < indexCount; j++)
+                {
+                    compositeIndices[iIndex++] = verticesBefore +
+                        targetObject['${this.packer._indexProperty}'][j];
+                }
+
+                this._iIndex = iIndex;
+            `;
             }
             // eslint-disable-next-line no-new-func
-            return new (Function.bind.apply(Function, __spreadArrays([void 0], CompilerConstants.packerArguments, [packerBody])))();
-        };
-        class_1.prototype._compileSourceBufferExpression = function (redirect, i) {
+            return new Function(...CompilerConstants.packerArguments, packerBody);
+        }
+        _compileSourceBufferExpression(redirect, i) {
             return (typeof redirect.source === 'string')
-                ? "targetObject['" + redirect.source + "']"
-                : "attributeRedirects[" + i + "].source(targetObject)";
-        };
-        class_1.prototype._compileVertexCountExpression = function () {
+                ? `targetObject['${redirect.source}']`
+                : `attributeRedirects[${i}].source(targetObject)`;
+        }
+        _compileVertexCountExpression() {
             if (!this.packer._vertexCountProperty) {
                 // auto-calculate based on primary attribute
-                return "__buffer_0.length / " + this.packer._attributeRedirects[0].size;
+                return `__buffer_0.length / ${this.packer._attributeRedirects[0].size}`;
             }
             return ((typeof this.packer._vertexCountProperty === 'string')
-                ? "targetObject." + this.packer._vertexCountProperty
-                : "" + this.packer._vertexCountProperty);
-        };
-        class_1.prototype._sizeOf = function (i) {
+                ? `targetObject.${this.packer._vertexCountProperty}`
+                : `${this.packer._vertexCountProperty}`);
+        }
+        _sizeOf(i) {
             return PIXI.ViewableBuffer.sizeOf(this.packer._attributeRedirects[i].type);
-        };
-        return class_1;
-    }());
+        }
+    };
 
     function resolveConstantOrProperty(targetObject, property) {
         return (typeof property === 'string')
@@ -861,17 +711,72 @@ var __batch_renderer = (function (exports, PIXI) {
     }
 
     /**
-     * Core class that renders objects in batches. Clients should
-     * defer rendering to a `BatchRenderer` instance by registering
-     * it as a plugin.
+     * This object renderer renders multiple display-objects in batches. It can greatly
+     * reduce the number of draw calls issued per frame.
+     *
+     * ## Batch Rendering Pipeline
+     *
+     * The batch rendering pipeline consists of the following stages:
+     *
+     * * **Display-object buffering**: Each display-object is kept in a buffer until it fills
+     * up or a flush is required.
+     *
+     * * **Geometry compositing**: The geometries of each display-object are merged together
+     * in one interleaved composite geometry.
+     *
+     * * **Batch accumulation**: In a sliding window, display-object batches are generated based
+     * off of certain constraints like GPU texture units and the uniforms used in each display-object.
+     *
+     * * **Rendering**: Each batch is rendered in-order using `gl.draw*`. The textures and
+     * uniforms of each display-object are uploaded as arrays.
+     *
+     * ## Shaders
+     *
+     * ### Shader templates
+     *
+     * Since the max. display-object count per batch is not known until the WebGL context is created,
+     * shaders are generated at runtime by processing shader templates. A shader templates has "%macros%"
+     * that are replaced by constants at runtime.
+     *
+     * ### Textures
+     *
+     * The batch renderer uploads textures in the `uniform sampler2D uSamplers[%texturesPerBatch%];`. The
+     * `varying float vTextureId` defines the index into this array that holds the current display-object's
+     * texture.
+     *
+     * ### Uniforms
+     *
+     * This renderer currently does not support customized uniforms for display-objects. This is a
+     * work-in-progress feature.
      *
      * @memberof PIXI.brend
      * @class
      * @extends PIXI.ObjectRenderer
+     * @example
+     * import * as PIXI from 'pixi.js';
+     * import { BatchRendererPluginFactory } from 'pixi-batch-renderer';
+     *
+     * // Define the geometry of your display-object and create a BatchRenderer using
+     * // BatchRendererPluginFactory. Register it as a plugin with PIXI.Renderer.
+     * PIXI.Renderer.registerPlugin('ExampleBatchRenderer', BatchRendererPluginFactory.from(...));
+     *
+     * class ExampleObject extends PIXI.Container
+     * {
+     *     _render(renderer: PIXI.Renderer): void
+     *     {
+     *          // BatchRenderer will handle the whole rendering process for you!
+     *          renderer.plugins['ExampleBatchRenderer'].render(this);
+     *     }
+     * }
      */
-    var BatchRenderer = /** @class */ (function (_super) {
-        __extends(BatchRenderer, _super);
+    class BatchRenderer extends PIXI.ObjectRenderer {
         /**
+         * Creates a batch renderer the renders display-objects with the described
+         * geometry.
+         *
+         * To register a batch-renderer plugin, you must use the API provided by
+         * `PIXI.brend.BatchRendererPluginFactory`.
+         *
          * @param {PIXI.Renderer} renderer - renderer to attach to
          * @param {PIXI.brend.AttributeRedirect[]} attributeRedirects
          * @param {string | null} indexProperty
@@ -885,39 +790,42 @@ var __batch_renderer = (function (exports, PIXI) {
          * @param {Class} [BatchGeneratorClass=PIXI.brend.BatchGenerator]
          * @see PIXI.brend.ShaderGenerator
          */
-        function BatchRenderer(// eslint-disable-line max-params
-        renderer, attributeRedirects, indexProperty, vertexCountProperty, textureProperty, texturePerObject, textureAttribute, stateFunction, shaderFunction, packer, BatchGeneratorClass) {
-            if (packer === void 0) { packer = new GeometryPacker(attributeRedirects, indexProperty, vertexCountProperty, // auto-calculate
-            undefined, texturePerObject); }
-            if (BatchGeneratorClass === void 0) { BatchGeneratorClass = BatchGenerator; }
-            var _this = _super.call(this, renderer) || this;
-            _this._attributeRedirects = attributeRedirects;
-            _this._indexProperty = indexProperty;
-            _this._vertexCountProperty = vertexCountProperty;
-            _this._textureProperty = textureProperty;
-            _this._texturePerObject = texturePerObject;
-            _this._textureAttribute = textureAttribute;
-            _this._stateFunction = stateFunction;
-            _this._shaderFunction = shaderFunction;
-            _this._BatchGeneratorClass = BatchGeneratorClass;
-            _this._batchGenerator = null; // @see this#contextChange
-            _this.renderer.runners.contextChange.add(_this);
-            if (_this.renderer.gl) // we are late to the party!
-             {
-                _this.contextChange();
+        constructor(// eslint-disable-line max-params
+        renderer, attributeRedirects, indexProperty, vertexCountProperty, textureProperty, texturePerObject, textureAttribute, stateFunction, shaderFunction, packer = new GeometryPacker(attributeRedirects, indexProperty, vertexCountProperty, // auto-calculate
+        undefined, texturePerObject), BatchGeneratorClass = BatchGenerator) {
+            super(renderer);
+            this._attributeRedirects = attributeRedirects;
+            this._indexProperty = indexProperty;
+            this._vertexCountProperty = vertexCountProperty;
+            this._textureProperty = textureProperty;
+            this._texturePerObject = texturePerObject;
+            this._textureAttribute = textureAttribute;
+            this._stateFunction = stateFunction;
+            this._shaderFunction = shaderFunction;
+            this._BatchGeneratorClass = BatchGeneratorClass;
+            this._batchGenerator = null; // @see this#contextChange
+            // Although the runners property is not a public API, it is required to
+            // handle contextChange events.
+            this.renderer.runners.contextChange.add(this);
+            // If the WebGL context has already been created, initialization requires a
+            // syntheic call to contextChange.
+            if (this.renderer.gl) {
+                this.contextChange();
             }
-            _this._packer = packer;
-            _this._geom = BatchRenderer.generateCompositeGeometry(attributeRedirects, !!indexProperty, textureAttribute, texturePerObject);
-            _this._objectBuffer = [];
-            _this._bufferedVertices = 0;
-            _this._bufferedIndices = 0;
-            _this._shader = null;
-            _this._batchPool = []; // may contain garbage after _batchCount
-            _this._batchCount = 0;
-            return _this;
+            this._packer = packer;
+            this._geom = BatchRenderer.generateCompositeGeometry(attributeRedirects, !!indexProperty, textureAttribute, texturePerObject);
+            this._objectBuffer = [];
+            this._bufferedVertices = 0;
+            this._bufferedIndices = 0;
+            this._shader = null;
+            this._batchPool = []; // may contain garbage after _batchCount
+            this._batchCount = 0;
         }
-        BatchRenderer.prototype.contextChange = function () {
-            var gl = this.renderer.gl;
+        /**
+         * Internal method that is called whenever the renderer's WebGL context changes.
+         */
+        contextChange() {
+            const gl = this.renderer.gl;
             if (PIXI.settings.PREFER_ENV === PIXI.ENV.WEBGL_LEGACY) {
                 this.MAX_TEXTURES = 1;
             }
@@ -929,8 +837,15 @@ var __batch_renderer = (function (exports, PIXI) {
                 throw new Error('PIXI.brend.BatchRenderer does not support '
                     + 'batch generation without texture reduction enabled.');
             }
-        };
-        BatchRenderer.prototype.start = function () {
+        }
+        /**
+         * This is an internal method. It ensures that the batch renderer is ready
+         * to start buffering display-objects. This is automatically invoked by the
+         * renderer's batch system.
+         *
+         * @override
+         */
+        start() {
             this._objectBuffer.length = 0;
             this._bufferedVertices = 0;
             this._bufferedIndices = 0;
@@ -940,27 +855,44 @@ var __batch_renderer = (function (exports, PIXI) {
                     = BatchRenderer.generateTextureArray(this.MAX_TEXTURES);
             }
             this.renderer.shader.bind(this._shader, false);
-        };
-        BatchRenderer.prototype.render = function (targetObject) {
-            this._objectBuffer.push(targetObject);
-            this._bufferedVertices += this._vertexCountFor(targetObject);
+        }
+        /**
+         * Adds the display-object to be rendered in a batch.
+         *
+         * @param {PIXI.DisplayObject} displayObject
+         * @override
+         */
+        render(displayObject) {
+            this._objectBuffer.push(displayObject);
+            this._bufferedVertices += this._vertexCountFor(displayObject);
             if (this._indexProperty) {
-                this._bufferedIndices += resolveConstantOrProperty(targetObject, this._indexProperty).length;
+                this._bufferedIndices += resolveConstantOrProperty(displayObject, this._indexProperty).length;
             }
-        };
-        BatchRenderer.prototype.flush = function () {
-            var _a = this, batchGenerator = _a._batchGenerator, geom = _a._geom, packer = _a._packer, renderer = _a.renderer, stateFunction = _a._stateFunction, textureProperty = _a._textureProperty, texturePerObject = _a._texturePerObject;
-            var gl = renderer.gl;
-            var buffer = this._objectBuffer;
-            var bufferLength = buffer.length;
+        }
+        /**
+         * Forces buffered display-objects to be rendered immediately. This should not
+         * be called unless absolutely necessary like the following scenarios:
+         *
+         * * before directly rendering your display-object, to preserve render-order.
+         *
+         * * to do a nested render pass (calling `Renderer#render` inside a `render` method)
+         *   because the PixiJS renderer is not re-entrant.
+         *
+         * @override
+         */
+        flush() {
+            const { _batchGenerator: batchGenerator, _geom: geom, _packer: packer, renderer, _stateFunction: stateFunction, _textureProperty: textureProperty, _texturePerObject: texturePerObject, } = this;
+            const gl = renderer.gl;
+            const buffer = this._objectBuffer;
+            const bufferLength = buffer.length;
             this._batchCount = 0;
             packer.reset(this._bufferedVertices, this._bufferedIndices);
-            var batchStart = 0;
+            let batchStart = 0;
             // Generate batches/groups that will be drawn using just
             // one draw call.
-            for (var objectIndex = 0; objectIndex < bufferLength;) {
-                var target = buffer[objectIndex];
-                var wasPut = batchGenerator.put(target, resolveFunctionOrProperty(target, stateFunction));
+            for (let objectIndex = 0; objectIndex < bufferLength;) {
+                const target = buffer[objectIndex];
+                const wasPut = batchGenerator.put(target, resolveFunctionOrProperty(target, stateFunction));
                 if (!wasPut) {
                     batchGenerator.finalize(this._newBatch(batchStart));
                     batchStart = objectIndex;
@@ -975,20 +907,20 @@ var __batch_renderer = (function (exports, PIXI) {
             }
             // Pack each object into the composite geometry. This is done
             // after batching, so that texture-ids are generated.
-            var textureId = this._texturePerObject === 1
+            let textureId = this._texturePerObject === 1
                 ? 0
                 : new Array(texturePerObject);
-            for (var i = 0; i < this._batchCount; i++) // loop-per(batch)
+            for (let i = 0; i < this._batchCount; i++) // loop-per(batch)
              {
-                var batch = this._batchPool[i];
-                var batchBuffer = batch.batchBuffer;
-                var batchLength = batchBuffer.length;
-                var uidMap = batch.uidMap;
-                var vertexCount = 0; // eslint-disable-line
-                var indexCount = 0;
-                for (var j = 0; j < batchLength; j++) // loop-per(targetObject)
+                const batch = this._batchPool[i];
+                const batchBuffer = batch.batchBuffer;
+                const batchLength = batchBuffer.length;
+                const uidMap = batch.uidMap;
+                let vertexCount = 0; // eslint-disable-line
+                let indexCount = 0;
+                for (let j = 0; j < batchLength; j++) // loop-per(targetObject)
                  {
-                    var targetObject = batchBuffer[j];
+                    const targetObject = batchBuffer[j];
                     if (this._indexProperty) {
                         indexCount += resolveConstantOrProperty(targetObject, this._indexProperty).length;
                     }
@@ -998,8 +930,8 @@ var __batch_renderer = (function (exports, PIXI) {
                     // externally-defined properties for draw calls
                     batch.$vertexCount = vertexCount;
                     batch.$indexCount = indexCount;
-                    var tex = targetObject[textureProperty];
-                    var texUID = void 0;
+                    const tex = targetObject[textureProperty];
+                    let texUID;
                     if (texturePerObject === 1) {
                         texUID = tex.baseTexture
                             ? tex.baseTexture.uid
@@ -1007,8 +939,8 @@ var __batch_renderer = (function (exports, PIXI) {
                         textureId = uidMap[texUID];
                     }
                     else {
-                        var _tex = void 0;
-                        for (var k = 0; k < tex.length; k++) {
+                        let _tex;
+                        for (let k = 0; k < tex.length; k++) {
                             _tex = tex[k];
                             texUID = _tex.BaseTexture
                                 ? _tex.baseTexture.uid
@@ -1025,8 +957,8 @@ var __batch_renderer = (function (exports, PIXI) {
             renderer.geometry.bind(geom);
             renderer.geometry.updateBuffers();
             // Now draw each batch
-            for (var i = 0; i < this._batchCount; i++) {
-                var batch = this._batchPool[i];
+            for (let i = 0; i < this._batchCount; i++) {
+                const batch = this._batchPool[i];
                 batch.upload();
                 if (this._indexProperty) {
                     gl.drawElements(gl.TRIANGLES, batch.$indexCount, gl.UNSIGNED_SHORT, batch.geometryOffset * 2); // * 2 cause Uint16 indices
@@ -1036,45 +968,52 @@ var __batch_renderer = (function (exports, PIXI) {
                 }
                 batch.reset();
             }
-        };
-        BatchRenderer.prototype.stop = function () {
+        }
+        /**
+         * Internal method that stops buffering of display-objects and flushes any existing
+         * buffers.
+         *
+         * @override
+         */
+        stop() {
             if (this._bufferedVertices) {
                 this.flush();
             }
-        };
-        BatchRenderer.prototype._newBatch = function (batchStart) {
+        }
+        _newBatch(batchStart) {
             if (this._batchCount === this._batchPool.length) {
-                var batch_1 = new Batch(batchStart);
-                this._batchPool.push(batch_1);
+                const batch = new Batch(batchStart);
+                this._batchPool.push(batch);
                 ++this._batchCount;
-                return batch_1;
+                return batch;
             }
-            var batch = this._batchPool[this._batchCount++];
+            const batch = this._batchPool[this._batchCount++];
             batch.reset();
             batch.geometryOffset = batchStart;
             return batch;
-        };
-        BatchRenderer.prototype._vertexCountFor = function (targetObject) {
+        }
+        _vertexCountFor(targetObject) {
             return (this._vertexCountProperty)
                 ? resolveConstantOrProperty(targetObject, this._vertexCountProperty)
                 : resolveFunctionOrProperty(targetObject, this._attributeRedirects[0].source).length
                     / this._attributeRedirects[0].size;
-        };
+        }
         /**
-         * Generates a `PIXI.Geometry` that can be used for rendering
-         * multiple display objects at once.
+         * Constructs an interleaved geometry that can be used to upload a whole buffer
+         * of display-object primitives at once.
          *
+         * @private
          * @param {Array<PIXI.brend.AttributeRedirect>} attributeRedirects
          * @param {boolean} hasIndex - whether to include an index property
          * @param {string} textureAttribute - name of the texture-id attribute
          * @param {number} texturePerObject - no. of textures per object
          */
-        BatchRenderer.generateCompositeGeometry = function (attributeRedirects, hasIndex, textureAttribute, texturePerObject) {
-            var geom = new PIXI.Geometry();
-            var attributeBuffer = new PIXI.Buffer(null, false, false);
-            var indexBuffer = hasIndex ? new PIXI.Buffer(null, false, true) : null;
-            attributeRedirects.forEach(function (redirect) {
-                var glslIdentifer = redirect.glslIdentifer, glType = redirect.glType, glSize = redirect.glSize, normalize = redirect.normalize;
+        static generateCompositeGeometry(attributeRedirects, hasIndex, textureAttribute, texturePerObject) {
+            const geom = new PIXI.Geometry();
+            const attributeBuffer = new PIXI.Buffer(null, false, false);
+            const indexBuffer = hasIndex ? new PIXI.Buffer(null, false, true) : null;
+            attributeRedirects.forEach((redirect) => {
+                const { glslIdentifer, glType, glSize, normalize, } = redirect;
                 geom.addAttribute(glslIdentifer, attributeBuffer, glSize, normalize, glType);
             });
             if (textureAttribute && texturePerObject > 0) {
@@ -1087,28 +1026,31 @@ var __batch_renderer = (function (exports, PIXI) {
             // $buffer is attributeBuffer
             // getIndex() is ?indexBuffer
             return geom;
-        };
-        BatchRenderer.generateTextureArray = function (count) {
-            var array = new Int32Array(count);
-            for (var i = 0; i < count; i++) {
+        }
+        /**
+         * @private
+         * @param {number} count
+         */
+        static generateTextureArray(count) {
+            const array = new Int32Array(count);
+            for (let i = 0; i < count; i++) {
                 array[i] = i;
             }
             return array;
-        };
-        return BatchRenderer;
-    }(PIXI.ObjectRenderer));
+        }
+    }
 
     /**
-     * Generates a batch-renderer plugin.
+     * Factory class for creating a batch-renderer.
      *
      * @memberof PIXI.brend
-     * @hideconstructor
      * @class
      */
-    var BatchRendererPluginFactory = /** @class */ (function () {
-        function BatchRendererPluginFactory() {
-        }
+    class BatchRendererPluginFactory {
         /**
+         * Generates a fully customized `BatchRenderer` that aggregates primitives
+         * and textures. This is useful for non-uniform based display-objects.
+         *
          * @param {PIXI.brend.AttributeRedirect[]} attributeRedirects
          * @param {string | Array<number>} indexProperty
          * @param {string | number} vertexCountProperty
@@ -1120,19 +1062,16 @@ var __batch_renderer = (function (exports, PIXI) {
          * @param {PIXI.brend.GeometryPacker} [packer]
          * @param {Class} [BatchGeneratorClass]
          * @param {Class} [BatchRendererClass]
+         * @static
          */
-        BatchRendererPluginFactory.from = function (/* eslint-disable-line max-params */ attributeRedirects, indexProperty, vertexCountProperty, textureProperty, texturePerObject, textureAttribute, stateFunction, shaderFunction, packer, BatchGeneratorClass, BatchRendererClass) {
-            if (BatchRendererClass === void 0) { BatchRendererClass = BatchRenderer; }
-            return /** @class */ (function (_super) {
-                __extends(class_1, _super);
-                function class_1(renderer) {
-                    return _super.call(this, renderer, attributeRedirects, indexProperty, vertexCountProperty, textureProperty, texturePerObject, textureAttribute, stateFunction, shaderFunction, packer, BatchGeneratorClass) || this;
+        static from(/* eslint-disable-line max-params */ attributeRedirects, indexProperty, vertexCountProperty, textureProperty, texturePerObject, textureAttribute, stateFunction, shaderFunction, packer, BatchGeneratorClass, BatchRendererClass = BatchRenderer) {
+            return class extends BatchRendererClass {
+                constructor(renderer) {
+                    super(renderer, attributeRedirects, indexProperty, vertexCountProperty, textureProperty, texturePerObject, textureAttribute, stateFunction, shaderFunction, packer, BatchGeneratorClass);
                 }
-                return class_1;
-            }(BatchRendererClass));
-        };
-        return BatchRendererPluginFactory;
-    }());
+            };
+        }
+    }
 
     // JavaScript is stupid enough not to have a replaceAll
     // in String. This is a temporary solution and we should
@@ -1141,7 +1080,7 @@ var __batch_renderer = (function (exports, PIXI) {
         return target.replace(new RegExp(search, 'g'), replacement);
     }
     function injectTexturesPerBatch(batchRenderer) {
-        return "" + batchRenderer.MAX_TEXTURES;
+        return `${batchRenderer.MAX_TEXTURES}`;
     }
     /**
      * Exposes an easy-to-use API for generating a shader function
@@ -1159,7 +1098,7 @@ var __batch_renderer = (function (exports, PIXI) {
      * @memberof PIXI.brend
      * @class
      */
-    var ShaderGenerator = /** @class */ (function () {
+    class ShaderGenerator {
         /**
          * WARNING: Do not pass `uSamplers` in your uniforms. They
          *  will be added to your shader instance directly.
@@ -1171,12 +1110,9 @@ var __batch_renderer = (function (exports, PIXI) {
          * @param {boolean} [disableVertexShaderTemplate=true] - turn off (true)
          *      if you aren't using macros in the vertex shader
          */
-        function ShaderGenerator(vertexShaderTemplate, fragmentShaderTemplate, uniforms, templateInjectors, disableVertexShaderTemplate) {
-            if (uniforms === void 0) { uniforms = {}; }
-            if (templateInjectors === void 0) { templateInjectors = {
-                '%texturesPerBatch%': injectTexturesPerBatch,
-            }; }
-            if (disableVertexShaderTemplate === void 0) { disableVertexShaderTemplate = true; }
+        constructor(vertexShaderTemplate, fragmentShaderTemplate, uniforms = {}, templateInjectors = {
+            '%texturesPerBatch%': injectTexturesPerBatch,
+        }, disableVertexShaderTemplate = true) {
             if (!templateInjectors['%texturesPerBatch%']) {
                 templateInjectors['%texturesPerBatch%'] = injectTexturesPerBatch;
             }
@@ -1215,42 +1151,40 @@ var __batch_renderer = (function (exports, PIXI) {
         /**
          * @return shader function that can be given to the batch renderer
          */
-        ShaderGenerator.prototype.generateFunction = function () {
-            var _this = this;
-            return function (batchRenderer) {
-                var stringState = _this._generateInjectorBasedState(batchRenderer);
-                var cachedShader = _this._cache[stringState];
+        generateFunction() {
+            return (batchRenderer) => {
+                const stringState = this._generateInjectorBasedState(batchRenderer);
+                const cachedShader = this._cache[stringState];
                 if (cachedShader) {
                     return cachedShader;
                 }
-                return _this._generateShader(stringState);
+                return this._generateShader(stringState);
             };
-        };
-        ShaderGenerator.prototype._generateInjectorBasedState = function (batchRenderer) {
-            var state = '';
-            var cState = this._cState = {};
-            for (var injectorMacro in this._templateInjectors) {
-                var val = this._templateInjectors[injectorMacro](batchRenderer);
+        }
+        _generateInjectorBasedState(batchRenderer) {
+            let state = '';
+            const cState = this._cState = {};
+            for (const injectorMacro in this._templateInjectors) {
+                const val = this._templateInjectors[injectorMacro](batchRenderer);
                 state += val;
                 cState[injectorMacro] = val;
             }
             return state;
-        };
-        ShaderGenerator.prototype._generateShader = function (stringState) {
-            var vertexShaderTemplate = this._vertexShaderTemplate.slice(0);
-            var fragmentShaderTemplate = this._fragmentShaderTemplate.slice(0);
-            for (var injectorTemplate in this._cState) {
+        }
+        _generateShader(stringState) {
+            let vertexShaderTemplate = this._vertexShaderTemplate.slice(0);
+            let fragmentShaderTemplate = this._fragmentShaderTemplate.slice(0);
+            for (const injectorTemplate in this._cState) {
                 if (!this.disableVertexShaderTemplate) {
                     vertexShaderTemplate = _replaceAll(vertexShaderTemplate, injectorTemplate, this._cState[injectorTemplate]);
                 }
                 fragmentShaderTemplate = _replaceAll(fragmentShaderTemplate, injectorTemplate, this._cState[injectorTemplate]);
             }
-            var shader = PIXI.Shader.from(vertexShaderTemplate, fragmentShaderTemplate, this._uniforms);
+            const shader = PIXI.Shader.from(vertexShaderTemplate, fragmentShaderTemplate, this._uniforms);
             this._cache[stringState] = shader;
             return shader;
-        };
-        return ShaderGenerator;
-    }());
+        }
+    }
 
     /**
      * @namespace PIXI
@@ -1286,6 +1220,7 @@ var __batch_renderer = (function (exports, PIXI) {
      */
 
     exports.AttributeRedirect = AttributeRedirect;
+    exports.Batch = Batch;
     exports.BatchGenerator = BatchGenerator;
     exports.BatchRenderer = BatchRenderer;
     exports.BatchRendererPluginFactory = BatchRendererPluginFactory;

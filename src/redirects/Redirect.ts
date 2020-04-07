@@ -1,29 +1,35 @@
+import * as PIXI from 'pixi.js';
+
 /**
- * A redirect is used to transfer data from the display
- * object to the shader program.
+ * Redirects are used to aggregate the resources needed by the WebGL pipeline to render
+ * a display-object. This includes the base primitives (geometry), uniforms, and
+ * textures (which are handled as "special" uniforms).
  *
  * @memberof PIXI.brend
  * @class
+ * @abstract
+ * @see PIXI.brend.AttributeRedirect
  */
-export class Redirect
+export abstract class Redirect
 {
-    public source: string | Function;
+    public source: string | ((displayObject: PIXI.DisplayObject) => any);
     public glslIdentifer: string;
 
-    constructor(source: string | Function, glslIdentifer: string)
+    constructor(source: string | ((displayObject: PIXI.DisplayObject) => any), glslIdentifer: string)
     {
         /**
-         * Source property on a `PIXI.DisplayObject` that
-         * holds the data being transferred. This can also
-         * be a callback that returns the data.
+         * The property on the display-object that holds the resource.
+         *
+         * Instead of a property, you can provide a callback that generates the resource
+         * on invokation.
          *
          * @member {string | Function}
          */
         this.source = source;
 
         /**
-         * GLSL variable that will hold the data.
-         *
+         * The shader variable that references the resource, e.g. attribute or uniform
+         * name.
          * @member {string}
          */
         this.glslIdentifer = glslIdentifer;

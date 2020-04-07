@@ -4,15 +4,17 @@ import GeometryPacker from './GeometryPacker';
 import BatchGenerator from './BatchGenerator';
 
 /**
- * Generates a batch-renderer plugin.
+ * Factory class for creating a batch-renderer.
  *
  * @memberof PIXI.brend
- * @hideconstructor
  * @class
  */
 export class BatchRendererPluginFactory
 {
     /**
+     * Generates a fully customized `BatchRenderer` that aggregates primitives
+     * and textures. This is useful for non-uniform based display-objects.
+     *
      * @param {PIXI.brend.AttributeRedirect[]} attributeRedirects
      * @param {string | Array<number>} indexProperty
      * @param {string | number} vertexCountProperty
@@ -24,6 +26,7 @@ export class BatchRendererPluginFactory
      * @param {PIXI.brend.GeometryPacker} [packer]
      * @param {Class} [BatchGeneratorClass]
      * @param {Class} [BatchRendererClass]
+     * @static
      */
     static from(/* eslint-disable-line max-params */
         attributeRedirects: AttributeRedirect[],
@@ -41,7 +44,7 @@ export class BatchRendererPluginFactory
     {
         return class extends BatchRendererClass
         {
-            constructor(renderer)
+            constructor(renderer: PIXI.Renderer)
             {
                 super(renderer,
                     attributeRedirects,
