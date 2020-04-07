@@ -1,2 +1,5 @@
 node_modules
 example/node_modules
+docs
+/dist
+.DS_Store

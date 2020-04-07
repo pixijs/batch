@@ -38,44 +38,41 @@ const banner = [
     `this.PIXI.brend = this.PIXI.brend || {}`,
 ].join('\n');
 
-const input = 'src/index.js';
+const input = 'src/index.ts';
 const name = '__batch_renderer';
-const footer = `Object.assign(this.PIXI.brend, ${name}`;
+const footer = `Object.assign(this.PIXI.brend, ${name});`;
 
 export default [{
     plugins,
     external,
-    globals,
     input,
     output: [
         {
             banner,
             file: 'lib/pixi-batch-renderer.mjs',
             format: 'esm',
-            sourcemaps: true,
+            sourcemap: true,
             freeze: false,
-            globals,
         },
         {
             banner,
             file: 'lib/pixi-batch-renderer.cjs',
             format: 'cjs',
-            sourcemaps: true,
+            sourcemap: true,
             freeze: false,
-            globals,
         },
         {
             banner,
             file: 'dist/pixi-batch-renderer.js',
             format: 'iife',
-            sourcemaps: true,
+            sourcemap: true,
             freeze: false,
             globals,
             name,
             footer,
-            treeshake: false,
         },
     ],
+    treeshake: false,
 },
 {
     plugins: [...plugins, terser({
@@ -84,17 +81,16 @@ export default [{
         },
     })],
     external,
-    globals,
     input,
     output: {
         banner,
-        file: 'dist/pixi-batch-renderer.js',
+        file: 'dist/pixi-batch-renderer.min.js',
         format: 'iife',
-        sourcemaps: true,
+        sourcemap: true,
         freeze: false,
         globals,
         name,
         footer,
-        treeshake: false,
     },
+    treeshake: false,
 }];

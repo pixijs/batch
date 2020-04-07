@@ -3,21 +3,23 @@
         "allowUnknownTags": false
     },
     "source": {
-        "include": ["src"],
-        "includePattern": ".+\\.js(doc)?$"
+        "include": [
+            "lib/pixi-batch-renderer.mjs"
+        ],
+        "includePattern": ".+\\.mjs(doc)?$"
     },
     "plugins": [
         "plugins/markdown"
     ],
     "templates": {
-        "cleverLinks"   : false,
+        "cleverLinks": false,
         "monospaceLinks": false,
-        "default"       : {
-            "outputSourceFiles" : true
+        "default": {
+            "outputSourceFiles": true
         },
         "applicationName": "pixi-batch-renderer",
-        "footer"        : "Made with ♥ by Shukant Pal",
-        "copyright"     : "Copyright © 2019 Shukant Pal",
+        "footer": "Made with ♥ by Shukant Pal",
+        "copyright": "Copyright © 2019 Shukant Pal",
         "disqus": "",
         "openGraph": {
             "title": "",
@@ -31,17 +33,17 @@
             "description": "Documentation for pixi-batch-renderer library",
             "keyword": "docs, documentation, pixi, pixijs, renderer, html5, javascript, jsdoc"
         },
-        "linenums"      : true
+        "linenums": true
     },
-    "markdown"  : {
-        "parser"        : "gfm",
-        "hardwrap"      : false
+    "markdown": {
+        "parser": "gfm",
+        "hardwrap": false
     },
     "opts": {
-        "encoding"      : "utf8",
-        "recurse"       : true,
-        "lenient"       : true,
-        "destination"   : "./dist/docs",
-        "template"      : "./node_modules/@pixi/jsdoc-template"
+        "encoding": "utf8",
+        "recurse": true,
+        "lenient": true,
+        "destination": "./docs",
+        "template": "./node_modules/@pixi/jsdoc-template"
     }
 }
