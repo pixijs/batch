@@ -2,6 +2,7 @@ import { AttributeRedirect } from './redirects/AttributeRedirect';
 import * as PIXI from 'pixi.js';
 import Redirect from './redirects/Redirect';
 
+// Defaults
 const CompilerConstants = {
     INDICES_OFFSET: '__offset_indices_',
     FUNC_SOURCE_BUFFER: 'getSourceBuffer',
