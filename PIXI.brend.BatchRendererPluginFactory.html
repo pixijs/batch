@@ -404,7 +404,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="PIXI.brend.BatchRenderer.html">Class: BatchRenderer</h1>
+        <h1 class="page-title" data-filename="PIXI.brend.BatchRendererPluginFactory.html">Class: BatchRendererPluginFactory</h1>
         
 
 
@@ -413,7 +413,7 @@
     
 <header>
     <div class="header content-size">
-        <h2>BatchRenderer
+        <h2>BatchRendererPluginFactory
         </h2>
         
     </div>
@@ -421,97 +421,7 @@
 
 <article class="content-size">
     
-        <div class="container-overview">
-        
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="BatchRenderer">
-            <a class="share-icon" href="#BatchRenderer"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-                new PIXI.brend.BatchRenderer
-            </span>
-            <span class="signature">()</span>
-            
-            
-            
-            
-        </h4>
     
-        
-        <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line871">pixi-batch-renderer.mjs:871</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Core class that renders objects in batches. Clients should
-defer rendering to a <code>BatchRenderer</code> instance by registering
-it as a plugin.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-        </div>
-    
-    
-    
-        <h3 class="subsection-title">Extends</h3>
-        
-        <ul>
-            <li>PIXI.ObjectRenderer</li>
-        </ul>
     
     
     
@@ -533,12 +443,12 @@ it as a plugin.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id=".generateCompositeGeometry">
-            <a class="share-icon" href="#.generateCompositeGeometry"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id=".from">
+            <a class="share-icon" href="#.from"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                PIXI.brend.BatchRenderer.generateCompositeGeometry
+                PIXI.brend.BatchRendererPluginFactory.from
             </span>
-            <span class="signature">(attributeRedirects, hasIndex, textureAttribute, texturePerObject)</span>
+            <span class="signature">(attributeRedirects, indexProperty, vertexCountProperty, textureProperty, texturePerObject, textureAttribute, stateFunction, shaderFunction, <span class="optional">packer</span>, <span class="optional">BatchGeneratorClass</span>, <span class="optional">BatchRendererClass</span>)</span>
             
             <span class="access-signature">static</span>
             
@@ -547,7 +457,7 @@ it as a plugin.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1071">pixi-batch-renderer.mjs:1071</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1123">pixi-batch-renderer.mjs:1123</a>
         </div>
         
     </div>
@@ -556,11 +466,6 @@ it as a plugin.</p>
 </dt>
 <dd>
     
-    
-    <div class="description">
-        <p>Generates a <code>PIXI.Geometry</code> that can be used for rendering
-multiple display objects at once.</p>
-    </div>
     
 
     
@@ -606,6 +511,11 @@ multiple display objects at once.</p>
             
             <td class="description last">
                 
+                    
+                    
+                        
+                    
+                
                 </td>
         </tr>
 	
@@ -613,13 +523,16 @@ multiple display objects at once.</p>
 	
         <tr>
             
-                <td class="name"><code>hasIndex</code></td>
+                <td class="name"><code>indexProperty</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">string</span>
+|
+
+<span class="param-type">Array.&lt;number></span>
 
 
             
@@ -629,14 +542,50 @@ multiple display objects at once.</p>
             
             <td class="description last">
                 
-                <p>whether to include an index property</p></td>
+                    
+                    
+                        
+                    
+                
+                </td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>textureAttribute</code></td>
+                <td class="name"><code>vertexCountProperty</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>textureProperty</code></td>
             
             
             <td class="type">
@@ -652,7 +601,12 @@ multiple display objects at once.</p>
             
             <td class="description last">
                 
-                <p>name of the texture-id attribute</p></td>
+                    
+                    
+                        
+                    
+                
+                </td>
         </tr>
 	
 	
@@ -675,7 +629,186 @@ multiple display objects at once.</p>
             
             <td class="description last">
                 
-                <p>no. of textures per object</p></td>
+                    
+                    
+                        
+                    
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>textureAttribute</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>stateFunction</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>shaderFunction</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>packer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="PIXI.brend.GeometryPacker.html">PIXI.brend.GeometryPacker</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>BatchGeneratorClass</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Class</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>BatchRendererClass</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Class</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                </td>
         </tr>
 	
 	

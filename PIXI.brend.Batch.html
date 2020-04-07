@@ -404,7 +404,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="PIXI.brend.BatchRenderer.html">Class: BatchRenderer</h1>
+        <h1 class="page-title" data-filename="PIXI.brend.Batch.html">Class: Batch</h1>
         
 
 
@@ -413,7 +413,7 @@
     
 <header>
     <div class="header content-size">
-        <h2>BatchRenderer
+        <h2>Batch
         </h2>
         
     </div>
@@ -428,10 +428,10 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="BatchRenderer">
-            <a class="share-icon" href="#BatchRenderer"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="Batch">
+            <a class="share-icon" href="#Batch"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                new PIXI.brend.BatchRenderer
+                new PIXI.brend.Batch
             </span>
             <span class="signature">()</span>
             
@@ -442,7 +442,7 @@
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line871">pixi-batch-renderer.mjs:871</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line533">pixi-batch-renderer.mjs:533</a>
         </div>
         
     </div>
@@ -453,9 +453,8 @@
     
     
     <div class="description">
-        <p>Core class that renders objects in batches. Clients should
-defer rendering to a <code>BatchRenderer</code> instance by registering
-it as a plugin.</p>
+        <p>Resources that need to be uploaded to WebGL to render
+one batch.</p>
     </div>
     
 
@@ -507,12 +506,6 @@ it as a plugin.</p>
     
     
     
-        <h3 class="subsection-title">Extends</h3>
-        
-        <ul>
-            <li>PIXI.ObjectRenderer</li>
-        </ul>
-    
     
     
     
@@ -533,21 +526,21 @@ it as a plugin.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id=".generateCompositeGeometry">
-            <a class="share-icon" href="#.generateCompositeGeometry"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="reset">
+            <a class="share-icon" href="#reset"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                PIXI.brend.BatchRenderer.generateCompositeGeometry
+                reset
             </span>
-            <span class="signature">(attributeRedirects, hasIndex, textureAttribute, texturePerObject)</span>
+            <span class="signature">()</span>
             
-            <span class="access-signature">static</span>
+            
             
             
         </h4>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1071">pixi-batch-renderer.mjs:1071</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line576">pixi-batch-renderer.mjs:576</a>
         </div>
         
     </div>
@@ -558,8 +551,8 @@ it as a plugin.</p>
     
     
     <div class="description">
-        <p>Generates a <code>PIXI.Geometry</code> that can be used for rendering
-multiple display objects at once.</p>
+        <p>Resets all properties to <code>null</code> to free up references
+to resources.</p>
     </div>
     
 
@@ -568,119 +561,82 @@ multiple display objects at once.</p>
     
     
     
+    
+    
+<dl class="details">
+    
         
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>attributeRedirects</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;<a href="PIXI.brend.AttributeRedirect.html">PIXI.brend.AttributeRedirect</a>></span>
+    
+    
 
+    
 
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>hasIndex</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
+    
+    
+    
+    
+    
+    
+    
+</dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="upload">
+            <a class="share-icon" href="#upload"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                upload
+            </span>
+            <span class="signature">()</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line566">pixi-batch-renderer.mjs:566</a>
+        </div>
+        
+    </div>
 
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>whether to include an index property</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>textureAttribute</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Uploads the resources required before rendering this
+batch.</p>
+    </div>
+    
 
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>name of the texture-id attribute</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>texturePerObject</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>no. of textures per object</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
+    
+    
+    
+    
     
     
     

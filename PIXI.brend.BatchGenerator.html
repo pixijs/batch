@@ -404,7 +404,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="PIXI.brend.BatchRenderer.html">Class: BatchRenderer</h1>
+        <h1 class="page-title" data-filename="PIXI.brend.BatchGenerator.html">Class: BatchGenerator</h1>
         
 
 
@@ -413,7 +413,7 @@
     
 <header>
     <div class="header content-size">
-        <h2>BatchRenderer
+        <h2>BatchGenerator
         </h2>
         
     </div>
@@ -428,10 +428,10 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="BatchRenderer">
-            <a class="share-icon" href="#BatchRenderer"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="BatchGenerator">
+            <a class="share-icon" href="#BatchGenerator"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                new PIXI.brend.BatchRenderer
+                new PIXI.brend.BatchGenerator
             </span>
             <span class="signature">()</span>
             
@@ -442,7 +442,7 @@
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line871">pixi-batch-renderer.mjs:871</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line349">pixi-batch-renderer.mjs:349</a>
         </div>
         
     </div>
@@ -453,9 +453,15 @@
     
     
     <div class="description">
-        <p>Core class that renders objects in batches. Clients should
-defer rendering to a <code>BatchRenderer</code> instance by registering
-it as a plugin.</p>
+        <p>Used to generate discrete groups/batches of display-objects
+that can be drawn together. It also keeps a parallel buffer
+of textures.</p>
+<p>This class ensures that the WebGL states are equivalent and
+the texture count doesn't become greater than the no. of
+texture registers on the GPU. You can extend it and add
+constraints by overriding <code>onPut</code>.</p>
+<p>WARNING: <code>BatchRenderer</code> does not support geometry
+packing with texture reduction disabled.</p>
     </div>
     
 
@@ -507,12 +513,6 @@ it as a plugin.</p>
     
     
     
-        <h3 class="subsection-title">Extends</h3>
-        
-        <ul>
-            <li>PIXI.ObjectRenderer</li>
-        </ul>
-    
     
     
     
@@ -533,21 +533,21 @@ it as a plugin.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id=".generateCompositeGeometry">
-            <a class="share-icon" href="#.generateCompositeGeometry"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="finalize">
+            <a class="share-icon" href="#finalize"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                PIXI.brend.BatchRenderer.generateCompositeGeometry
+                finalize
             </span>
-            <span class="signature">(attributeRedirects, hasIndex, textureAttribute, texturePerObject)</span>
+            <span class="signature">(batch)</span>
             
-            <span class="access-signature">static</span>
+            
             
             
         </h4>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1071">pixi-batch-renderer.mjs:1071</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line443">pixi-batch-renderer.mjs:443</a>
         </div>
         
     </div>
@@ -558,8 +558,8 @@ it as a plugin.</p>
     
     
     <div class="description">
-        <p>Generates a <code>PIXI.Geometry</code> that can be used for rendering
-multiple display objects at once.</p>
+        <p>Finalize this batch by getting its data into a
+<code>Batch</code> object.</p>
     </div>
     
 
@@ -590,13 +590,13 @@ multiple display objects at once.</p>
 	
         <tr>
             
-                <td class="name"><code>attributeRedirects</code></td>
+                <td class="name"><code>batch</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;<a href="PIXI.brend.AttributeRedirect.html">PIXI.brend.AttributeRedirect</a>></span>
+<span class="param-type"><a href="PIXI.brend.Batch.html">PIXI.brend.Batch</a></span>
 
 
             
@@ -607,75 +607,6 @@ multiple display objects at once.</p>
             <td class="description last">
                 
                 </td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>hasIndex</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>whether to include an index property</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>textureAttribute</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>name of the texture-id attribute</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>texturePerObject</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>no. of textures per object</p></td>
         </tr>
 	
 	
@@ -715,6 +646,303 @@ multiple display objects at once.</p>
     
     
     
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onPut">
+            <a class="share-icon" href="#onPut"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                onPut
+            </span>
+            <span class="signature">(targetObject)</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line409">pixi-batch-renderer.mjs:409</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Overridable method that is called before an object
+is put into this batch. It should check compatibility
+with other objects, and return true/false accordingly.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>targetObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.DisplayObject</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>object being added</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="put">
+            <a class="share-icon" href="#put"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                put
+            </span>
+            <span class="signature">(targetObject, state)</span><span class="type-signature">boolean</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line420">pixi-batch-renderer.mjs:420</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Put an object into this batch.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>targetObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.DisplayObject</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>object to add</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.State</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>state required by that object</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        boolean
+                        
+                    
+            </td>
+            <td class="description last">whether the object was added to the
+batch. If it wasn't, you should finalize it.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
     
     
     

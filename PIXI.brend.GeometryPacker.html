@@ -404,7 +404,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="PIXI.brend.BatchRenderer.html">Class: BatchRenderer</h1>
+        <h1 class="page-title" data-filename="PIXI.brend.GeometryPacker.html">Class: GeometryPacker</h1>
         
 
 
@@ -413,7 +413,7 @@
     
 <header>
     <div class="header content-size">
-        <h2>BatchRenderer
+        <h2>GeometryPacker
         </h2>
         
     </div>
@@ -428,10 +428,10 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="BatchRenderer">
-            <a class="share-icon" href="#BatchRenderer"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="GeometryPacker">
+            <a class="share-icon" href="#GeometryPacker"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                new PIXI.brend.BatchRenderer
+                new PIXI.brend.GeometryPacker
             </span>
             <span class="signature">()</span>
             
@@ -442,7 +442,7 @@
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line871">pixi-batch-renderer.mjs:871</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line611">pixi-batch-renderer.mjs:611</a>
         </div>
         
     </div>
@@ -453,9 +453,13 @@
     
     
     <div class="description">
-        <p>Core class that renders objects in batches. Clients should
-defer rendering to a <code>BatchRenderer</code> instance by registering
-it as a plugin.</p>
+        <p>Packs the geometry of display-object batches into a
+composite attribute and index buffer.</p>
+<p>It works by generating an optimized packer function,
+which can add objects to the composite geometry. This
+geometry is interleaved and is in accordance with
+what <a href="PIXI.brend.BatchRenderer.html#.generateCompositeGeometry">PIXI.brend.BatchRenderer.generateCompositeGeometry</a>
+would return.</p>
     </div>
     
 
@@ -507,12 +511,6 @@ it as a plugin.</p>
     
     
     
-        <h3 class="subsection-title">Extends</h3>
-        
-        <ul>
-            <li>PIXI.ObjectRenderer</li>
-        </ul>
-    
     
     
     
@@ -533,21 +531,21 @@ it as a plugin.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id=".generateCompositeGeometry">
-            <a class="share-icon" href="#.generateCompositeGeometry"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="pack">
+            <a class="share-icon" href="#pack"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                PIXI.brend.BatchRenderer.generateCompositeGeometry
+                pack
             </span>
-            <span class="signature">(attributeRedirects, hasIndex, textureAttribute, texturePerObject)</span>
+            <span class="signature">(targetObject, textureId)</span>
             
-            <span class="access-signature">static</span>
+            
             
             
         </h4>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1071">pixi-batch-renderer.mjs:1071</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line712">pixi-batch-renderer.mjs:712</a>
         </div>
         
     </div>
@@ -556,11 +554,6 @@ it as a plugin.</p>
 </dt>
 <dd>
     
-    
-    <div class="description">
-        <p>Generates a <code>PIXI.Geometry</code> that can be used for rendering
-multiple display objects at once.</p>
-    </div>
     
 
     
@@ -590,13 +583,13 @@ multiple display objects at once.</p>
 	
         <tr>
             
-                <td class="name"><code>attributeRedirects</code></td>
+                <td class="name"><code>targetObject</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;<a href="PIXI.brend.AttributeRedirect.html">PIXI.brend.AttributeRedirect</a>></span>
+<span class="param-type">PIXI.DisplayObject</span>
 
 
             
@@ -613,53 +606,7 @@ multiple display objects at once.</p>
 	
         <tr>
             
-                <td class="name"><code>hasIndex</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>whether to include an index property</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>textureAttribute</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>name of the texture-id attribute</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>texturePerObject</code></td>
+                <td class="name"><code>textureId</code></td>
             
             
             <td class="type">
@@ -675,7 +622,147 @@ multiple display objects at once.</p>
             
             <td class="description last">
                 
-                <p>no. of textures per object</p></td>
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="reset">
+            <a class="share-icon" href="#reset"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                reset
+            </span>
+            <span class="signature">(batchVertexCount, batchIndexCount)</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line699">pixi-batch-renderer.mjs:699</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>batchVertexCount</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>batchIndexCount</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
         </tr>
 	
 	
