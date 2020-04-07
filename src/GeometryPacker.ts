@@ -28,6 +28,7 @@ const CompilerConstants = {
  * would return.
  *
  * @memberof PIXI.brend
+ * @class
  */
 export class GeometryPacker
 {

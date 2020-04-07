@@ -3,13 +3,14 @@
  * object to the shader program.
  *
  * @memberof PIXI.brend
+ * @class
  */
 export class Redirect
 {
     public source: string | Function;
     public glslIdentifer: string;
 
-    constructor(source, glslIdentifer)
+    constructor(source: string | Function, glslIdentifer: string)
     {
         /**
          * Source property on a `PIXI.DisplayObject` that

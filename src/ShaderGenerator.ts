@@ -28,6 +28,7 @@ function injectTexturesPerBatch(batchRenderer: BatchRenderer): string
  * uniform.
  *
  * @memberof PIXI.brend
+ * @class
  */
 class ShaderGenerator
 {

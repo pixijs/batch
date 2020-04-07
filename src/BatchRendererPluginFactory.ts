@@ -8,6 +8,7 @@ import BatchGenerator from './BatchGenerator';
  *
  * @memberof PIXI.brend
  * @hideconstructor
+ * @class
  */
 export class BatchRendererPluginFactory
 {
@@ -31,8 +32,8 @@ export class BatchRendererPluginFactory
         textureProperty: string,
         texturePerObject: number,
         textureAttribute: string,
-        stateFunction: Function,
-        shaderFunction: Function,
+        stateFunction: (brend: BatchRenderer) => any,
+        shaderFunction: (brend: BatchRenderer) => any,
         packer: GeometryPacker,
         BatchGeneratorClass: typeof BatchGenerator,
         BatchRendererClass = BatchRenderer,

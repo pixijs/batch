@@ -1,6 +1,6 @@
 /*!
  * pixi-batch-renderer
- * Compiled Tue, 07 Apr 2020 17:40:54 UTC
+ * Compiled Tue, 07 Apr 2020 17:54:42 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -229,6 +229,7 @@ var __batch_renderer = (function (exports, PIXI) {
      * object to the shader program.
      *
      * @memberof PIXI.brend
+     * @class
      */
     var Redirect = /** @class */ (function () {
         function Redirect(source, glslIdentifer) {
@@ -343,7 +344,8 @@ var __batch_renderer = (function (exports, PIXI) {
      * WARNING: `BatchRenderer` does not support geometry
      *              packing with texture reduction disabled.
      *
-     * @memberOf PIXI.brend
+     * @memberof PIXI.brend
+     * @class
      */
     var BatchGenerator = /** @class */ (function () {
         /**
@@ -527,7 +529,7 @@ var __batch_renderer = (function (exports, PIXI) {
      * one batch.
      *
      * @memberof PIXI.brend
-     * @protected
+     * @class
      */
     var Batch = /** @class */ (function () {
         function Batch(geometryOffset) {
@@ -605,6 +607,7 @@ var __batch_renderer = (function (exports, PIXI) {
      * would return.
      *
      * @memberof PIXI.brend
+     * @class
      */
     var GeometryPacker = /** @class */ (function () {
         /**
@@ -1100,6 +1103,7 @@ var __batch_renderer = (function (exports, PIXI) {
      *
      * @memberof PIXI.brend
      * @hideconstructor
+     * @class
      */
     var BatchRendererPluginFactory = /** @class */ (function () {
         function BatchRendererPluginFactory() {
@@ -1153,6 +1157,7 @@ var __batch_renderer = (function (exports, PIXI) {
      * uniform.
      *
      * @memberof PIXI.brend
+     * @class
      */
     var ShaderGenerator = /** @class */ (function () {
         /**

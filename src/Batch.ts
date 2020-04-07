@@ -5,7 +5,7 @@ import * as PIXI from 'pixi.js';
  * one batch.
  *
  * @memberof PIXI.brend
- * @protected
+ * @class
  */
 export class Batch
 {

@@ -13,7 +13,8 @@ import { Batch } from './Batch';
  * WARNING: `BatchRenderer` does not support geometry
  *              packing with texture reduction disabled.
  *
- * @memberOf PIXI.brend
+ * @memberof PIXI.brend
+ * @class
  */
 class BatchGenerator
 {
