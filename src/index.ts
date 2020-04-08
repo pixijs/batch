@@ -1,40 +1,34 @@
-/**
- * @namespace PIXI
- */
-/**
- * @namespace brend
- * @memberof PIXI
- */
-
 export { AttributeRedirect } from './redirects/AttributeRedirect';
 export { BatchGenerator } from './BatchGenerator';
 export { BatchRenderer } from './BatchRenderer';
 export { BatchRendererPluginFactory } from './BatchRendererPluginFactory';
-export { GeometryPacker } from './GeometryPacker';
+export { BatchGeometryFactory as GeometryPacker } from './BatchGeometryFactory';
 export { Redirect } from './redirects/Redirect';
 export { ShaderGenerator } from './ShaderGenerator';
 export { Batch } from './Batch';
 
 /**
- * This function type is used by `GeometryPacker#packerFunction`.
+ * @memberof PIXI
+ * @namespace brend
+ * @example
+ * // ES6 import
+ * import * as brend from 'pixi-batch-renderer';
+ * const { BatchRendererPluginFactory } = brend;
+ * @example
+ * // CommonJS require
+ * const brend = require('pixi-batch-renderer');
+ * const BatchRendererPluginFactory = brend.BatchRendererPluginFactory;
+ */
+
+/**
+ * Used by `PIXI.brend.BatchGeometryFactory` to merge the geometry of a
+ * display-object into the whole batch's geometry.
  *
- * It should add to this._aIndex and this._iIndex the number
- * of vertices and indices appended.
- *
- * @function
- * @name PackerFunction
- * @memberof PIXI.brend
- *
- * @param {PIXI.DisplayObject} targetObject - object to pack
- * @param {PIXI.ViewableBuffer} compositeAttributes
- * @param {Uint16Array} compositeIndices
- * @param {number} aIndex - Offset in the composite attribute buffer
- *      in bytes at which the object's geometry should be inserted.
- * @param {number} iIndex - Number of vertices already packed in the
- *      composite index buffer.
- * @param {Array<PIXI.brend.AttributeRedirect>} attributeRedirects
- * @return {void}
- * @see PIXI.brend.GeometryPacker#packerFunction
+ * @memberof PIXI.brend#
+ * @function IGeometryMerger
+ * @param {PIXI.DisplayObject} displayObject
+ * @param {PIXI.brend.BatchGeometryFactory} factory
+ * @see PIXI.brend.BatchGeometryFactory#geometryMerger
  */
 
 /**

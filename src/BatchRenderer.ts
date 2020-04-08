@@ -1,6 +1,6 @@
 import { Batch } from './Batch';
 import { BatchGenerator } from './BatchGenerator';
-import { GeometryPacker } from './GeometryPacker';
+import { BatchGeometryFactory } from './BatchGeometryFactory';
 import * as PIXI from 'pixi.js';
 import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve';
 import { AttributeRedirect } from './redirects/AttributeRedirect';
@@ -44,6 +44,13 @@ import { AttributeRedirect } from './redirects/AttributeRedirect';
  * This renderer currently does not support customized uniforms for display-objects. This is a
  * work-in-progress feature.
  *
+ * ## Learn more
+ * This batch renderer uses the PixiJS object-renderer API to hook itself:
+ *
+ * 1. [PIXI.ObjectRenderer]{@link http://pixijs.download/release/docs/PIXI.ObjectRenderer.html}
+ *
+ * 2. [PIXI.AbstractBatchRenderer]{@link http://pixijs.download/release/docs/PIXI.AbstractBatchRenderer.html}
+ *
  * @memberof PIXI.brend
  * @class
  * @extends PIXI.ObjectRenderer
@@ -60,6 +67,7 @@ import { AttributeRedirect } from './redirects/AttributeRedirect';
  *     _render(renderer: PIXI.Renderer): void
  *     {
  *          // BatchRenderer will handle the whole rendering process for you!
+ *          renderer.batch.setObjectRenderer(renderer.plugins['ExampleBatchRenderer']);
  *          renderer.plugins['ExampleBatchRenderer'].render(this);
  *     }
  * }
@@ -78,7 +86,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     _BatchGeneratorClass: typeof BatchGenerator;
     _batchGenerator: BatchGenerator;
 
-    _packer: GeometryPacker;
+    _geometryFactory: BatchGeometryFactory;
     _geom: PIXI.Geometry;
 
     _objectBuffer: PIXI.DisplayObject[];
@@ -122,7 +130,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         textureAttribute: string,
         stateFunction: (renderer: BatchRenderer) => PIXI.State,
         shaderFunction: (renderer: BatchRenderer) => PIXI.Shader,
-        packer = new GeometryPacker(
+        packer = new BatchGeometryFactory(
             attributeRedirects,
             indexProperty,
             vertexCountProperty, // auto-calculate
@@ -157,7 +165,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
             this.contextChange();
         }
 
-        this._packer = packer;
+        this._geometryFactory = packer;
 
         this._geom = BatchRenderer.generateCompositeGeometry(
             attributeRedirects,
@@ -262,7 +270,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         const {
             _batchGenerator: batchGenerator,
             _geom: geom,
-            _packer: packer,
+            _geometryFactory: geometryFactory,
             renderer,
             _stateFunction: stateFunction,
             _textureProperty: textureProperty,
@@ -274,12 +282,11 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         const bufferLength = buffer.length;
 
         this._batchCount = 0;
-        packer.reset(this._bufferedVertices, this._bufferedIndices);
+        geometryFactory.init(this._bufferedVertices, this._bufferedIndices);
 
         let batchStart = 0;
 
-        // Generate batches/groups that will be drawn using just
-        // one draw call.
+        // Loop through display-objects and create batches
         for (let objectIndex = 0; objectIndex < bufferLength;)
         {
             const target = buffer[objectIndex];
@@ -366,13 +373,13 @@ export class BatchRenderer extends PIXI.ObjectRenderer
                     }
                 }
 
-                packer.pack(targetObject, textureId);
+                geometryFactory.append(targetObject, textureId);
             }
         }
 
         // Upload the geometry
-        geom.$buffer.update(packer.compositeAttributes.float32View);
-        geom.getIndex().update(packer.compositeIndices);
+        geom.$buffer.update(geometryFactory.compositeAttributes.float32View);
+        geom.getIndex().update(geometryFactory.compositeIndices);
         renderer.geometry.bind(geom);
         renderer.geometry.updateBuffers();
 

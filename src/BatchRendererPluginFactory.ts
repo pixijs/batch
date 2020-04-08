@@ -1,6 +1,6 @@
 import { BatchRenderer } from './BatchRenderer';
 import { AttributeRedirect } from './redirects/AttributeRedirect';
-import GeometryPacker from './GeometryPacker';
+import BatchGeometryFactory from './BatchGeometryFactory';
 import BatchGenerator from './BatchGenerator';
 
 /**
@@ -37,7 +37,7 @@ export class BatchRendererPluginFactory
         textureAttribute: string,
         stateFunction: (brend: BatchRenderer) => any,
         shaderFunction: (brend: BatchRenderer) => any,
-        packer: GeometryPacker,
+        packer: BatchGeometryFactory,
         BatchGeneratorClass: typeof BatchGenerator,
         BatchRendererClass = BatchRenderer,
     ): typeof BatchRenderer

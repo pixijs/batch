@@ -1,2 +1,12 @@
 node_modules
-examples
+example
+docs
+src
+
+# Build Tools
+.eslintrc.json
+.eslintignore
+.jsdoc.conf.json
+rollup.config.js
+tsconfig.json
+README.md

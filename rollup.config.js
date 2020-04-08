@@ -34,6 +34,10 @@ const banner = [
     ` * pixi-batch-renderer is licensed under the MIT License.`,
     ` * http://www.opensource.org/licenses/mit-license`,
     ` */`,
+].join('\n');
+
+const iifeBanner = [
+    banner,
     `this.PIXI = this.PIXI || {}`,
     `this.PIXI.brend = this.PIXI.brend || {}`,
 ].join('\n');
@@ -62,7 +66,7 @@ export default [{
             freeze: false,
         },
         {
-            banner,
+            banner: iifeBanner,
             file: 'dist/pixi-batch-renderer.js',
             format: 'iife',
             sourcemap: true,
@@ -83,7 +87,7 @@ export default [{
     external,
     input,
     output: {
-        banner,
+        banner: iifeBanner,
         file: 'dist/pixi-batch-renderer.min.js',
         format: 'iife',
         sourcemap: true,
