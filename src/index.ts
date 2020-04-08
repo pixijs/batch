@@ -1,5 +1,5 @@
 export { AttributeRedirect } from './redirects/AttributeRedirect';
-export { BatchGenerator } from './BatchGenerator';
+export { BatchFactory as BatchGenerator } from './BatchGenerator';
 export { BatchRenderer } from './BatchRenderer';
 export { BatchRendererPluginFactory } from './BatchRendererPluginFactory';
 export { BatchGeometryFactory as GeometryPacker } from './BatchGeometryFactory';

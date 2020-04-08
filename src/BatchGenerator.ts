@@ -16,7 +16,7 @@ import { Batch } from './Batch';
  * @memberof PIXI.brend
  * @class
  */
-class BatchGenerator
+export class BatchFactory
 {
     public readonly enableTextureReduction: boolean;
 
@@ -275,6 +275,4 @@ class BatchGenerator
     }
 }
 
-export { BatchGenerator };
-
-export default BatchGenerator;
+export default BatchFactory;

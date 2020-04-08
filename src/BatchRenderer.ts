@@ -1,5 +1,5 @@
 import { Batch } from './Batch';
-import { BatchGenerator } from './BatchGenerator';
+import { BatchFactory } from './BatchGenerator';
 import { BatchGeometryFactory } from './BatchGeometryFactory';
 import * as PIXI from 'pixi.js';
 import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve';
@@ -83,8 +83,8 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     _stateFunction: Function;
     _shaderFunction: Function;
 
-    _BatchGeneratorClass: typeof BatchGenerator;
-    _batchGenerator: BatchGenerator;
+    _BatchGeneratorClass: typeof BatchFactory;
+    _batchGenerator: BatchFactory;
 
     _geometryFactory: BatchGeometryFactory;
     _geom: PIXI.Geometry;
@@ -137,7 +137,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
             undefined,
             texturePerObject,
         ),
-        BatchGeneratorClass = BatchGenerator,
+        BatchGeneratorClass = BatchFactory,
     )
     {
         super(renderer);

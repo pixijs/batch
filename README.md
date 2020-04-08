@@ -35,9 +35,12 @@ For most use cases, `PIXI.brend.BatchRendererPluginFactory` is all you'll need f
 An example implementation would look like:
 
 ```
-// BatchedView has two attributes: aVertex and aTextureCoord. They come from the
+import * as PIXI from 'pixi.js';
+import { AttributeRedirect, BatchRendererPluginFactory, ShaderGenerator } from 'pixi-batch-renderer';
+
+// ExampleFigure has two attributes: aVertex and aTextureCoord. They come from the
 // vertices and uvs properties in this object. The indices are in the indices property.
-class BatchedView extends PIXI.Container
+class ExampleFigure extends PIXI.Container
 {
   _render(renderer)
   {
@@ -47,69 +50,84 @@ class BatchedView extends PIXI.Container
 
     this.indices = [0, 1, 2, ..., n];// we could also tell our batch renderer to not use indices too :)
 
-    renderer.plugins["bvbr"].render(this);
-    // NOTE: bvbr is the plugin we register at the bottom
+    renderer.setObjectRenderer(renderer.plugins["ExampleRenderer"]);
+    renderer.plugins["ExampleRenderer"].render(this);
   }
 }
 
-import { AttributeRedirect, BatchRendererPluginFactory, ShaderGenerator } from 'pixi-batch-renderer';
+// Define the geometry of ExampleFigure.
+const attribSet = [
+  new AttributeRedirect({
+      source: "vertices", 
+      attrib: "aVertex", 
+      type: 'float32', 
+      size: 2, 
+      glType: PIXI.TYPES.FLOAT, 
+      glSize: 2
+  }),
+  new AttributeRedirect({
+      source: "uvs", 
+      attrib: "aTextureCoord", 
+      type: 'float32', 
+      size: 2, 
+      glType: PIXI.TYPES.FLOAT, 
+      size: 2
+  }),
+];
 
-const BatchedViewBatchRenderer = BatchRendererPluginFactory.from(
-  [// 1. Attribute redirects
-    new AttributeRedirect("vertices", "aVertex", 'float32', 2, PIXI.TYPES.FLOAT, 2, false),
-    new AttributeRedirect("uvs", "aTextureCoord", 'float32', 2, PIXI.TYPES.FLOAT, 2, false),
-  ],
-  // 2. indexProperty
-  "indices",
-  // 3. vertexCountProperty
-  undefined, // auto-calculates
-  // 4. textureProperty
-  "texture",
-  // 5. texturePerObject
-  1,
-  // 6. textureAttribute
-  "aTextureId", // this will be used to locate the texture in the fragment shader later
-  // 7. stateFunction,
-  () => PIXI.State.for2D(), // default state please!
-  // 8. shaderFunction
-  new ShaderGenerator(// 1. vertexShader
-    ` attribute vec2 aVertex;
-      attribute vec2 aTextureCoord;
-      attribute float aTextureId;
+// Create a shader function from a shader template!
+const shaderFunction = new ShaderGenerator(
+// Vertex Shader
+`
+attribute vec2 aVertex;
+attribute vec2 aTextureCoord;
+attribute float aTextureId;
 
-      varying float vTextureId;
-      varying vec2 vTextureCoord;
+varying float vTextureId;
+varying vec2 vTextureCoord;
 
-      main() {
-        gl_Position = vec4(aVertex.xy, 0, 0);
-        vTextureId = aTextureId;
-        vTextureCoord = aTextureCoord;
-      }
-    `,
-    `
-      uniform uSamplers[%texturesPerBatch%];/* %texturesPerBatch% is a macro and will become a number */\
-      varying float vTextureId;
-      varying vec2 vTextureCoord;
+uniform mat3 projectionMatrix;
 
-      void main(void){
-        vec4 color;
+void main()
+{
+    gl_Position = vec4((projectionMatrix * vec3(aVertex.xy, 1), 0, 1);
+    vTextureId = aTextureId;
+    vTextureCoord = aTextureCoord;
+}
+`,
 
-        /* get color, which is the pixel in texture uSamplers[vTextureId] @ vTextureCoord */
-        for (int k = 0; k < %texturesPerBatch%; ++k)
-          if (int(vTextureId) == k)
+// Fragment Shader
+`
+uniform uSamplers[%texturesPerBatch%];/* %texturesPerBatch% is a macro and will become a number */\
+varying float vTextureId;
+varying vec2 vTextureCoord;
+
+void main(void){
+    vec4 color;
+
+    /* get color, which is the pixel in texture uSamplers[vTextureId] @ vTextureCoord */
+    for (int k = 0; k < %texturesPerBatch%; ++k)
+    {
+        if (int(vTextureId) == k)
             color = texture2D(uSamplers[k], vTextureCoord);
 
-        gl_FragColor = color;
-      }
-     `,
-     {// we don't use any uniforms except uSamplers, which is handled by default!
-     },
-     // no custom template injectors
-     // disable vertex shader macros by default
-    ).generateFunction();
+    }
+
+    gl_FragColor = color;
 }
-);
+`,
+{}).generateFunction();
+
+// Create batch renderer class
+const ExampleRenderer = BatchRendererPluginFactory.from({
+    attribSet,
+    indexCountProperty: "indices",
+    textureProperty: "texture",
+    texturePerObject: 1,
+    inBatchIdAttrib: "aTextureId", // this will be used to locate the texture in the fragment shader later
+    shaderFunction
+});
 
 // Remember to do this before instantiating a PIXI.Application or PIXI.Renderer!
-PIXI.Renderer.registerPlugin("bvbr" /* this could be any name for your plugin */, BatchedViewBatchRenderer);
+PIXI.Renderer.registerPlugin("ExampleRenderer", ExampleRenderer);
 ```
