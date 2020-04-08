@@ -8,6 +8,83 @@ import BatchGenerator from './BatchGenerator';
  *
  * @memberof PIXI.brend
  * @class
+ * @example
+ *  const attribSet = [
+ *      new AttributeRedirect({
+ *          source: 'vertexData',
+ *          attrib: 'aVertex',
+ *          type: 'float32',
+ *          size: 2,
+ *          glType: PIXI.TYPES.FLOAT,
+ *          glSize: 2,
+ *       }),
+ *      new AttributeRedirect({
+ *          source: 'uvs',
+ *          attrib: 'aTextureCoord',
+ *          type: 'float32',
+ *          size: 2,
+ *          glType: PIXI.TYPES.FLOAT,
+ *          glSize: 2,
+ *      }),
+ *  ];
+ *  const SpriteBatchRenderer = BatchRendererPluginFactory.from(
+ *      attribSet,
+ *      // 2. indexProperty
+ *      'indices',
+ *      // 3. vertexCountProperty
+ *      undefined, // auto-calculates
+ *      // 4. textureProperty
+ *      'texture',
+ *      // 5. texturePerObject
+ *      1,
+ *      // 6. textureAttribute
+ *      'aTextureId', // this will be used to locate the texture in the fragment shader later
+ *      // 7. stateFunction,
+ *      () => PIXI.State.for2d(), // default state please!
+ *      // 8. shaderFunction
+ *      new ShaderGenerator(// 1. vertexShader
+ *          ` attribute vec2 aVertex;
+ *          attribute vec2 aTextureCoord;
+ *          attribute float aTextureId;
+ *
+ *          varying float vTextureId;
+ *          varying vec2 vTextureCoord;
+ *
+ *          uniform mat3 projectionMatrix;
+ *
+ *          void main() {
+ *              gl_Position = vec4((projectionMatrix * vec3(aVertex, 1)).xy, 0, 1);
+ *              vTextureId = aTextureId;
+ *              vTextureCoord = aTextureCoord;
+ *          }
+ *     `,
+ *     `
+ *          uniform sampler2D uSamplers[%texturesPerBatch%];
+ *          varying float vTextureId;
+ *          varying vec2 vTextureCoord;
+ *
+ *          void main(void){
+ *              vec4 color;
+ *
+ *              // get color, which is the pixel in texture uSamplers[vTextureId] @ vTextureCoord
+ *              for (int k = 0; k < %texturesPerBatch%; ++k) {
+ *                  if (int(vTextureId) == k) {
+ *                      color = texture2D(uSamplers[k], vTextureCoord);
+ *                      break;
+ *              }
+ *           }
+ *
+ *           gl_FragColor = color;
+ *      }
+ *      `,
+ *      {// we don't use any uniforms except uSamplers, which is handled by default!
+ *      },
+ *      // no custom template injectors
+ *      // disable vertex shader macros by default
+ *      ).generateFunction()
+ *  );
+ *
+ *  PIXI.Renderer.registerPlugin('customBatch', SpriteBatchRenderer);
  */
 export class BatchRendererPluginFactory
 {

@@ -1,6 +1,6 @@
 /*!
  * pixi-batch-renderer
- * Compiled Wed, 08 Apr 2020 16:29:41 UTC
+ * Compiled Wed, 08 Apr 2020 18:16:54 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -77,8 +77,8 @@ var __batch_renderer = (function (exports, PIXI) {
          * @param {number} glSize - number of elements to be uploaded as (size of source and upload must match)
          * @param {boolean}[normalize=false] - whether to normalize the data before uploading
          */
-        constructor(source, glslIdentifer, type = 'float32', size = 0, glType = PIXI.TYPES.FLOAT, glSize, normalize = false) {
-            super(source, glslIdentifer);
+        constructor(options) {
+            super(options.source, options.attrib);
             /**
              * The type of data stored in the source buffer. This can be any of: `int8`, `uint8`,
              * `int16`, `uint16`, `int32`, `uint32`, or (by default) `float32`.
@@ -87,7 +87,7 @@ var __batch_renderer = (function (exports, PIXI) {
              * @see [PIXI.ViewableBuffer#view]{@link https://pixijs.download/dev/docs/PIXI.ViewableBuffer.html}
              * @default 'float32'
              */
-            this.type = type;
+            this.type = options.type;
             /**
              * Number of elements to extract out of `source` with
              * the given view type, for one vertex.
@@ -97,13 +97,13 @@ var __batch_renderer = (function (exports, PIXI) {
              *
              * @member {number | '%notarray%'}
              */
-            this.size = size;
+            this.size = options.size;
             /**
              * This is equal to `size` or 1 if size is `%notarray%`.
              *
              * @member {number}
              */
-            this.properSize = (size === '%notarray%') ? 1 : size;
+            this.properSize = (options.size === '%notarray%') ? 1 : options.size;
             /**
              * Type of attribute, when uploading.
              *
@@ -116,7 +116,7 @@ var __batch_renderer = (function (exports, PIXI) {
              *
              * @member {PIXI.TYPES}
              */
-            this.glType = glType;
+            this.glType = options.glType;
             /**
              * Size of attribute in terms of `glType`.
              *
@@ -124,14 +124,14 @@ var __batch_renderer = (function (exports, PIXI) {
              *
              * @readonly
              */
-            this.glSize = glSize;
+            this.glSize = options.glSize;
             /**
              * Whether to normalize the attribute values.
              *
              * @member {boolean}
              * @readonly
              */
-            this.normalize = normalize;
+            this.normalize = !!options.normalize;
         }
         static vertexSizeFor(attributeRedirects) {
             return attributeRedirects.reduce((acc, redirect) => (PIXI.ViewableBuffer.sizeOf(redirect.type)
@@ -670,8 +670,8 @@ var __batch_renderer = (function (exports, PIXI) {
             packerBody += `
             const compositeAttributes = factory._targetCompositeAttributeBuffer;
             const compositeIndices = factory._targetCompositeIndexBuffer;
-            const aIndex = factory._aIndex;
-            const iIndex = factory._iIndex;
+            let aIndex = factory._aIndex;
+            let iIndex = factory._iIndex;
             const textureId = factory.textureId;
             const attributeRedirects = factory.attributeRedirects;
 
@@ -1080,7 +1080,7 @@ var __batch_renderer = (function (exports, PIXI) {
             // Now draw each batch
             for (let i = 0; i < this._batchCount; i++) {
                 const batch = this._batchPool[i];
-                batch.upload();
+                batch.upload(renderer);
                 if (this._indexProperty) {
                     gl.drawElements(gl.TRIANGLES, batch.$indexCount, gl.UNSIGNED_SHORT, batch.geometryOffset * 2); // * 2 cause Uint16 indices
                 }

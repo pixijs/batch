@@ -1,6 +1,17 @@
 import * as PIXI from 'pixi.js';
 import { Redirect } from './Redirect';
 
+interface IAttributeRedirectOptions
+{
+    source: string | ((db: PIXI.DisplayObject) => any);
+    attrib: string;
+    type: string;
+    size: number | '%notarray%';
+    glType: number;
+    glSize: number;
+    normalize?: boolean;
+}
+
 /**
  * This redirect defines an attribute of a display-object's geometry. The attribute
  * data is expected to be stored in a `PIXI.ViewableBuffer`, in an array, or (if
@@ -47,17 +58,9 @@ export class AttributeRedirect extends Redirect
      * @param {number} glSize - number of elements to be uploaded as (size of source and upload must match)
      * @param {boolean}[normalize=false] - whether to normalize the data before uploading
      */
-    constructor(
-        source: string | ((db: PIXI.DisplayObject) => any),
-        glslIdentifer: string,
-        type = 'float32',
-        size: number | '%notarray%' = 0,
-        glType = PIXI.TYPES.FLOAT,
-        glSize: number,
-        normalize = false,
-    )
+    constructor(options: IAttributeRedirectOptions)
     {
-        super(source, glslIdentifer);
+        super(options.source, options.attrib);
 
         /**
          * The type of data stored in the source buffer. This can be any of: `int8`, `uint8`,
@@ -67,7 +70,7 @@ export class AttributeRedirect extends Redirect
          * @see [PIXI.ViewableBuffer#view]{@link https://pixijs.download/dev/docs/PIXI.ViewableBuffer.html}
          * @default 'float32'
          */
-        this.type = type;
+        this.type = options.type;
 
         /**
          * Number of elements to extract out of `source` with
@@ -78,14 +81,14 @@ export class AttributeRedirect extends Redirect
          *
          * @member {number | '%notarray%'}
          */
-        this.size = size;
+        this.size = options.size;
 
         /**
          * This is equal to `size` or 1 if size is `%notarray%`.
          *
          * @member {number}
          */
-        this.properSize = (size === '%notarray%') ? 1 : size;
+        this.properSize = (options.size === '%notarray%') ? 1 : options.size;
 
         /**
          * Type of attribute, when uploading.
@@ -99,7 +102,7 @@ export class AttributeRedirect extends Redirect
          *
          * @member {PIXI.TYPES}
          */
-        this.glType = glType;
+        this.glType = options.glType;
 
         /**
          * Size of attribute in terms of `glType`.
@@ -108,7 +111,7 @@ export class AttributeRedirect extends Redirect
          *
          * @readonly
          */
-        this.glSize = glSize;
+        this.glSize = options.glSize;
 
         /**
          * Whether to normalize the attribute values.
@@ -116,7 +119,7 @@ export class AttributeRedirect extends Redirect
          * @member {boolean}
          * @readonly
          */
-        this.normalize = normalize;
+        this.normalize = !!options.normalize;
     }
 
     static vertexSizeFor(attributeRedirects: Array<AttributeRedirect>): number

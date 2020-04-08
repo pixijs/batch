@@ -388,7 +388,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         {
             const batch = this._batchPool[i];
 
-            batch.upload();
+            batch.upload(renderer);
 
             if (this._indexProperty)
             {

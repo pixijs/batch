@@ -402,8 +402,8 @@ const GeometryMergerFactory = class
         packerBody += `
             const compositeAttributes = factory._targetCompositeAttributeBuffer;
             const compositeIndices = factory._targetCompositeIndexBuffer;
-            const aIndex = factory._aIndex;
-            const iIndex = factory._iIndex;
+            let aIndex = factory._aIndex;
+            let iIndex = factory._iIndex;
             const textureId = factory.textureId;
             const attributeRedirects = factory.attributeRedirects;
 
