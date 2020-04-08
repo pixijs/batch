@@ -34,7 +34,7 @@ For most use cases, `PIXI.brend.BatchRendererPluginFactory` is all you'll need f
 
 An example implementation would look like:
 
-```
+```js
 import * as PIXI from 'pixi.js';
 import { AttributeRedirect, BatchRendererPluginFactory, ShaderGenerator } from 'pixi-batch-renderer';
 
