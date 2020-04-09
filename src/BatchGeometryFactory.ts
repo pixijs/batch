@@ -1,6 +1,8 @@
 import { AttributeRedirect } from './redirects/AttributeRedirect';
 import * as PIXI from 'pixi.js';
 import Redirect from './redirects/Redirect';
+import BatchRenderer from './BatchRenderer';
+import { StdBatch } from './StdBatch';
 
 // BatchGeometryFactory uses this class internally to setup the attributes of
 // the batches.
@@ -45,17 +47,28 @@ export class BatchGeometry extends PIXI.Geometry
     }
 }
 
-export interface IBatchGeometryFactory
+// To define the constructor shape, this is defined as an abstract class but documented
+// as an interface.
+export abstract class IBatchGeometryFactory
 {
-    init(verticesBatched: number, indiciesBatched: number): void;
-    append(displayObject: number, inBatchId: number): void;
-    build(): PIXI.Geometry;
-    release(geom: PIXI.Geometry): void;
+    // eslint-disable-next-line @typescript-eslint/no-useless-constructor, @typescript-eslint/no-unused-vars
+    constructor(renderer: BatchRenderer)
+    {
+        // Implementation
+    }
+
+    abstract init(verticesBatched: number, indiciesBatched: number): void;
+    abstract append(displayObject: PIXI.DisplayObject, batch: any): void;
+    abstract build(): PIXI.Geometry;
+    abstract release(geom: PIXI.Geometry): void;
 }
 
 /**
  * This interface defines the methods you need to implement to creating your own batch
  * geometry factory.
+ *
+ * The constructor of an implementation should take only one argument - the batch renderer.
+ *
  * @memberof PIXI.brend
  * @interface IBatchGeometryFactory
  */
@@ -71,15 +84,17 @@ export interface IBatchGeometryFactory
  */
 
 /**
- * Adds the display-object to the batch geometry. If the display-object's shader also uses
- * uniforms (or textures in `uSamplers` uniform), then it will also be given an in-batch
- * ID. This id is used to fetch the corresponding uniform for the "current" display-object
- * from an array. `inBatchId` is passed as an attribute `vTextureId`.
+ * Adds the display-object to the batch geometry.
+ *
+ * If the display-object's shader also uses textures (in `uSamplers` uniform), then it will
+ * be given a texture-ID to get the texture from the `uSamplers` array. If it uses multiple
+ * textures, then the texture-ID is an array of indices into `uSamplers`. The texture-attrib
+ * passed to the batch renderer sets the name of the texture-ID attribute (defualt is `aTextureId`).
  *
  * @memberof PIXI.brend.IBatchGeometryFactory#
  * @method append
  * @param {PIXI.DisplayObject} displayObject
- * @param {number} inBatchId
+ * @param {object} batch - the batch
  */
 
 /**
@@ -120,7 +135,7 @@ export interface IBatchGeometryFactory
  * @class
  * @implements PIXI.brend.IBatchGeometryFactory
  */
-export class BatchGeometryFactory
+export class BatchGeometryFactory extends IBatchGeometryFactory
 {
     _targetCompositeAttributeBuffer: PIXI.ViewableBuffer;
     _targetCompositeIndexBuffer: Uint16Array;
@@ -131,9 +146,13 @@ export class BatchGeometryFactory
     _indexProperty: string;
     _vertexCountProperty: string | number;
     _vertexSize: number;
-    _texturePerObject: number;
+    _texturesPerObject: number;
+    _textureProperty: string;
+    _texIDAttrib: string;
 
-    textureId: number;
+    /* Set to the indicies of the display-object's textures in uSamplers uniform before
+        invoking geometryMerger(). */
+    protected _texID: number | number[];
 
     protected _aBuffers: PIXI.ViewableBuffer[];
     protected _iBuffers: Uint16Array[];
@@ -143,32 +162,35 @@ export class BatchGeometryFactory
     _geometryMerger: (displayObject: PIXI.DisplayObject, factory: BatchGeometryFactory) => void;
 
     /**
-     * @param {PIXI.brend.AttributeRedirect[]} attributeRedirects
-     * @param {string} indexProperty - property where indicies are kept; null/undefined if not required.
-     * @param {string | number} vertexCountProperty - property where no. of vertices for each object
-     *  are kept. This could also be a constant.
-     * @param {number} vertexSize - vertex size, calculated by default. This should exclude the vertex attribute
-     * @param {number} texturePerObject - no. of textures per object
+     * @param {PIXI.brend.BatchRenderer} renderer
      */
-    constructor(
-        attribRedirects: AttributeRedirect[],
-        indexProperty: string,
-        vertexCountProperty: string | number,
-        vertexSize = AttributeRedirect.vertexSizeFor(attribRedirects),
-        texturePerObject: number)
+    constructor(renderer: BatchRenderer)
     {
-        vertexSize += texturePerObject * 4;// texture indices are also passed
+        super(renderer);
 
         this._targetCompositeAttributeBuffer = null;
         this._targetCompositeIndexBuffer = null;
         this._aIndex = 0;
         this._iIndex = 0;
 
-        this._attribRedirects = attribRedirects;
-        this._indexProperty = indexProperty;
-        this._vertexCountProperty = vertexCountProperty;
-        this._vertexSize = vertexSize;
-        this._texturePerObject = texturePerObject;
+        this._attribRedirects = renderer._attribRedirects;
+        this._indexProperty = renderer._indexProperty;
+        this._vertexCountProperty = renderer._vertexCountProperty;
+        this._vertexSize = AttributeRedirect.vertexSizeFor(this._attribRedirects);
+        this._texturesPerObject = renderer._texturePerObject;
+        this._textureProperty = renderer._textureProperty;
+        this._texIDAttrib = renderer._texIDAttrib;
+
+        this._vertexSize += this._texturesPerObject * 4;// texture indices are also passed
+
+        if (this._texturesPerObject === 1)
+        {
+            this._texID = 0;
+        }
+        else if (this._texturesPerObject > 1)
+        {
+            this._texID = new Array(this._texturesPerObject);
+        }
 
         this._aBuffers = [];// @see _getAttributeBuffer
         this._iBuffers = [];// @see _getIndexBuffer
@@ -181,30 +203,6 @@ export class BatchGeometryFactory
          * @see PIXI.brend.IBatchGeometryFactory#release
          */
         this._geometryPool = [];
-    }
-
-    /**
-     * This is the currently active composite attribute
-     * buffer. It may contain garbage in unused locations.
-     *
-     * @member {PIXI.ViewableBuffer}
-     */
-    get compositeAttributes(): PIXI.ViewableBuffer
-    {
-        return this._targetCompositeAttributeBuffer;
-    }
-
-    /**
-     * This is the currently active composite index
-     * buffer. It may contain garbage in unused locations.
-     *
-     * It will be `null` if `indexProperty` was not given.
-     *
-     * @member {Uint16Array}
-     */
-    get compositeIndices(): Uint16Array
-    {
-        return this._targetCompositeIndexBuffer;
     }
 
     /**
@@ -228,29 +226,65 @@ export class BatchGeometryFactory
     }
 
     /**
-     * Append's the display-object geometry to this batch's geometry.
+     * Append's the display-object geometry to this batch's geometry. You must override
+     * this you need to "modify" the geometry of the display-object before merging into
+     * the composite geometry (for example, adding an ID to a special uniform)
      *
      * @param {PIXI.DisplayObject} targetObject
-     * @param {number} textureId
+     * @param {number} batch
      */
-    append(targetObject: PIXI.DisplayObject, textureId: number): void
+    append(targetObject: PIXI.DisplayObject, batch_: any): void
     {
-        this.textureId = textureId;
+        const batch: StdBatch = batch_ as StdBatch;
+        const tex = (targetObject as any)[this._textureProperty];
+
+        if (this._texturesPerObject === 1)
+        {
+            const texUID = tex.baseTexture ? tex.baseTexture.uid : tex.uid;
+
+            this._texID = batch.uidMap[texUID];
+        }
+        else if (this._texturesPerObject > 1)
+        {
+            let _tex;
+
+            for (let k = 0; k < tex.length; k++)
+            {
+                _tex = tex[k];
+
+                const texUID = _tex.BaseTexture ? _tex.baseTexture.uid : _tex.uid;
+
+                (this._texID as number[])[k] = batch.uidMap[texUID];
+            }
+        }
+
         this.geometryMerger(targetObject, this);
     }
 
     /**
      * @override
      * @returns {PIXI.Geometry} the generated batch geometry
+     * @example
+     * build(): PIXI.Geometry
+     * {
+     *      // Make sure you're not allocating new geometries if _geometryPool has some
+     *      // already. (Otherwise, a memory leak will result!)
+     *      const geom: ExampleGeometry = (this._geometryPool.pop() || new ExampleGeometry(
+     *          // ...your arguments... //)) as ExampleGeometry;
+     *
+     *      // Put data into geometry's buffer
+     *
+     *      return geom;
+     * }
      */
     build(): PIXI.Geometry
     {
         const geom: BatchGeometry = (this._geometryPool.pop() || new BatchGeometry(
-            this._attribRedirects, true, 'aInBatchID', this._texturePerObject)) as BatchGeometry;
+            this._attribRedirects, true, this._texIDAttrib, this._texturesPerObject)) as BatchGeometry;
 
         // We don't really have to remove the buffers because BatchRenderer won't reuse
         // the data in these buffers after the next build() call.
-        geom.attribBuffer.update(this._targetCompositeAttributeBuffer.rawBinaryData);
+        geom.attribBuffer.update(this._targetCompositeAttributeBuffer.float32View);
         geom.indexBuffer.update(this._targetCompositeIndexBuffer);
 
         return geom;
@@ -314,8 +348,7 @@ export class BatchGeometryFactory
 
         if (!buffer)
         {
-            this._aBuffers[roundedSize] = buffer
-                = new PIXI.ViewableBuffer(roundedSize * this._vertexSize);
+            this._aBuffers[roundedSize] = buffer = new PIXI.ViewableBuffer(roundedSize * this._vertexSize);
         }
 
         return buffer;
@@ -343,8 +376,7 @@ export class BatchGeometryFactory
 
         if (!buffer)
         {
-            this._iBuffers[roundedSizeIndex] = buffer
-                = new Uint16Array(roundedSize);
+            this._iBuffers[roundedSizeIndex] = buffer = new Uint16Array(roundedSize);
         }
 
         return buffer;
@@ -404,7 +436,7 @@ const GeometryMergerFactory = class
             const compositeIndices = factory._targetCompositeIndexBuffer;
             let aIndex = factory._aIndex;
             let iIndex = factory._iIndex;
-            const textureId = factory.textureId;
+            const textureId = factory._texID;
             const attributeRedirects = factory.attributeRedirects;
 
             const {
@@ -486,9 +518,9 @@ const GeometryMergerFactory = class
             }
         }
 
-        if (packer._texturePerObject > 0)
+        if (packer._texturesPerObject > 0)
         {
-            if (packer._texturePerObject > 1)
+            if (packer._texturesPerObject > 1)
             {
                 if (!skipReverseTransformation)
                 {
@@ -497,7 +529,7 @@ const GeometryMergerFactory = class
                     `;
                 }
 
-                for (let k = 0; k < packer._texturePerObject; k++)
+                for (let k = 0; k < packer._texturesPerObject; k++)
                 {
                     packerBody += `
                         float32View[adjustedAIndex++] = textureId[${k}];

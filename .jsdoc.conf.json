@@ -33,7 +33,8 @@
             "description": "Documentation for pixi-batch-renderer library",
             "keyword": "docs, documentation, pixi, pixijs, renderer, html5, javascript, jsdoc"
         },
-        "linenums": true
+        "linenums": true,
+        "sort": false
     },
     "markdown": {
         "parser": "gfm",
@@ -44,6 +45,7 @@
         "recurse": true,
         "lenient": true,
         "destination": "./docs",
-        "template": "./node_modules/@pixi/jsdoc-template"
+        "template": "./node_modules/@pixi/jsdoc-template",
+        "sort": false
     }
 }

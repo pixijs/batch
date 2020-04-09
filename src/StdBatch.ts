@@ -1,41 +1,42 @@
 import * as PIXI from 'pixi.js';
 
 /**
- * Resources that need to be uploaded to WebGL to render
- * one batch.
+ * Resources that need to be uploaded to WebGL to render one batch.
+ *
+ * To customize batches, you must create your own batch factory by extending the
+ * `PIXI.brend.StdBatchFactory` class.
  *
  * @memberof PIXI.brend
  * @class
+ * @see PIXI.brend.StdBatchFactory
  */
-export class Batch
+export class StdBatch
 {
     geometryOffset: number;
-    uidMap: Map<number, number>;
+    uidMap: any;
     state: PIXI.State;
 
     batchBuffer: Array<PIXI.DisplayObject>;
     textureBuffer: Array<PIXI.BaseTexture>;
 
-    constructor(geometryOffset: number)
+    constructor(geometryOffset?: number)
     {
         /**
-         * Offset in the geometry (set by `BatchRenderer`)
-         * where this batch is located.
+         * Index of the first vertex of this batch's geometry in the uploaded geometry.
          *
          * @member {number}
          */
         this.geometryOffset = geometryOffset;
 
         /**
-         * Buffer of textures that should be uploaded in-order
-         * to GPU texture registers.
+         * Textures that are used by the display-object's in this batch.
          *
          * @member {Array<PIXI.Texture>}
          */
         this.textureBuffer = null;
 
         /**
-         * Map of texture-ids into texture-buffer indices.
+         * Map of in-batch IDs to texture indices.
          *
          * @member {Map<number, number>}
          */
@@ -50,8 +51,8 @@ export class Batch
     }
 
     /**
-     * Uploads the resources required before rendering this
-     * batch.
+     * Uploads the resources required before rendering this batch. If you override
+     * this, you must call `super.upload`.
      */
     upload(renderer: PIXI.Renderer): void
     {
@@ -64,14 +65,15 @@ export class Batch
     }
 
     /**
-     * Resets all properties to `null` to free up references
-     * to resources.
+     * Reset this batch to become "fresh"!
      */
     reset(): void
     {
-        this.textureBuffer
-            = this.uidMap
-                = this.state
-                    = null;
+        this.textureBuffer = this.uidMap = this.state = null;
+
+        if (this.batchBuffer)
+        {
+            this.batchBuffer.length = 0;
+        }
     }
 }

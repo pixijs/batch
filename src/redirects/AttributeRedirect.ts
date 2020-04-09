@@ -6,7 +6,7 @@ interface IAttributeRedirectOptions
     source: string | ((db: PIXI.DisplayObject) => any);
     attrib: string;
     type: string;
-    size: number | '%notarray%';
+    size?: number | '%notarray%';
     glType: number;
     glSize: number;
     normalize?: boolean;
@@ -27,17 +27,17 @@ interface IAttributeRedirectOptions
  * // Furthermore, the color is uploaded as four bytes (`attribute vec4 aTint`) while the
  * // source returns an integer. This is done by splitting the 32-bit integer into four
  * // 8-bit bytes.
- * new PIXI.brend.AttributeRedirect(
- *     (tgt: ExampleDisplay) => (tgt.alpha < 1.0 && tgt.tintMode === PREMULTIPLY)
+ * new PIXI.brend.AttributeRedirect({
+ *     source: (tgt: ExampleDisplay) => (tgt.alpha < 1.0 && tgt.tintMode === PREMULTIPLY)
  *          ? premultiplyTint(tgt.rgb, tgt.alpha)
  *          : tgt.rgb + (tgt.alpha << 24);
- *     'aTint',
- *     'int32',
- *     '%notarray%',
- *     PIXI.TYPES.UNSIGNED_BYTE,
- *     4,
- *     true
- * );
+ *     attrib: 'aTint',
+ *     type: 'int32',
+ *     size: '%notarray%', // optional/default
+ *     glType: PIXI.TYPES.UNSIGNED_BYTE,
+ *     glSize: 4,
+ *     normalize: true // We are using [0, 255] range for RGBA here. Must normalize to [0, 1].
+ * });
  */
 export class AttributeRedirect extends Redirect
 {
@@ -50,13 +50,14 @@ export class AttributeRedirect extends Redirect
     public properSize: number;
 
     /**
-     * @param {string | Function} source - redirect source
-     * @param {string} glslIdentifer - shader attribute variable
-     * @param {string}[type='float32'] - the type of data stored in the source
-     * @param {number | '%notarray%'}[size=0] - size of the source array ('%notarray' if not an array & just one element)
-     * @param {PIXI.TYPES}[glType=PIXI.TYPES.FLOAT] - data format to be uploaded in
-     * @param {number} glSize - number of elements to be uploaded as (size of source and upload must match)
-     * @param {boolean}[normalize=false] - whether to normalize the data before uploading
+     * @param {object} options
+     * @param {string | Function} options.source - redirect source
+     * @param {string} options.attrib - shader attribute variable
+     * @param {string}[options.type='float32'] - the type of data stored in the source
+     * @param {number | '%notarray%'}[options.size=0] - size of the source array ('%notarray' if not an array & just one element)
+     * @param {PIXI.TYPES}[options.glType=PIXI.TYPES.FLOAT] - data format to be uploaded in
+     * @param {number} options.glSize - number of elements to be uploaded as (size of source and upload must match)
+     * @param {boolean}[options.normalize=false] - whether to normalize the data before uploading
      */
     constructor(options: IAttributeRedirectOptions)
     {
@@ -88,7 +89,7 @@ export class AttributeRedirect extends Redirect
          *
          * @member {number}
          */
-        this.properSize = (options.size === '%notarray%') ? 1 : options.size;
+        this.properSize = (options.size === '%notarray%' || options.size === undefined) ? 1 : options.size;
 
         /**
          * Type of attribute, when uploading.

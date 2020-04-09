@@ -1,9 +1,27 @@
-import { Batch } from './Batch';
-import { BatchFactory } from './BatchFactory';
+import { StdBatchFactory } from './StdBatchFactory';
 import { BatchGeometryFactory } from './BatchGeometryFactory';
 import * as PIXI from 'pixi.js';
 import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve';
 import { AttributeRedirect } from './redirects/AttributeRedirect';
+
+export interface IBatchRendererOptions
+{
+    attribSet: AttributeRedirect[];
+    indexProperty: string;
+    vertexCountProperty?: string | number;
+    textureProperty: string;
+    texturesPerObject?: number;
+    texIDAttrib: string;
+    stateFunction: (renderer: PIXI.DisplayObject) => PIXI.State;
+    shaderFunction: (renderer: BatchRenderer) => PIXI.Shader;
+    BatchFactoryClass?: typeof StdBatchFactory;
+    BatchGeometryFactoryClass?: typeof BatchGeometryFactory;
+}
+
+/**
+ * @memberof PIXI.brend#
+ * @interface IBatchRendererOptions
+ */
 
 /**
  * This object renderer renders multiple display-objects in batches. It can greatly
@@ -74,31 +92,28 @@ import { AttributeRedirect } from './redirects/AttributeRedirect';
  */
 export class BatchRenderer extends PIXI.ObjectRenderer
 {
-    _attributeRedirects: AttributeRedirect[];
-    _indexProperty: string;
-    _vertexCountProperty: string | number;
-    _textureProperty: string;
-    _texturePerObject: number;
-    _textureAttribute: string;
-    _stateFunction: Function;
-    _shaderFunction: Function;
+    readonly _attribRedirects: AttributeRedirect[];
+    readonly _indexProperty: string;
+    readonly _vertexCountProperty: string | number;
+    readonly _textureProperty: string;
+    readonly _texturePerObject: number;
+    readonly _texIDAttrib: string;
+    readonly _stateFunction: Function;
+    readonly _shaderFunction: Function;
 
-    _BatchGeneratorClass: typeof BatchFactory;
-    _batchGenerator: BatchFactory;
-
+    _batchFactory: StdBatchFactory;
     _geometryFactory: BatchGeometryFactory;
-    _geom: PIXI.Geometry;
+
+    _shader: PIXI.Shader;
 
     _objectBuffer: PIXI.DisplayObject[];
     _bufferedVertices: number;
     _bufferedIndices: number;
 
-    _shader: PIXI.Shader;
-
-    _batchPool: Array<Batch>;
-    _batchCount: number;
-
     MAX_TEXTURES: number;
+
+    protected readonly _BatchFactoryClass: typeof StdBatchFactory;
+    protected readonly _BatchGeometryFactoryClass: typeof BatchGeometryFactory;
 
     /**
      * Creates a batch renderer the renders display-objects with the described
@@ -116,43 +131,103 @@ export class BatchRenderer extends PIXI.ObjectRenderer
      * @param {string} textureAttribute - name of texture-id attribute variable
      * @param {Function} stateFunction - returns a {PIXI.State} for an object
      * @param {Function} shaderFunction - generates a shader given this instance
-     * @param {PIXI.brend.GeometryPacker} [packer=new PIXI.brend.GeometryPacker]
+     * @param {PIXI.brend.BatchGeometryFactory} [packer=new PIXI.brend.BatchGeome]
      * @param {Class} [BatchGeneratorClass=PIXI.brend.BatchGenerator]
      * @see PIXI.brend.ShaderGenerator
      */
-    constructor(// eslint-disable-line max-params
-        renderer: PIXI.Renderer,
-        attributeRedirects: AttributeRedirect[],
-        indexProperty: string,
-        vertexCountProperty: string | number,
-        textureProperty: string,
-        texturePerObject: number,
-        textureAttribute: string,
-        stateFunction: (renderer: BatchRenderer) => PIXI.State,
-        shaderFunction: (renderer: BatchRenderer) => PIXI.Shader,
-        packer = new BatchGeometryFactory(
-            attributeRedirects,
-            indexProperty,
-            vertexCountProperty, // auto-calculate
-            undefined,
-            texturePerObject,
-        ),
-        BatchGeneratorClass = BatchFactory,
-    )
+    constructor(renderer: PIXI.Renderer, options: IBatchRendererOptions)
     {
         super(renderer);
 
-        this._attributeRedirects = attributeRedirects;
-        this._indexProperty = indexProperty;
-        this._vertexCountProperty = vertexCountProperty;
-        this._textureProperty = textureProperty;
-        this._texturePerObject = texturePerObject;
-        this._textureAttribute = textureAttribute;
-        this._stateFunction = stateFunction;
-        this._shaderFunction = shaderFunction;
+        /**
+         * Attribute redirects
+         * @member {PIXI.brend.AttributeRedirect[]}
+         * @protected
+         * @readonly
+         */
+        this._attribRedirects = options.attribSet;
 
-        this._BatchGeneratorClass = BatchGeneratorClass;
-        this._batchGenerator = null;// @see this#contextChange
+        /**
+         * Indices property
+         * @member {string}
+         * @protected
+         * @readonly
+         */
+        this._indexProperty = options.indexProperty;
+
+        /**
+         * Vertex count property (optional)
+         * @member {string}
+         * @protected
+         * @readonly
+         */
+        this._vertexCountProperty = options.vertexCountProperty;
+
+        /**
+         * Texture(s) property
+         * @member {string}
+         * @protected
+         * @readonly
+         */
+        this._textureProperty = options.textureProperty;
+
+        /**
+         * Textures per display-object
+         * @member {number}
+         * @protected
+         * @readonly
+         * @default 1
+         */
+        this._texturePerObject = typeof options.texturesPerObject !== 'undefined' ? options.texturesPerObject : 1;
+
+        /**
+         * Texture ID attribute
+         * @member {string}
+         * @protected
+         * @readonly
+         */
+        this._texIDAttrib = options.texIDAttrib;
+
+        /**
+         * State generating function (takes a display-object)
+         *
+         * @member {Function}
+         * @default () => PIXI.State.for2d()
+         * @protected
+         * @readonly
+         */
+        this._stateFunction = options.stateFunction || ((): PIXI.State => PIXI.State.for2d());
+
+        /**
+         * Shader generating function (takes the batch renderer)
+         *
+         * @member {Function}
+         * @protected
+         * @see PIXI.brend.BatchShaderFactory
+         * @readonly
+         */
+        this._shaderFunction = options.shaderFunction;
+
+        /**
+         * Batch-factory class.
+         *
+         * @member {Class}
+         * @protected
+         * @default PIXI.brend.StdBatchFactory
+         * @readonly
+         */
+        this._BatchFactoryClass = options.BatchFactoryClass || StdBatchFactory;
+
+        /**
+         * Batch-geometry factory class. It's constructor takes one argument - this batch
+         * renderer.
+         *
+         * @member {Class}
+         * @protected
+         * @default PIXI.brend.BatchGeometryFactory
+         * @readonly
+         */
+        this._BatchGeometryFactoryClass = options.BatchGeometryFactoryClass || BatchGeometryFactory;
 
         // Although the runners property is not a public API, it is required to
         // handle contextChange events.
@@ -165,21 +240,10 @@ export class BatchRenderer extends PIXI.ObjectRenderer
             this.contextChange();
         }
 
-        this._geometryFactory = packer;
-
-        this._geom = BatchRenderer.generateCompositeGeometry(
-            attributeRedirects,
-            !!indexProperty,
-            textureAttribute,
-            texturePerObject);
-
         this._objectBuffer = [];
         this._bufferedVertices = 0;
         this._bufferedIndices = 0;
         this._shader = null;
-
-        this._batchPool = [];// may contain garbage after _batchCount
-        this._batchCount = 0;
     }
 
     /**
@@ -195,20 +259,22 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         }
         else
         {
-            this.MAX_TEXTURES = Math.min(
-                gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS),
-                PIXI.settings.SPRITE_MAX_TEXTURES);
+            this.MAX_TEXTURES = Math.min(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS), PIXI.settings.SPRITE_MAX_TEXTURES);
         }
 
-        this._batchGenerator = new this._BatchGeneratorClass(
-            this._texturePerObject, this.MAX_TEXTURES,
-            this._textureProperty, true); // NOTE: Force texture reduction
+        /**
+         * @member {_BatchFactoryClass}
+         * @readonly
+         * @protected
+         */
+        this._batchFactory = new this._BatchFactoryClass(this);
 
-        if (!this._batchGenerator.enableTextureReduction)
-        {
-            throw new Error('PIXI.brend.BatchRenderer does not support '
-                    + 'batch generation without texture reduction enabled.');
-        }
+        /**
+         * @member {_BatchGeometryFactoryClass}
+         * @readonly
+         * @protected
+         */
+        this._geometryFactory = new this._BatchGeometryFactoryClass(this);
     }
 
     /**
@@ -268,12 +334,10 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     flush(): void
     {
         const {
-            _batchGenerator: batchGenerator,
-            _geom: geom,
+            _batchFactory: batchFactory,
             _geometryFactory: geometryFactory,
             renderer,
             _stateFunction: stateFunction,
-            _textureProperty: textureProperty,
             _texturePerObject: texturePerObject,
         } = this;
 
@@ -281,7 +345,8 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         const buffer = this._objectBuffer;
         const bufferLength = buffer.length;
 
-        this._batchCount = 0;
+        // Reset components
+        batchFactory.reset();
         geometryFactory.init(this._bufferedVertices, this._bufferedIndices);
 
         let batchStart = 0;
@@ -290,12 +355,11 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         for (let objectIndex = 0; objectIndex < bufferLength;)
         {
             const target = buffer[objectIndex];
-            const wasPut = batchGenerator.put(target,
-                resolveFunctionOrProperty(target, stateFunction));
+            const wasPut = batchFactory.put(target, resolveFunctionOrProperty(target, stateFunction));
 
             if (!wasPut)
             {
-                batchGenerator.finalize(this._newBatch(batchStart));
+                batchFactory.build(batchStart);
                 batchStart = objectIndex;
             }
             else
@@ -305,23 +369,19 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         }
 
         // Generate the last batch, if required.
-        if (batchGenerator._batchBuffer.length !== 0)
+        if (!batchFactory.ready())
         {
-            batchGenerator.finalize(this._newBatch(batchStart));
+            batchFactory.build(batchStart);
         }
 
-        // Pack each object into the composite geometry. This is done
-        // after batching, so that texture-ids are generated.
-        let textureId = this._texturePerObject === 1
-            ? 0
-            : new Array(texturePerObject);
+        const batchList = batchFactory.access();
+        const batchCount = batchFactory.size();
 
-        for (let i = 0; i < this._batchCount; i++)// loop-per(batch)
+        for (let i = 0; i < batchCount; i++)// loop-per(batch)
         {
-            const batch = this._batchPool[i];
+            const batch = batchList[i];
             const batchBuffer = batch.batchBuffer;
             const batchLength = batchBuffer.length;
-            const uidMap = batch.uidMap;
 
             let vertexCount = 0;// eslint-disable-line
             let indexCount = 0;
@@ -332,61 +392,30 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
                 if (this._indexProperty)
                 {
-                    indexCount += resolveConstantOrProperty(
-                        targetObject, this._indexProperty).length;
+                    indexCount += resolveConstantOrProperty(targetObject, this._indexProperty).length;
                 }
                 else
                 {
-                    vertexCount += resolveConstantOrProperty(
-                        targetObject, this._vertexCountProperty);
+                    vertexCount += resolveConstantOrProperty(targetObject, this._vertexCountProperty);
                 }
 
                 // externally-defined properties for draw calls
                 batch.$vertexCount = vertexCount;
                 batch.$indexCount = indexCount;
 
-                const tex = targetObject[textureProperty];
-
-                let texUID;
-
-                if (texturePerObject === 1)
-                {
-                    texUID = tex.baseTexture
-                        ? tex.baseTexture.uid
-                        : tex.uid;
-
-                    textureId = uidMap[texUID];
-                }
-                else
-                {
-                    let _tex;
-
-                    for (let k = 0; k < tex.length; k++)
-                    {
-                        _tex = tex[k];
-
-                        texUID = _tex.BaseTexture
-                            ? _tex.baseTexture.uid
-                            : _tex.uid;
-
-                        textureId[k] = uidMap[texUID];
-                    }
-                }
-
-                geometryFactory.append(targetObject, textureId);
+                geometryFactory.append(targetObject, batch);
             }
         }
 
         // Upload the geometry
-        geom.$buffer.update(geometryFactory.compositeAttributes.float32View);
-        geom.getIndex().update(geometryFactory.compositeIndices);
-        renderer.geometry.bind(geom);
-        renderer.geometry.updateBuffers();
+        const geom = geometryFactory.build();
 
-        // Now draw each batch
-        for (let i = 0; i < this._batchCount; i++)
+        renderer.geometry.bind(geom);
+
+        // Draw each batch
+        for (let i = 0; i < batchCount; i++)
         {
-            const batch = this._batchPool[i];
+            const batch = batchList[i];
 
             batch.upload(renderer);
 
@@ -406,6 +435,8 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
             batch.reset();
         }
+
+        geometryFactory.release(geom);
     }
 
     /**
@@ -422,83 +453,13 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         }
     }
 
-    protected _newBatch(batchStart: number): Batch
-    {
-        if (this._batchCount === this._batchPool.length)
-        {
-            const batch = new Batch(batchStart);
-
-            this._batchPool.push(batch);
-            ++this._batchCount;
-
-            return batch;
-        }
-
-        const batch = this._batchPool[this._batchCount++];
-
-        batch.reset();
-        batch.geometryOffset = batchStart;
-
-        return batch;
-    }
-
     protected _vertexCountFor(targetObject: PIXI.DisplayObject): number
     {
         return (this._vertexCountProperty)
             ? resolveConstantOrProperty(targetObject, this._vertexCountProperty)
             : resolveFunctionOrProperty(targetObject,
-                this._attributeRedirects[0].source).length
-                    / (this._attributeRedirects[0].size as number);
-    }
-
-    /**
-     * Constructs an interleaved geometry that can be used to upload a whole buffer
-     * of display-object primitives at once.
-     *
-     * @private
-     * @param {Array<PIXI.brend.AttributeRedirect>} attributeRedirects
-     * @param {boolean} hasIndex - whether to include an index property
-     * @param {string} textureAttribute - name of the texture-id attribute
-     * @param {number} texturePerObject - no. of textures per object
-     */
-    static generateCompositeGeometry(
-        attributeRedirects: AttributeRedirect[],
-        hasIndex: boolean,
-        textureAttribute: string,
-        texturePerObject: number,
-    ): PIXI.Geometry
-    {
-        const geom = new PIXI.Geometry();
-        const attributeBuffer = new PIXI.Buffer(null, false, false);
-        const indexBuffer = hasIndex ? new PIXI.Buffer(null, false, true) : null;
-
-        attributeRedirects.forEach((redirect) =>
-        {
-            const {
-                glslIdentifer, glType, glSize,
-                normalize,
-            } = redirect;
-
-            geom.addAttribute(glslIdentifer, attributeBuffer,
-                glSize, normalize, glType);
-        });
-
-        if (textureAttribute && texturePerObject > 0)
-        {
-            geom.addAttribute(textureAttribute, attributeBuffer,
-                texturePerObject, true, PIXI.TYPES.FLOAT);
-        }
-
-        if (hasIndex)
-        {
-            geom.addIndex(indexBuffer);
-        }
-
-        geom.$buffer = attributeBuffer;
-
-        // $buffer is attributeBuffer
-        // getIndex() is ?indexBuffer
-        return geom;
+                this._attribRedirects[0].source).length
+                    / (this._attribRedirects[0].size as number);
     }
 
     /**

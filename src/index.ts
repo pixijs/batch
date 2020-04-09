@@ -1,11 +1,11 @@
 export { AttributeRedirect } from './redirects/AttributeRedirect';
-export { BatchFactory as BatchGenerator } from './BatchFactory';
+export { StdBatchFactory as BatchGenerator } from './StdBatchFactory';
 export { BatchRenderer } from './BatchRenderer';
 export { BatchRendererPluginFactory } from './BatchRendererPluginFactory';
 export { BatchGeometryFactory as GeometryPacker } from './BatchGeometryFactory';
 export { Redirect } from './redirects/Redirect';
-export { ShaderGenerator } from './ShaderGenerator';
-export { Batch } from './Batch';
+export { BatchShaderFactory } from './BatchShaderFactory';
+export { StdBatch as Batch } from './StdBatch';
 
 /**
  * @memberof PIXI

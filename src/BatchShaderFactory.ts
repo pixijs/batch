@@ -1,9 +1,10 @@
 import * as PIXI from 'pixi.js';
 import BatchRenderer from './BatchRenderer';
 
-// JavaScript is stupid enough not to have a replaceAll
-// in String. This is a temporary solution and we should
-// depend on an actually polyfill.
+// This file might need a cleanup :)
+
+// JavaScript is stupid enough not to have a replaceAll in String. This is a temporary
+// solution and we should depend on an actually polyfill.
 function _replaceAll(target: string, search: string, replacement: string): string
 {
     return target.replace(new RegExp(search, 'g'), replacement);
@@ -15,22 +16,19 @@ function injectTexturesPerBatch(batchRenderer: BatchRenderer): string
 }
 
 /**
- * Exposes an easy-to-use API for generating a shader function
- * for batch rendering.
+ * Exposes an easy-to-use API for generating shader-functions to use in
+ * the batch renderer!
  *
- * You are required to provide an injector map, which maps
- * macros to functions that return a string value for those
- * macros given a renderer.
+ * You are required to provide an injector map, which maps macros to functions
+ * that return a string value for those macros given a renderer. By default, only one
+ * injector is used - the textures per batch `%texturesPerBatch%` macro. This is replaced by
+ * the number of textures passed to the `uSamplers` textures uniform.
  *
- * By default, only one injector is used - the textures per
- * batch `%texturesPerBatch%` macro. This is replaced by
- * the number of textures passed to the `uSamplers` textures
- * uniform.
  *
  * @memberof PIXI.brend
  * @class
  */
-class ShaderGenerator
+export class BatchShaderFactory
 {
     protected _vertexShaderTemplate: string;
     protected _fragmentShaderTemplate: string;
@@ -68,13 +66,9 @@ class ShaderGenerator
             templateInjectors['%texturesPerBatch%'] = injectTexturesPerBatch;
         }
 
-        /** @protected */
         this._vertexShaderTemplate = vertexShaderTemplate;
-        /** @protected */
         this._fragmentShaderTemplate = fragmentShaderTemplate;
-        /** @protected */
         this._uniforms = uniforms;
-        /** @protected */
         this._templateInjectors = templateInjectors;
 
         /**
@@ -105,9 +99,12 @@ class ShaderGenerator
     }
 
     /**
+     * This essentially returns a function for generating the shader for a batch
+     * renderer.
+     *
      * @return shader function that can be given to the batch renderer
      */
-    generateFunction(): (brend: BatchRenderer) => PIXI.Shader
+    derive(): (brend: BatchRenderer) => PIXI.Shader
     {
         return (batchRenderer: BatchRenderer): PIXI.Shader =>
         {
@@ -119,7 +116,7 @@ class ShaderGenerator
                 return cachedShader;
             }
 
-            return this._generateShader(stringState);
+            return this._generateShader(stringState, batchRenderer);
         };
     }
 
@@ -139,7 +136,7 @@ class ShaderGenerator
         return state;
     }
 
-    protected _generateShader(stringState: string): PIXI.Shader
+    protected _generateShader(stringState: string, renderer: BatchRenderer): PIXI.Shader
     {
         let vertexShaderTemplate = this._vertexShaderTemplate.slice(0);
 
@@ -160,11 +157,18 @@ class ShaderGenerator
         const shader = PIXI.Shader.from(vertexShaderTemplate,
             fragmentShaderTemplate, this._uniforms);
 
+        const textures = new Array(renderer.MAX_TEXTURES);
+
+        for (let i = 0; i < textures.length; i++)
+        {
+            textures[i] = i;
+        }
+        shader.uniforms.uSamplers = textures;
+
         this._cache[stringState] = shader;
 
         return shader;
     }
 }
 
-export { ShaderGenerator };
-export default ShaderGenerator;
+export default BatchShaderFactory;

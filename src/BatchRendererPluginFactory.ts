@@ -1,7 +1,7 @@
 import { BatchRenderer } from './BatchRenderer';
 import { AttributeRedirect } from './redirects/AttributeRedirect';
 import BatchGeometryFactory from './BatchGeometryFactory';
-import BatchFactory from './BatchFactory';
+import StdBatchFactory from './StdBatchFactory';
 
 import * as PIXI from 'pixi.js';
 
@@ -10,15 +10,16 @@ interface IBatchRendererStdOptions
 {
     attribSet: AttributeRedirect[];
     vertexCountProperty: string | number;
-    indexCountProperty: string;
+    indexProperty: string;
     textureProperty: string;
-    texturePerObject: number;
-    inBatchIdAttrib: string;
-    stateFunction: (brend: BatchRenderer) => any;
+    texturesPerObject?: number;
+    texIDAttrib: string;
+    stateFunction: (brend: PIXI.DisplayObject) => any;
     shaderFunction: (brend: BatchRenderer) => any;
     geometryFactory: BatchGeometryFactory;
-    BatchFactoryClass: typeof BatchFactory;
-    BatchRendererClass: typeof BatchRenderer;
+    BatchFactoryClass?: typeof StdBatchFactory;
+    BatchRendererClass?: typeof BatchRenderer;
+    BatchGeometryFactoryClass?: typeof BatchGeometryFactory;
 }
 
 /**
@@ -27,6 +28,9 @@ interface IBatchRendererStdOptions
  * @memberof PIXI.brend
  * @class
  * @example
+ *  import * as PIXI from 'pixi.js';
+ *  import { AttributeRedirect, BatchShaderFactory, BatchRendererPluginFactory } from 'pixi-batch-renderer';
+ *
  *  // Define the geometry of Sprite.
  *  const attribSet = [
  *      // Sprite vertexData contains global coordinates of the corners
@@ -49,7 +53,7 @@ interface IBatchRendererStdOptions
  *      }),
  *  ];
  *
- *  const shaderFunction = new ShaderGenerator(// 1. vertexShader
+ *  const shaderFunction = new BatchShaderFactory(// 1. vertexShader
  *  `
  *  attribute vec2 aVertex;
  *  attribute vec2 aTextureCoord;
@@ -74,7 +78,7 @@ interface IBatchRendererStdOptions
  *  void main(void){
  *      vec4 color;
  *
- *      // get color, which is the pixel in texture uSamplers[vTextureId] @ vTextureCoord
+ *      // get color, which is the pixel in texture uSamplers[vTextureId] at vTextureCoord
  *      for (int k = 0; k < %texturesPerBatch%; ++k) {
  *          if (int(vTextureId) == k) {
  *              color = texture2D(uSamplers[k], vTextureCoord);
@@ -89,15 +93,15 @@ interface IBatchRendererStdOptions
  *  },
  *  // no custom template injectors
  *  // disable vertex shader macros by default
- *  ).generateFunction()
+ *  ).derive();
  *
  *  // Produce the SpriteBatchRenderer class!
  *  const SpriteBatchRenderer = BatchRendererPluginFactory.from({
  *      attribSet,
  *      indexCountProperty: 'indices',
  *      textureProperty: 'texture',
- *      texturePerObject: 1,
- *      inBatchIdAttrib: 'aTextureId',
+ *      texturesPerObject: 1, // default
+ *      texIDAttrib: 'aTextureId',
  *      stateFunction: () => PIXI.State.for2d(), // default
  *      shaderFunction
  *  });
@@ -124,13 +128,13 @@ export class BatchRendererPluginFactory
      * @param {string | number} options.vertexCountProperty - no. of vertices on display-object
      * @param {string} options.textureProperty - textures used in display-object
      * @param {number} options.texturePerObject - no. of textures used per display-object
-     * @param {string} options.inBatchIdAttrib - used to find texture for each display-object (index into array)
+     * @param {string} options.texIDAttrib - used to find texture for each display-object (index into array)
      * @param {string | Function}[options.stateFunction= ()=>PIXI.State.for2d()] - callback that finds the WebGL
      *  state required for display-object shader
-     * @param {Function} shaderFunction - shader generator function
+     * @param {Function} options.shaderFunction - shader generator function
      * @param {PIXI.brend.BatchGeometryFactory}[options.geometryFactory]
      * @param {Class} [options.BatchFactoryClass] - custom batch factory class
-     * @param {Class} [BatchRendererClass] - custom batch renderer class
+     * @param {Class} [options.BatchRendererClass] - custom batch renderer class
      * @static
      */
     static from(options: IBatchRendererStdOptions): typeof BatchRenderer
@@ -139,17 +143,7 @@ export class BatchRendererPluginFactory
         {
             constructor(renderer: PIXI.Renderer)
             {
-                super(renderer,
-                    options.attribSet,
-                    options.indexCountProperty,
-                    options.vertexCountProperty,
-                    options.textureProperty,
-                    options.texturePerObject,
-                    options.inBatchIdAttrib,
-                    options.stateFunction || ((): PIXI.State => PIXI.State.for2d()),
-                    options.shaderFunction,
-                    options.geometryFactory,
-                    options.BatchFactoryClass);
+                super(renderer, options);
             }
         };
     }

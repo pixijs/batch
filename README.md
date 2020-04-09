@@ -1,44 +1,53 @@
 [![](https://data.jsdelivr.com/v1/package/npm/pixi-batch-renderer-alpha/badge)](https://www.jsdelivr.com/package/npm/pixi-batch-renderer-alpha)
 
+# PixiJS Batch Rendering Library
+
 `pixi-batch-renderer` is a PixiJS plugin that allows you to add batch rendering to your custom display objects. I have documented each class in the `PIXI.brend` namespace.
 
-# Concepts
+## Concepts
 
 [Batch rendering](https://medium.com/swlh/inside-pixijs-batch-rendering-system-fad1b466c420) objects involves aggregating them into groups/batches and rendering them together with one WebGL draw call. PixiJS supports batch rendering its internal display objects - `PIXI.Sprite`, `PIXI.Graphics`, and `PIXI.Mesh`. However, it is difficult to extend that to custom-built display objects; it wasn't designed as an exposable API.
 
 This library builds upon the same concept and is designed for maximum flexibility. It still uses PixiJS's batch system - a stub that enables objects to be rendered asynchronously, without loosing the order of rendering. To understand how it works, understanding these things are helpful:
 
-* Attribute Redirects: An attribute redirect is a data-object that tells `pixi-batch-renderer` how it will transform your object into a set of shader attributes.
+* **Attribute Redirects**: An attribute redirect is a data-object that tells `pixi-batch-renderer` how it will transform your object into a set of shader attributes.
 
-* Index Property: If you use indices, this will be property on your display object that holds those indices. It could also be a constant array, rather than a property on each object.
+* **Index Property**: If you use indices, this will be property on your display object that holds those indices. It could also be a constant array, rather than a property on each object.
 
-* State Function: A function that generates a `PIXI.State` required to render your objects. It could also be a property on your objects or just `null`, if you want the default state.
+* **State Function**: This function/property tells the batch renderer what WebGL state is required to render a display-object. It is optional if you're display objects use the default state (`PIXI.State.for2d()`).
 
-* Shader Function: A function that generates a `PIXI.Shader` for rendering batches of objects. You can use `PIXI.brend.ShaderGenerator` to make one instead.
+* **Shader Function**: This function generates the shader to render whole batches. It takes one argument - the batch renderer
+that will use the shader. You can use the `BatchShaderFactory#derive()` API for create one.
 
-## Additional improvements over PixiJS internal batch rendering
+### New features
 
-* Texture reduction: If multiple objects in the same batch reference the same texture, it will be uploaded only once. This ensures that the batch sizes are as large as possible.
+* **Shader Templates**: The `BatchShaderFactory` allows you to write shader "templates" containing `%macros%`. At runtime, you
+can replace these macros based with another expression. For example, the (built-in) `%texturesPerBatch%` macro is set to the
+no. of textures units in the GPU.
 
-* Injector functions: Rather than just texture-related macros in the fragment shader/template, `PIXI.brend.ShaderGenerator` allows you to have additional macros and in the vertex shader/template as well.
+* **Custom uniforms**: [Experimental] You can also use uniforms in the batch shader; however, this might reduce the batching
+efficiency if most batchable display-objects have different values for uniforms (because then they can't be batched together).
 
-* Custom uniforms: You can use your own uniforms with `pixi-batch-renderer`, without having to create your own shader generator!
+* **Modular architecture**: With the modular architecture of this library, you change the behaviour of any component. The
+geometry composition, batch generation, and (not done yet!) draw call issuing stages done using external objects.
 
-# Regular Batch Renderer Generation
+# Usage
+
+### Standard Batch Renderer Generation
 
 For most use cases, `PIXI.brend.BatchRendererPluginFactory` is all you'll need from this library. You need to do these three things:
 
-1. Generate the plugin class using `PIXI.brend.BatchRendererPluginFactory.from`.
+1. **Generate the plugin class using `PIXI.brend.BatchRendererPluginFactory.from`**
 
-2. Register the plugin with PixiJS's WebGL renderer.
+2. **Register the plugin with PixiJS's WebGL renderer**
 
-3. Make your custom display object defer its rendering to your plugin.
+3. **Make your custom display object defer its rendering to your plugin**
 
 An example implementation would look like:
 
 ```js
 import * as PIXI from 'pixi.js';
-import { AttributeRedirect, BatchRendererPluginFactory, ShaderGenerator } from 'pixi-batch-renderer';
+import { AttributeRedirect, BatchRendererPluginFactory, BatchShaderFactory } from 'pixi-batch-renderer';
 
 // ExampleFigure has two attributes: aVertex and aTextureCoord. They come from the
 // vertices and uvs properties in this object. The indices are in the indices property.
@@ -78,7 +87,7 @@ const attribSet = [
 ];
 
 // Create a shader function from a shader template!
-const shaderFunction = new ShaderGenerator(
+const shaderFunction = new BatchShaderFactory(
 // Vertex Shader
 `
 attribute vec2 aVertex;
@@ -118,18 +127,25 @@ void main(void){
     gl_FragColor = color;
 }
 `,
-{}).generateFunction();
+{}).derive();
 
 // Create batch renderer class
 const ExampleRenderer = BatchRendererPluginFactory.from({
     attribSet,
     indexCountProperty: "indices",
     textureProperty: "texture",
-    texturePerObject: 1,
-    inBatchIdAttrib: "aTextureId", // this will be used to locate the texture in the fragment shader later
+    texIDAttrib: "aTextureId", // this will be used to locate the texture in the fragment shader later
     shaderFunction
 });
 
 // Remember to do this before instantiating a PIXI.Application or PIXI.Renderer!
 PIXI.Renderer.registerPlugin("ExampleRenderer", ExampleRenderer);
 ```
+
+### Advanced/Customized Batch Generation
+
+The `BatchRendererPluginFactory.from` method also accepts:
+
+* `BatchFactoryClass`: Customized version of [StdBatchFactory]{@link https://pixijs.io/pixi-batch-renderer/PIXI.brend.StdBatchFactory.html}
+
+* `BatchGeometryClass`: Customized version of [BatchGeometryClass]{@link https://pixijs.io/pixi-batch-renderer/PIXI.brend.BatchGeometryFactory.html}
