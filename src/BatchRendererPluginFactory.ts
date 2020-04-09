@@ -98,7 +98,7 @@ interface IBatchRendererStdOptions
  *  // Produce the SpriteBatchRenderer class!
  *  const SpriteBatchRenderer = BatchRendererPluginFactory.from({
  *      attribSet,
- *      indexCountProperty: 'indices',
+ *      indexProperty: 'indices',
  *      textureProperty: 'texture',
  *      texturesPerObject: 1, // default
  *      texIDAttrib: 'aTextureId',
@@ -124,7 +124,7 @@ export class BatchRendererPluginFactory
      *
      * @param {object} options
      * @param {PIXI.brend.AttributeRedirect[]} options.attribSet - set of geometry attributes
-     * @param {string | Array<number>} options.indexCountProperty - no. of indices on display-object
+     * @param {string | Array<number>} options.indexProperty - no. of indices on display-object
      * @param {string | number} options.vertexCountProperty - no. of vertices on display-object
      * @param {string} options.textureProperty - textures used in display-object
      * @param {number} options.texturePerObject - no. of textures used per display-object

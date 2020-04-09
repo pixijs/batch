@@ -132,7 +132,7 @@ void main(void){
 // Create batch renderer class
 const ExampleRenderer = BatchRendererPluginFactory.from({
     attribSet,
-    indexCountProperty: "indices",
+    indexProperty: "indices",
     textureProperty: "texture",
     texIDAttrib: "aTextureId", // this will be used to locate the texture in the fragment shader later
     shaderFunction
