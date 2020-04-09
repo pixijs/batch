@@ -52,7 +52,7 @@
     <ul class="list">
     
     
-        <li class="item" data-name="PIXI">
+        <li class="item" data-name="PIXI.brend">
             <span class="title namespace ">
                 
                 <span class="namespaceTag">
@@ -60,7 +60,7 @@
                 </span>
                 
                 
-                    <a href="PIXI.html">PIXI</a>
+                    <a href="PIXI.brend.html">PIXI.brend</a>
                 
             </span>
             
@@ -74,39 +74,19 @@
             
             <ul class="typedefs itemMembers">
             
-            </ul>
+            <span class="subtitle">Interfaces</span>
             
-            <ul class="methods itemMembers">
-            
-            </ul>
-            
-            <ul class="events itemMembers">
-            
-            </ul>
-            
-        </li>
-    
-        <li class="item" data-name="FunctionCompiler">
-            <span class="title  ">
-                
-                
-                    <a href="FunctionCompiler.html">FunctionCompiler</a>
-                
-            </span>
-            
-            <ul class="members itemMembers">
-            
-            </ul>
-            
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            
-            <ul class="typedefs itemMembers">
+                <li class="parent" data-name="PIXI.brend.IBatchGeometryFactory"><a href="PIXI.brend.IBatchGeometryFactory.html">IBatchGeometryFactory</a></li>
             
             </ul>
             
             <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="PIXI.brend.InjectorFunction"><a href="PIXI.brend.html#.InjectorFunction">InjectorFunction</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend#IGeometryMerger"><a href="PIXI.brend.html#IGeometryMerger">IGeometryMerger</a></li>
             
             </ul>
             
@@ -210,11 +190,11 @@
             
         </li>
     
-        <li class="item" data-name="PIXI.brend.BatchGenerator">
+        <li class="item" data-name="PIXI.brend.BatchFactory">
             <span class="title  ">
                 
                 
-                    <a href="PIXI.brend.BatchGenerator.html">PIXI.brend.BatchGenerator</a>
+                    <a href="PIXI.brend.BatchFactory.html">PIXI.brend.BatchFactory</a>
                 
             </span>
             
@@ -222,7 +202,7 @@
             
             <span class="subtitle">Members</span>
             
-                <li class="parent " data-name="PIXI.brend.BatchGenerator#enableTextureReduction"><a href="PIXI.brend.BatchGenerator.html#enableTextureReduction">enableTextureReduction</a></li>
+                <li class="parent " data-name="PIXI.brend.BatchFactory#enableTextureReduction"><a href="PIXI.brend.BatchFactory.html#enableTextureReduction">enableTextureReduction</a></li>
             
             </ul>
             
@@ -238,11 +218,11 @@
             
             <span class="subtitle">Methods</span>
             
-                <li class="parent  " data-name="PIXI.brend.BatchGenerator#finalize"><a href="PIXI.brend.BatchGenerator.html#finalize">finalize</a></li>
+                <li class="parent  " data-name="PIXI.brend.BatchFactory#finalize"><a href="PIXI.brend.BatchFactory.html#finalize">finalize</a></li>
             
-                <li class="parent  " data-name="PIXI.brend.BatchGenerator#onPut"><a href="PIXI.brend.BatchGenerator.html#onPut">onPut</a></li>
+                <li class="parent  " data-name="PIXI.brend.BatchFactory#onPut"><a href="PIXI.brend.BatchFactory.html#onPut">onPut</a></li>
             
-                <li class="parent  " data-name="PIXI.brend.BatchGenerator#put"><a href="PIXI.brend.BatchGenerator.html#put">put</a></li>
+                <li class="parent  " data-name="PIXI.brend.BatchFactory#put"><a href="PIXI.brend.BatchFactory.html#put">put</a></li>
             
             </ul>
             
@@ -264,11 +244,13 @@
             
             <span class="subtitle">Members</span>
             
+                <li class="parent " data-name="PIXI.brend.BatchGeometryFactory#_geometryPool"><a href="PIXI.brend.BatchGeometryFactory.html#_geometryPool">_geometryPool</a></li>
+            
                 <li class="parent " data-name="PIXI.brend.BatchGeometryFactory#compositeAttributes"><a href="PIXI.brend.BatchGeometryFactory.html#compositeAttributes">compositeAttributes</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchGeometryFactory#compositeIndices"><a href="PIXI.brend.BatchGeometryFactory.html#compositeIndices">compositeIndices</a></li>
             
-                <li class="parent " data-name="PIXI.brend.BatchGeometryFactory#packerFunction"><a href="PIXI.brend.BatchGeometryFactory.html#packerFunction">packerFunction</a></li>
+                <li class="parent " data-name="PIXI.brend.BatchGeometryFactory#geometryMerger"><a href="PIXI.brend.BatchGeometryFactory.html#geometryMerger">geometryMerger</a></li>
             
             </ul>
             
@@ -284,9 +266,17 @@
             
             <span class="subtitle">Methods</span>
             
-                <li class="parent  " data-name="PIXI.brend.BatchGeometryFactory#pack"><a href="PIXI.brend.BatchGeometryFactory.html#pack">pack</a></li>
+                <li class="parent  " data-name="PIXI.brend.BatchGeometryFactory#append"><a href="PIXI.brend.BatchGeometryFactory.html#append">append</a></li>
             
-                <li class="parent  " data-name="PIXI.brend.BatchGeometryFactory#reset"><a href="PIXI.brend.BatchGeometryFactory.html#reset">reset</a></li>
+                <li class="parent  " data-name="PIXI.brend.BatchGeometryFactory#build"><a href="PIXI.brend.BatchGeometryFactory.html#build">build</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.BatchGeometryFactory#getAttributeBuffer"><a href="PIXI.brend.BatchGeometryFactory.html#getAttributeBuffer">getAttributeBuffer</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.BatchGeometryFactory#getIndexBuffer"><a href="PIXI.brend.BatchGeometryFactory.html#getIndexBuffer">getIndexBuffer</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.BatchGeometryFactory#init"><a href="PIXI.brend.BatchGeometryFactory.html#init">init</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.BatchGeometryFactory#release"><a href="PIXI.brend.BatchGeometryFactory.html#release">release</a></li>
             
             </ul>
             
@@ -458,7 +448,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="FunctionCompiler.html">Class: FunctionCompiler</h1>
+        <h1 class="page-title" data-filename="PIXI.brend.BatchFactory.html">Class: BatchFactory</h1>
         
 
 
@@ -467,8 +457,18 @@
     
 <header>
     <div class="header content-size">
-        <h2>FunctionCompiler
+        <h2><span class="ancestors"><a href="PIXI.brend.html">.brend</a>~</span>BatchFactory
         </h2>
+        
+            <div class="class-description"><p>Used to generate discrete groups/batches of display-objects
+that can be drawn together. It also keeps a parallel buffer
+of textures.</p>
+<p>This class ensures that the WebGL states are equivalent and
+the texture count doesn't become greater than the no. of
+texture registers on the GPU. You can extend it and add
+constraints by overriding <code>onPut</code>.</p>
+<p>WARNING: <code>BatchRenderer</code> does not support geometry
+packing with texture reduction disabled.</p></div>
         
     </div>
 </header>  
@@ -482,12 +482,12 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="FunctionCompiler">
-            <a class="share-icon" href="#FunctionCompiler"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="BatchFactory">
+            <a class="share-icon" href="#BatchFactory"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                new FunctionCompiler
+                new BatchFactory
             </span>
-            <span class="signature">(packer)</span>
+            <span class="signature">(textureIncrement, textureLimit, textureProperty, <span class="optional">enableTextureReduction</span>)</span>
             
             
             
@@ -496,7 +496,7 @@
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line553">pixi-batch-renderer.mjs:553</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line169">pixi-batch-renderer.mjs:169</a>
         </div>
         
     </div>
@@ -524,6 +524,8 @@
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
@@ -534,23 +536,138 @@
 	
         <tr>
             
-                <td class="name"><code>packer</code></td>
+                <td class="name"><code>textureIncrement</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">PIXI.brend.GeometryPacker</span>
+<span class="param-type">number</span>
 
 
             
             </td>
             
             
+                <td class="default">
+                
+                </td>
+            
             
             <td class="description last">
                 
+                    
+                    
+                        
+                    
+                
+                <p>textures per object</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>textureLimit</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
                 </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                <p>no. of texture registers in GPU</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>textureProperty</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                <p>property where texture is kept</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>enableTextureReduction</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>whether same textures
+aren't counted multiple times. This reduces draw calls and can
+draw huge amounts of objects at the same time. For example,
+if 1000 objects use the same texture, then they can be drawn
+together. Further more if 1000 object use the same 8 textures
+randomly, then they can be drawn together. (provided other
+constraints like state are satisfied.)</p></td>
         </tr>
 	
 	
@@ -612,7 +729,481 @@
     
     
     
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl class="list-members">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="enableTextureReduction">
+            <a class="share-icon" href="#enableTextureReduction"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">enableTextureReduction</span>
+            
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+    </div>
     
+    
+</dt>
+<dd>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl class="list-methods">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="finalize">
+            <a class="share-icon" href="#finalize"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                finalize
+            </span>
+            <span class="signature">(batch)</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line249">pixi-batch-renderer.mjs:249</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Finalize this batch by getting its data into a
+<code>Batch</code> object.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>batch</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="PIXI.brend.Batch.html">PIXI.brend.Batch</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onPut">
+            <a class="share-icon" href="#onPut"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                onPut
+            </span>
+            <span class="signature">(targetObject)</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line215">pixi-batch-renderer.mjs:215</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Overridable method that is called before an object
+is put into this batch. It should check compatibility
+with other objects, and return true/false accordingly.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>targetObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.DisplayObject</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>object being added</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="put">
+            <a class="share-icon" href="#put"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                put
+            </span>
+            <span class="signature">(targetObject, state)</span><span class="type-signature">boolean</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line226">pixi-batch-renderer.mjs:226</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Put an object into this batch.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>targetObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.DisplayObject</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>object to add</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.State</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>state required by that object</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        boolean
+                        
+                    
+            </td>
+            <td class="description last">whether the object was added to the
+batch. If it wasn't, you should finalize it.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        </dl>
     
     
     
@@ -632,7 +1223,7 @@
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Tue Apr 07 2020 23:06:03 GMT-0400 (Eastern Daylight Time)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Wed Apr 08 2020 21:26:57 GMT-0400 (Eastern Daylight Time)
             </div>
         </footer>
     </div>

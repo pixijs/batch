@@ -448,7 +448,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="PIXI.brend.BatchRendererPluginFactory.html">Class: BatchRendererPluginFactory</h1>
+        <h1 class="page-title" data-filename="PIXI.brend.BatchGeometryFactory.html">Class: BatchGeometryFactory</h1>
         
 
 
@@ -457,10 +457,21 @@
     
 <header>
     <div class="header content-size">
-        <h2><span class="ancestors"><a href="PIXI.brend.html">.brend</a>.</span>BatchRendererPluginFactory
+        <h2><span class="ancestors"><a href="PIXI.brend.html">.brend</a>~</span>BatchGeometryFactory
         </h2>
         
-            <div class="class-description"><p>Factory class for creating a batch-renderer.</p></div>
+            <div class="class-description"><p>Factory class that generates the geometry for a whole batch by feeding on
+the individual display-object geometries. This factory is reusable, i.e. you
+can build another geometry after a build call.</p>
+<p><strong>Optimizations:</strong> To speed up geometry generation, this compiles an optimized
+packing function that pushes attributes without looping through the attribute
+redirects.</p>
+<p><strong>Default Format:</strong> If you are not using a custom draw-call issuer, then
+the batch geometry must have an interleaved attribute data buffer and one
+index buffer.</p>
+<p><strong>Customization:</strong> If you want to customize the batch geometry, then you must
+also define your draw call issuer. This is not supported by pixi-batch-render
+but is work-in-progress.</p></div>
         
     </div>
 </header>  
@@ -474,12 +485,12 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="BatchRendererPluginFactory">
-            <a class="share-icon" href="#BatchRendererPluginFactory"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="BatchGeometryFactory">
+            <a class="share-icon" href="#BatchGeometryFactory"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                new PIXI.brend.BatchRendererPluginFactory
+                new BatchGeometryFactory
             </span>
-            <span class="signature">()</span>
+            <span class="signature">(attributeRedirects, indexProperty, vertexCountProperty, vertexSize, texturePerObject)</span>
             
             
             
@@ -488,7 +499,7 @@
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1252">pixi-batch-renderer.mjs:1252</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line481">pixi-batch-renderer.mjs:481</a>
         </div>
         
     </div>
@@ -497,6 +508,616 @@
 </dt>
 <dd>
     
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attributeRedirects</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="PIXI.brend.AttributeRedirect.html">PIXI.brend.AttributeRedirect</a>></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>indexProperty</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>property where indicies are kept; null/undefined if not required.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>vertexCountProperty</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>property where no. of vertices for each object
+are kept. This could also be a constant.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>vertexSize</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>vertex size, calculated by default. This should exclude the vertex attribute</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>texturePerObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>no. of textures per object</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+        </div>
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Implements</h3>
+        
+        <ul>
+            <li><a href="PIXI.brend.IBatchGeometryFactory.html">PIXI.brend.IBatchGeometryFactory</a></li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl class="list-members">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="_geometryPool">
+            <a class="share-icon" href="#_geometryPool"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">_geometryPool</span>
+            <span class="type-signature type">PIXI.Geometry</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Batch geometries that can be reused.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="PIXI.brend.IBatchGeometryFactory.html#release">PIXI.brend.IBatchGeometryFactory#release</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="compositeAttributes">
+            <a class="share-icon" href="#compositeAttributes"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">compositeAttributes</span>
+            <span class="type-signature type">PIXI.ViewableBuffer</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>This is the currently active composite attribute
+buffer. It may contain garbage in unused locations.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="compositeIndices">
+            <a class="share-icon" href="#compositeIndices"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">compositeIndices</span>
+            <span class="type-signature type">Uint16Array</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>This is the currently active composite index
+buffer. It may contain garbage in unused locations.</p>
+<p>It will be <code>null</code> if <code>indexProperty</code> was not given.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="geometryMerger">
+            <a class="share-icon" href="#geometryMerger"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">geometryMerger</span>
+            <span class="type-signature type"><a href="PIXI.brend.html#IGeometryMerger">PIXI.brend#IGeometryMerger</a></span>
+            
+            
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>This lazy getter returns the geometry-merger function. This function
+takes one argument - the display-object to be appended to the batch -
+and pushes its geometry to the batch geometry.</p>
+<p>You can overwrite this property with a custom geometry-merger function
+if customizing <code>PIXI.brend.BatchGeometryFactory</code>.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl class="list-methods">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="append">
+            <a class="share-icon" href="#append"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                append
+            </span>
+            <span class="signature">(targetObject, textureId)</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line544">pixi-batch-renderer.mjs:544</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Append's the display-object geometry to this batch's geometry.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>targetObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.DisplayObject</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>textureId</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="build">
+            <a class="share-icon" href="#build"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                build
+            </span>
+            <span class="signature">()</span><span class="type-signature">PIXI.Geometry</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line552">pixi-batch-renderer.mjs:552</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>This should wrap up the batch geometry in a <code>PIXI.Geometry</code> object.</p>
+    </div>
     
 
     
@@ -538,141 +1159,58 @@
     
     
     
+    <h5>Returns:</h5>
     
-    
-        <h5>Example</h5>
+
+
+<table class="params">
+    <thead>
+    <tr>
         
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        PIXI.Geometry
+                        
+                    
+            </td>
+            <td class="description last">the generated batch geometry</td>
+        </tr>
+    
+    </tbody>
+</table>
 
     
-    <pre class="prettyprint"><code>// Define the geometry of Sprite.
- const attribSet = [
-     // Sprite vertexData contains global coordinates of the corners
-     new AttributeRedirect({
-         source: 'vertexData',
-         attrib: 'aVertex',
-         type: 'float32',
-         size: 2,
-         glType: PIXI.TYPES.FLOAT,
-         glSize: 2,
-     }),
-     // Sprite uvs contains the normalized texture coordinates for each corner/vertex
-     new AttributeRedirect({
-         source: 'uvs',
-         attrib: 'aTextureCoord',
-         type: 'float32',
-         size: 2,
-         glType: PIXI.TYPES.FLOAT,
-         glSize: 2,
-     }),
- ];
-
- const shaderFunction = new ShaderGenerator(// 1. vertexShader
- `
- attribute vec2 aVertex;
- attribute vec2 aTextureCoord;
- attribute float aTextureId;
-
- varying float vTextureId;
- varying vec2 vTextureCoord;
-
- uniform mat3 projectionMatrix;
-
- void main() {
-     gl_Position = vec4((projectionMatrix * vec3(aVertex, 1)).xy, 0, 1);
-     vTextureId = aTextureId;
-     vTextureCoord = aTextureCoord;
- }
- `,
- `
- uniform sampler2D uSamplers[%texturesPerBatch%];
- varying float vTextureId;
- varying vec2 vTextureCoord;
-
- void main(void){
-     vec4 color;
-
-     // get color, which is the pixel in texture uSamplers[vTextureId] @ vTextureCoord
-     for (int k = 0; k < %texturesPerBatch%; ++k) {
-         if (int(vTextureId) == k) {
-             color = texture2D(uSamplers[k], vTextureCoord);
-             break;
-         }
-     }
-
-     gl_FragColor = color;
- }
- `,
- {// we don't use any uniforms except uSamplers, which is handled by default!
- },
- // no custom template injectors
- // disable vertex shader macros by default
- ).generateFunction()
-
- // Produce the SpriteBatchRenderer class!
- const SpriteBatchRenderer = BatchRendererPluginFactory.from({
-     attribSet,
-     indexCountProperty: 'indices',
-     textureProperty: 'texture',
-     texturePerObject: 1,
-     inBatchIdAttrib: 'aTextureId',
-     stateFunction: () => PIXI.State.for2d(), // default
-     shaderFunction
- });
-
- PIXI.Renderer.registerPlugin('customBatch', SpriteBatchRenderer);
-
- // Sprite will render using SpriteBatchRenderer instead of default PixiJS
- // batch renderer. Instead of targetting PIXI.Sprite, you can write a batch
- // renderer for a custom display-object too! (See main page for that example!)
- const exampleSprite = PIXI.Sprite.from('./asset/example.png');
- exampleSprite.pluginName = 'customBatch';
- exampleSprite.width = 128;
- exampleSprite.height = 128;</code></pre>
     
-
     
 </dd>
 
         
-        </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl class="list-methods">
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id=".from">
-            <a class="share-icon" href="#.from"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="getAttributeBuffer">
+            <a class="share-icon" href="#getAttributeBuffer"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                PIXI.brend.BatchRendererPluginFactory.from
+                getAttributeBuffer
             </span>
-            <span class="signature">(options, shaderFunction, <span class="optional">BatchRendererClass</span>)</span>
+            <span class="signature">(size)</span>
             
-            <span class="access-signature">static</span>
+            <span class="access-signature">protected</span>
             
             
         </h4>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1272">pixi-batch-renderer.mjs:1272</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line595">pixi-batch-renderer.mjs:595</a>
         </div>
         
     </div>
@@ -683,8 +1221,7 @@
     
     
     <div class="description">
-        <p>Generates a fully customized <code>BatchRenderer</code> that aggregates primitives
-and textures. This is useful for non-uniform based display-objects.</p>
+        <p>Allocates an attribute buffer with sufficient capacity to hold <code>size</code> elements.</p>
     </div>
     
 
@@ -715,13 +1252,13 @@ and textures. This is useful for non-uniform based display-objects.</p>
 	
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>size</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">number</span>
 
 
             
@@ -731,13 +1268,90 @@ and textures. This is useful for non-uniform based display-objects.</p>
             
             <td class="description last">
                 
-                    
-                    
-                        
-                    
-                
-                
-                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getIndexBuffer">
+            <a class="share-icon" href="#getIndexBuffer"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                getIndexBuffer
+            </span>
+            <span class="signature">(size)</span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line616">pixi-batch-renderer.mjs:616</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Allocates an index buffer (<code>Uint16Array</code>) with sufficient capacity to hold <code>size</code> indices.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
 
 <table class="params">
     <thead>
@@ -749,7 +1363,123 @@ and textures. This is useful for non-uniform based display-objects.</p>
 		<th>Type</th>
 		
 		
-		<th>Default</th>
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="init">
+            <a class="share-icon" href="#init"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                init
+            </span>
+            <span class="signature">(verticesBatched, indiciesBatched)</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line531">pixi-batch-renderer.mjs:531</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Ensures this factory has enough space to buffer the given number of vertices
+and indices. This should be called before feeding display-objects from the
+batch.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
 		
 		
 		<th class="last">Description</th>
@@ -761,141 +1491,7 @@ and textures. This is useful for non-uniform based display-objects.</p>
 	
         <tr>
             
-                <td class="name"><code>attribSet</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;<a href="PIXI.brend.AttributeRedirect.html">PIXI.brend.AttributeRedirect</a>></span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                <p>set of geometry attributes</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>indexCountProperty</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                <p>no. of indices on display-object</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>vertexCountProperty</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                <p>no. of vertices on display-object</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>textureProperty</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                <p>textures used in display-object</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>texturePerObject</code></td>
+                <td class="name"><code>verticesBatched</code></td>
             
             
             <td class="type">
@@ -908,110 +1504,145 @@ and textures. This is useful for non-uniform based display-objects.</p>
             </td>
             
             
-                <td class="default">
-                
-                </td>
-            
             
             <td class="description last">
                 
-                    
-                    
-                        
-                    
-                
-                <p>no. of textures used per display-object</p></td>
+                </td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>inBatchIdAttrib</code></td>
+                <td class="name"><code>indiciesBatched</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">number</span>
 
 
             
             </td>
             
             
-                <td class="default">
-                
-                </td>
-            
             
             <td class="description last">
                 
-                    
-                    
-                        
-                    
-                
-                <p>used to find texture for each display-object (index into array)</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>stateFunction</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">function</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    ()=>PIXI.State.for2d()
-                
                 </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>callback that finds the WebGL
-state required for display-object shader</p></td>
         </tr>
 	
 	
 	</tbody>
 </table>
-            </td>
-        </tr>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="release">
+            <a class="share-icon" href="#release"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                release
+            </span>
+            <span class="signature">(geom)</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line565">pixi-batch-renderer.mjs:565</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>This is used to return a batch geometry so it can be pooled and reused in a future <code>build()</code>
+call.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
 	
+	<tbody>
 	
 	
         <tr>
             
-                <td class="name"><code>shaderFunction</code></td>
+                <td class="name"><code>geom</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">PIXI.Geometry</span>
 
 
             
@@ -1021,102 +1652,8 @@ state required for display-object shader</p></td>
             
             <td class="description last">
                 
-                    
-                    
-                        
-                    
-                
-                <p>shader generator function</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>options.geometryFactory</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="PIXI.brend.BatchGeometryFactory.html">PIXI.brend.BatchGeometryFactory</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                </td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>options.BatchFactoryClass</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Class</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>custom batch factory class</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>BatchRendererClass</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Class</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>custom batch renderer class</p></td>
+                <p>releases back the geometry to be reused. It is expected
+that it is not used externally again.</p></td>
         </tr>
 	
 	
