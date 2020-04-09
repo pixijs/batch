@@ -1,7 +1,7 @@
 import { BatchRenderer } from './BatchRenderer';
 import { AttributeRedirect } from './redirects/AttributeRedirect';
 import BatchGeometryFactory from './BatchGeometryFactory';
-import BatchFactory from './BatchGenerator';
+import BatchFactory from './BatchFactory';
 
 import * as PIXI from 'pixi.js';
 

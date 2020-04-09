@@ -1,5 +1,5 @@
 import { Batch } from './Batch';
-import { BatchFactory } from './BatchGenerator';
+import { BatchFactory } from './BatchFactory';
 import { BatchGeometryFactory } from './BatchGeometryFactory';
 import * as PIXI from 'pixi.js';
 import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve';
