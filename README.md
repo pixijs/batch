@@ -20,7 +20,7 @@ This library builds upon the same concept and is designed for maximum flexibilit
 
 * Injector functions: Rather than just texture-related macros in the fragment shader/template, `PIXI.brend.ShaderGenerator` allows you to have additional macros and in the vertex shader/template as well.
 
-* Custom uniforms: You can use your own uniforms with `pixi-batch-renderer`, without having to create your own shader generator.
+* Custom uniforms: You can use your own uniforms with `pixi-batch-renderer`, without having to create your own shader generator!
 
 # Regular Batch Renderer Generation
 
