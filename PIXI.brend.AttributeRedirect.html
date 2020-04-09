@@ -32,7 +32,7 @@
 
     
     <script>
-    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"pixi-batch-renderer","footer":"Made with ♥ by Shukant Pal","copyright":"Copyright © 2019 Shukant Pal","disqus":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"PixiJS Batch Rendering Library API Documentation","description":"Documentation for pixi-batch-renderer library","keyword":"docs, documentation, pixi, pixijs, renderer, html5, javascript, jsdoc"},"linenums":true};
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"pixi-batch-renderer","footer":"Made with ♥ by Shukant Pal","copyright":"Copyright © 2019 Shukant Pal","disqus":"","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"PixiJS Batch Rendering Library API Documentation","description":"Documentation for pixi-batch-renderer library","keyword":"docs, documentation, pixi, pixijs, renderer, html5, javascript, jsdoc"},"linenums":true,"sort":false};
     </script>
     
 
@@ -77,6 +77,8 @@
             <span class="subtitle">Interfaces</span>
             
                 <li class="parent" data-name="PIXI.brend.IBatchGeometryFactory"><a href="PIXI.brend.IBatchGeometryFactory.html">IBatchGeometryFactory</a></li>
+            
+                <li class="parent" data-name="PIXI.brend#IBatchRendererOptions"><a href="PIXI.brend_IBatchRendererOptions.html">IBatchRendererOptions</a></li>
             
             </ul>
             
@@ -144,94 +146,6 @@
             
         </li>
     
-        <li class="item" data-name="PIXI.brend.Batch">
-            <span class="title  ">
-                
-                
-                    <a href="PIXI.brend.Batch.html">PIXI.brend.Batch</a>
-                
-            </span>
-            
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li class="parent " data-name="PIXI.brend.Batch#geometryOffset"><a href="PIXI.brend.Batch.html#geometryOffset">geometryOffset</a></li>
-            
-                <li class="parent " data-name="PIXI.brend.Batch#state"><a href="PIXI.brend.Batch.html#state">state</a></li>
-            
-                <li class="parent " data-name="PIXI.brend.Batch#textureBuffer"><a href="PIXI.brend.Batch.html#textureBuffer">textureBuffer</a></li>
-            
-                <li class="parent " data-name="PIXI.brend.Batch#uidMap"><a href="PIXI.brend.Batch.html#uidMap">uidMap</a></li>
-            
-            </ul>
-            
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li class="parent  " data-name="PIXI.brend.Batch#reset"><a href="PIXI.brend.Batch.html#reset">reset</a></li>
-            
-                <li class="parent  " data-name="PIXI.brend.Batch#upload"><a href="PIXI.brend.Batch.html#upload">upload</a></li>
-            
-            </ul>
-            
-            <ul class="events itemMembers">
-            
-            </ul>
-            
-        </li>
-    
-        <li class="item" data-name="PIXI.brend.BatchFactory">
-            <span class="title  ">
-                
-                
-                    <a href="PIXI.brend.BatchFactory.html">PIXI.brend.BatchFactory</a>
-                
-            </span>
-            
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li class="parent " data-name="PIXI.brend.BatchFactory#enableTextureReduction"><a href="PIXI.brend.BatchFactory.html#enableTextureReduction">enableTextureReduction</a></li>
-            
-            </ul>
-            
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li class="parent  " data-name="PIXI.brend.BatchFactory#finalize"><a href="PIXI.brend.BatchFactory.html#finalize">finalize</a></li>
-            
-                <li class="parent  " data-name="PIXI.brend.BatchFactory#onPut"><a href="PIXI.brend.BatchFactory.html#onPut">onPut</a></li>
-            
-                <li class="parent  " data-name="PIXI.brend.BatchFactory#put"><a href="PIXI.brend.BatchFactory.html#put">put</a></li>
-            
-            </ul>
-            
-            <ul class="events itemMembers">
-            
-            </ul>
-            
-        </li>
-    
         <li class="item" data-name="PIXI.brend.BatchGeometryFactory">
             <span class="title  ">
                 
@@ -245,10 +159,6 @@
             <span class="subtitle">Members</span>
             
                 <li class="parent " data-name="PIXI.brend.BatchGeometryFactory#_geometryPool"><a href="PIXI.brend.BatchGeometryFactory.html#_geometryPool">_geometryPool</a></li>
-            
-                <li class="parent " data-name="PIXI.brend.BatchGeometryFactory#compositeAttributes"><a href="PIXI.brend.BatchGeometryFactory.html#compositeAttributes">compositeAttributes</a></li>
-            
-                <li class="parent " data-name="PIXI.brend.BatchGeometryFactory#compositeIndices"><a href="PIXI.brend.BatchGeometryFactory.html#compositeIndices">compositeIndices</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchGeometryFactory#geometryMerger"><a href="PIXI.brend.BatchGeometryFactory.html#geometryMerger">geometryMerger</a></li>
             
@@ -295,6 +205,32 @@
             </span>
             
             <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_attribRedirects"><a href="PIXI.brend.BatchRenderer.html#_attribRedirects">_attribRedirects</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_batchFactory"><a href="PIXI.brend.BatchRenderer.html#_batchFactory">_batchFactory</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchFactoryClass"><a href="PIXI.brend.BatchRenderer.html#_BatchFactoryClass">_BatchFactoryClass</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchGeometryFactoryClass"><a href="PIXI.brend.BatchRenderer.html#_BatchGeometryFactoryClass">_BatchGeometryFactoryClass</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_geometryFactory"><a href="PIXI.brend.BatchRenderer.html#_geometryFactory">_geometryFactory</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_indexProperty"><a href="PIXI.brend.BatchRenderer.html#_indexProperty">_indexProperty</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_shaderFunction"><a href="PIXI.brend.BatchRenderer.html#_shaderFunction">_shaderFunction</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_stateFunction"><a href="PIXI.brend.BatchRenderer.html#_stateFunction">_stateFunction</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_texIDAttrib"><a href="PIXI.brend.BatchRenderer.html#_texIDAttrib">_texIDAttrib</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_texturePerObject"><a href="PIXI.brend.BatchRenderer.html#_texturePerObject">_texturePerObject</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_textureProperty"><a href="PIXI.brend.BatchRenderer.html#_textureProperty">_textureProperty</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_vertexCountProperty"><a href="PIXI.brend.BatchRenderer.html#_vertexCountProperty">_vertexCountProperty</a></li>
             
             </ul>
             
@@ -362,6 +298,44 @@
             
         </li>
     
+        <li class="item" data-name="PIXI.brend.BatchShaderFactory">
+            <span class="title  ">
+                
+                
+                    <a href="PIXI.brend.BatchShaderFactory.html">PIXI.brend.BatchShaderFactory</a>
+                
+            </span>
+            
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="PIXI.brend.BatchShaderFactory#disableVertexShaderTemplate"><a href="PIXI.brend.BatchShaderFactory.html#disableVertexShaderTemplate">disableVertexShaderTemplate</a></li>
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="PIXI.brend.BatchShaderFactory#derive"><a href="PIXI.brend.BatchShaderFactory.html#derive">derive</a></li>
+            
+            </ul>
+            
+            <ul class="events itemMembers">
+            
+            </ul>
+            
+        </li>
+    
         <li class="item" data-name="PIXI.brend.Redirect">
             <span class="title  ">
                 
@@ -398,11 +372,11 @@
             
         </li>
     
-        <li class="item" data-name="PIXI.brend.ShaderGenerator">
+        <li class="item" data-name="PIXI.brend.StdBatch">
             <span class="title  ">
                 
                 
-                    <a href="PIXI.brend.ShaderGenerator.html">PIXI.brend.ShaderGenerator</a>
+                    <a href="PIXI.brend.StdBatch.html">PIXI.brend.StdBatch</a>
                 
             </span>
             
@@ -410,15 +384,13 @@
             
             <span class="subtitle">Members</span>
             
-                <li class="parent " data-name="PIXI.brend.ShaderGenerator#_fragmentShaderTemplate"><a href="PIXI.brend.ShaderGenerator.html#_fragmentShaderTemplate">_fragmentShaderTemplate</a></li>
+                <li class="parent " data-name="PIXI.brend.StdBatch#geometryOffset"><a href="PIXI.brend.StdBatch.html#geometryOffset">geometryOffset</a></li>
             
-                <li class="parent " data-name="PIXI.brend.ShaderGenerator#_templateInjectors"><a href="PIXI.brend.ShaderGenerator.html#_templateInjectors">_templateInjectors</a></li>
+                <li class="parent " data-name="PIXI.brend.StdBatch#state"><a href="PIXI.brend.StdBatch.html#state">state</a></li>
             
-                <li class="parent " data-name="PIXI.brend.ShaderGenerator#_uniforms"><a href="PIXI.brend.ShaderGenerator.html#_uniforms">_uniforms</a></li>
+                <li class="parent " data-name="PIXI.brend.StdBatch#textureBuffer"><a href="PIXI.brend.StdBatch.html#textureBuffer">textureBuffer</a></li>
             
-                <li class="parent " data-name="PIXI.brend.ShaderGenerator#_vertexShaderTemplate"><a href="PIXI.brend.ShaderGenerator.html#_vertexShaderTemplate">_vertexShaderTemplate</a></li>
-            
-                <li class="parent " data-name="PIXI.brend.ShaderGenerator#disableVertexShaderTemplate"><a href="PIXI.brend.ShaderGenerator.html#disableVertexShaderTemplate">disableVertexShaderTemplate</a></li>
+                <li class="parent " data-name="PIXI.brend.StdBatch#uidMap"><a href="PIXI.brend.StdBatch.html#uidMap">uidMap</a></li>
             
             </ul>
             
@@ -434,7 +406,77 @@
             
             <span class="subtitle">Methods</span>
             
-                <li class="parent  " data-name="PIXI.brend.ShaderGenerator#generateFunction"><a href="PIXI.brend.ShaderGenerator.html#generateFunction">generateFunction</a></li>
+                <li class="parent  " data-name="PIXI.brend.StdBatch#reset"><a href="PIXI.brend.StdBatch.html#reset">reset</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.StdBatch#upload"><a href="PIXI.brend.StdBatch.html#upload">upload</a></li>
+            
+            </ul>
+            
+            <ul class="events itemMembers">
+            
+            </ul>
+            
+        </li>
+    
+        <li class="item" data-name="PIXI.brend.StdBatchFactory">
+            <span class="title  ">
+                
+                
+                    <a href="PIXI.brend.StdBatchFactory.html">PIXI.brend.StdBatchFactory</a>
+                
+            </span>
+            
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="PIXI.brend.StdBatchFactory#_batchBuffer"><a href="PIXI.brend.StdBatchFactory.html#_batchBuffer">_batchBuffer</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.StdBatchFactory#_batchCount"><a href="PIXI.brend.StdBatchFactory.html#_batchCount">_batchCount</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.StdBatchFactory#_batchPool"><a href="PIXI.brend.StdBatchFactory.html#_batchPool">_batchPool</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.StdBatchFactory#_textureBuffer"><a href="PIXI.brend.StdBatchFactory.html#_textureBuffer">_textureBuffer</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.StdBatchFactory#_textureCount"><a href="PIXI.brend.StdBatchFactory.html#_textureCount">_textureCount</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.StdBatchFactory#_textureLimit"><a href="PIXI.brend.StdBatchFactory.html#_textureLimit">_textureLimit</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.StdBatchFactory#_textureProperty"><a href="PIXI.brend.StdBatchFactory.html#_textureProperty">_textureProperty</a></li>
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="PIXI.brend.StdBatchFactory#_buildBatch"><a href="PIXI.brend.StdBatchFactory.html#_buildBatch">_buildBatch</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.StdBatchFactory#_newBatch"><a href="PIXI.brend.StdBatchFactory.html#_newBatch">_newBatch</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.StdBatchFactory#_nextBatch"><a href="PIXI.brend.StdBatchFactory.html#_nextBatch">_nextBatch</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.StdBatchFactory#_put"><a href="PIXI.brend.StdBatchFactory.html#_put">_put</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.StdBatchFactory#access"><a href="PIXI.brend.StdBatchFactory.html#access">access</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.StdBatchFactory#build"><a href="PIXI.brend.StdBatchFactory.html#build">build</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.StdBatchFactory#put"><a href="PIXI.brend.StdBatchFactory.html#put">put</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.StdBatchFactory#ready"><a href="PIXI.brend.StdBatchFactory.html#ready">ready</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.StdBatchFactory#reset"><a href="PIXI.brend.StdBatchFactory.html#reset">reset</a></li>
+            
+                <li class="parent  " data-name="PIXI.brend.StdBatchFactory#size"><a href="PIXI.brend.StdBatchFactory.html#size">size</a></li>
             
             </ul>
             
@@ -481,7 +523,7 @@ just one element) as the property itself.</p></div>
             <span class="">
                 new AttributeRedirect
             </span>
-            <span class="signature">(source, glslIdentifer, <span class="optional">type</span>, <span class="optional">size</span>, <span class="optional">glType</span>, glSize, <span class="optional">normalize</span>)</span>
+            <span class="signature">(options)</span>
             
             
             
@@ -490,7 +532,7 @@ just one element) as the property itself.</p></div>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line77">pixi-batch-renderer.mjs:77</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line78">pixi-batch-renderer.mjs:78</a>
         </div>
         
     </div>
@@ -507,6 +549,45 @@ just one element) as the property itself.</p></div>
     
     
         
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                
+                
 
 <table class="params">
     <thead>
@@ -565,7 +646,7 @@ just one element) as the property itself.</p></div>
 	
         <tr>
             
-                <td class="name"><code>glslIdentifer</code></td>
+                <td class="name"><code>attrib</code></td>
             
             
             <td class="type">
@@ -775,6 +856,12 @@ just one element) as the property itself.</p></div>
 	
 	</tbody>
 </table>
+            </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -822,17 +909,17 @@ just one element) as the property itself.</p></div>
 // Furthermore, the color is uploaded as four bytes (`attribute vec4 aTint`) while the
 // source returns an integer. This is done by splitting the 32-bit integer into four
 // 8-bit bytes.
-new PIXI.brend.AttributeRedirect(
-    (tgt: ExampleDisplay) => (tgt.alpha < 1.0 && tgt.tintMode === PREMULTIPLY)
+new PIXI.brend.AttributeRedirect({
+    source: (tgt: ExampleDisplay) => (tgt.alpha < 1.0 && tgt.tintMode === PREMULTIPLY)
          ? premultiplyTint(tgt.rgb, tgt.alpha)
          : tgt.rgb + (tgt.alpha << 24);
-    'aTint',
-    'int32',
-    '%notarray%',
-    PIXI.TYPES.UNSIGNED_BYTE,
-    4,
-    true
-);</code></pre>
+    attrib: 'aTint',
+    type: 'int32',
+    size: '%notarray%', // optional/default
+    glType: PIXI.TYPES.UNSIGNED_BYTE,
+    glSize: 4,
+    normalize: true // We are using [0, 255] range for RGBA here. Must normalize to [0, 1].
+});</code></pre>
     
 
     
@@ -1325,7 +1412,7 @@ on invokation.</p>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Wed Apr 08 2020 21:27:12 GMT-0400 (Eastern Daylight Time)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Thu Apr 09 2020 14:11:09 GMT-0400 (Eastern Daylight Time)
             </div>
         </footer>
     </div>
