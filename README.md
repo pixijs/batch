@@ -1,3 +1,5 @@
+[![](https://data.jsdelivr.com/v1/package/npm/pixi-batch-renderer-alpha/badge)](https://www.jsdelivr.com/package/npm/pixi-batch-renderer-alpha)
+
 `pixi-batch-renderer` is a PixiJS plugin that allows you to add batch rendering to your custom display objects. I have documented each class in the `PIXI.brend` namespace.
 
 # Concepts
