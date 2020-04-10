@@ -3,6 +3,7 @@ import { BatchGeometryFactory } from './BatchGeometryFactory';
 import * as PIXI from 'pixi.js';
 import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve';
 import { AttributeRedirect } from './redirects/AttributeRedirect';
+import { BatchDrawer } from './BatchDrawer';
 
 export interface IBatchRendererOptions
 {
@@ -16,12 +17,8 @@ export interface IBatchRendererOptions
     shaderFunction: (renderer: BatchRenderer) => PIXI.Shader;
     BatchFactoryClass?: typeof StdBatchFactory;
     BatchGeometryFactoryClass?: typeof BatchGeometryFactory;
+    BatchDrawerClass?: typeof BatchDrawer;
 }
-
-/**
- * @memberof PIXI.brend#
- * @interface IBatchRendererOptions
- */
 
 /**
  * This object renderer renders multiple display-objects in batches. It can greatly
@@ -31,17 +28,22 @@ export interface IBatchRendererOptions
  *
  * The batch rendering pipeline consists of the following stages:
  *
- * * **Display-object buffering**: Each display-object is kept in a buffer until it fills
- * up or a flush is required.
+ * * **Display-Object Buffering**: Each display-object is kept in a buffer until it fills up or a
+ * flush is required.
  *
- * * **Geometry compositing**: The geometries of each display-object are merged together
- * in one interleaved composite geometry.
+ * * **Batch Generation**: In a sliding window, display-object batches are generated based off of certain
+ * constraints like GPU texture units and the uniforms used in each display-object. This is done using an
+ * instance of {@link PIXI.brend.BatchFactory}.
  *
- * * **Batch accumulation**: In a sliding window, display-object batches are generated based
- * off of certain constraints like GPU texture units and the uniforms used in each display-object.
+ * * **Geometry Composition**: The geometries of all display-objects are merged together in a
+ * composite geometry. This is done using an instance of {@link PIXI.brend.BatchGeometryFactory}.
  *
- * * **Rendering**: Each batch is rendered in-order using `gl.draw*`. The textures and
- * uniforms of each display-object are uploaded as arrays.
+ * * **Drawing**: Each batch is rendered in-order using `gl.draw*`. The textures and
+ * uniforms of each display-object are uploaded as arrays. This is done using an instance of
+ * {@link PIXI.brend.BatchDrawer}.
+ *
+ * Each stage in this pipeline can be configured by overriding the appropriate component and passing that
+ * class to `BatchRendererPluginFactory.from*`.
  *
  * ## Shaders
  *
@@ -50,6 +52,9 @@ export interface IBatchRendererOptions
  * Since the max. display-object count per batch is not known until the WebGL context is created,
  * shaders are generated at runtime by processing shader templates. A shader templates has "%macros%"
  * that are replaced by constants at runtime.
+ *
+ * To use shader templates, simply use {@link PIXI.brend.BatchShaderFactory#derive}. This will generate a
+ * function that derives a shader from your template at runtime.
  *
  * ### Textures
  *
@@ -96,13 +101,14 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     readonly _indexProperty: string;
     readonly _vertexCountProperty: string | number;
     readonly _textureProperty: string;
-    readonly _texturePerObject: number;
+    readonly _texturesPerObject: number;
     readonly _texIDAttrib: string;
     readonly _stateFunction: Function;
     readonly _shaderFunction: Function;
 
     _batchFactory: StdBatchFactory;
     _geometryFactory: BatchGeometryFactory;
+    _drawer: BatchDrawer;
 
     _shader: PIXI.Shader;
 
@@ -114,26 +120,30 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
     protected readonly _BatchFactoryClass: typeof StdBatchFactory;
     protected readonly _BatchGeometryFactoryClass: typeof BatchGeometryFactory;
+    protected readonly _BatchDrawerClass: typeof BatchDrawer;
 
     /**
-     * Creates a batch renderer the renders display-objects with the described
-     * geometry.
+     * Creates a batch renderer the renders display-objects with the described geometry.
      *
-     * To register a batch-renderer plugin, you must use the API provided by
-     * `PIXI.brend.BatchRendererPluginFactory`.
+     * To register a batch-renderer plugin, you must use the API provided by `PIXI.brend.BatchRendererPluginFactory`.
      *
      * @param {PIXI.Renderer} renderer - renderer to attach to
-     * @param {PIXI.brend.AttributeRedirect[]} attributeRedirects
-     * @param {string | null} indexProperty
-     * @param {string | number} vertexCountProperty
-     * @param {string | null} textureProperty
-     * @param {number} texturePerObject
-     * @param {string} textureAttribute - name of texture-id attribute variable
-     * @param {Function} stateFunction - returns a {PIXI.State} for an object
-     * @param {Function} shaderFunction - generates a shader given this instance
-     * @param {PIXI.brend.BatchGeometryFactory} [packer=new PIXI.brend.BatchGeome]
-     * @param {Class} [BatchGeneratorClass=PIXI.brend.BatchGenerator]
-     * @see PIXI.brend.ShaderGenerator
+     * @param {object} options
+     * @param {PIXI.brend.AttributeRedirect[]} options.attribSet
+     * @param {string | null} options.indexProperty
+     * @param {string | number} [options.vertexCountProperty]
+     * @param {string | null} options.textureProperty
+     * @param {number} [options.texturesPerObject=1]
+     * @param {string} options.texIDAttrib - name of texture-id attribute variable
+     * @param {Function} options.stateFunction - returns a PIXI.State for an object
+     * @param {Function} options.shaderFunction - generates a shader given this instance
+     * @param {Class} [options.BatchGeometryFactory=PIXI.brend.BatchGeometry]
+     * @param {Class} [options.BatchFactoryClass=PIXI.brend.StdBatchFactory]
+     * @param {Class} [options.BatchDrawer=PIXI.brend.BatchDrawer]
+     * @see PIXI.brend.BatchShaderFactory
+     * @see PIXI.brend.StdBatchFactory
+     * @see PIXI.brend.BatchGeometryFactory
+     * @see PIXI.brend.BatchDrawer
      */
     constructor(renderer: PIXI.Renderer, options: IBatchRendererOptions)
     {
@@ -178,7 +188,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
          * @readonly
          * @default 1
          */
-        this._texturePerObject = typeof options.texturesPerObject !== 'undefined' ? options.texturesPerObject : 1;
+        this._texturesPerObject = typeof options.texturesPerObject !== 'undefined' ? options.texturesPerObject : 1;
 
         /**
          * Texture ID attribute
@@ -190,7 +200,6 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
         /**
          * State generating function (takes a display-object)
-         *
          * @member {Function}
          * @default () => PIXI.State.for2d()
          * @protected
@@ -200,7 +209,6 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
         /**
          * Shader generating function (takes the batch renderer)
-         *
          * @member {Function}
          * @protected
          * @see PIXI.brend.BatchShaderFactory
@@ -210,7 +218,6 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
         /**
          * Batch-factory class.
-         *
          * @member {Class}
          * @protected
          * @default PIXI.brend.StdBatchFactory
@@ -219,15 +226,22 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         this._BatchFactoryClass = options.BatchFactoryClass || StdBatchFactory;
 
         /**
-         * Batch-geometry factory class. It's constructor takes one argument - this batch
-         * renderer.
-         *
+         * Batch-geometry factory class. Its constructor takes one argument - this batch renderer.
          * @member {Class}
          * @protected
          * @default PIXI.brend.BatchGeometryFactory
          * @readonly
          */
         this._BatchGeometryFactoryClass = options.BatchGeometryFactoryClass || BatchGeometryFactory;
+
+        /**
+         * Batch drawer class. Its constructor takes one argument - this batch renderer.
+         * @member {Class}
+         * @protected
+         * @default PIXI.brend.BatchDrawer
+         * @readonly
+         */
+        this._BatchDrawerClass = options.BatchDrawerClass || BatchDrawer;
 
         // Although the runners property is not a public API, it is required to
         // handle contextChange events.
@@ -275,12 +289,18 @@ export class BatchRenderer extends PIXI.ObjectRenderer
          * @protected
          */
         this._geometryFactory = new this._BatchGeometryFactoryClass(this);
+
+        /**
+         * @member {_BatchDrawerClass}
+         * @readonly
+         * @protected
+         */
+        this._drawer = new this._BatchDrawerClass(this);
     }
 
     /**
-     * This is an internal method. It ensures that the batch renderer is ready
-     * to start buffering display-objects. This is automatically invoked by the
-     * renderer's batch system.
+     * This is an internal method. It ensures that the batch renderer is ready to start buffering display-objects.
+     * This is automatically invoked by the renderer's batch system.
      *
      * @override
      */
@@ -292,17 +312,17 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
         this._shader = this._shaderFunction(this);
 
-        if (this._shader.uniforms.uSamplers)
-        {
-            this._shader.uniforms.uSamplers
-                = BatchRenderer.generateTextureArray(this.MAX_TEXTURES);
-        }
-
         this.renderer.shader.bind(this._shader, false);
     }
 
     /**
-     * Adds the display-object to be rendered in a batch.
+     * Adds the display-object to be rendered in a batch. Your display-object's render/_render method should call
+     * this as follows:
+     *
+     * ```js
+     * renderer.setObjectRenderer(<BatchRenderer>);
+     * <BatchRenderer>.render(this);
+     * ```
      *
      * @param {PIXI.DisplayObject} displayObject
      * @override
@@ -315,14 +335,13 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
         if (this._indexProperty)
         {
-            this._bufferedIndices += resolveConstantOrProperty(
-                displayObject, this._indexProperty).length;
+            this._bufferedIndices += resolveConstantOrProperty(displayObject, this._indexProperty).length;
         }
     }
 
     /**
-     * Forces buffered display-objects to be rendered immediately. This should not
-     * be called unless absolutely necessary like the following scenarios:
+     * Forces buffered display-objects to be rendered immediately. This should not be called unless absolutely
+     * necessary like the following scenarios:
      *
      * * before directly rendering your display-object, to preserve render-order.
      *
@@ -333,15 +352,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
      */
     flush(): void
     {
-        const {
-            _batchFactory: batchFactory,
-            _geometryFactory: geometryFactory,
-            renderer,
-            _stateFunction: stateFunction,
-            _texturePerObject: texturePerObject,
-        } = this;
-
-        const gl = renderer.gl;
+        const { _batchFactory: batchFactory, _geometryFactory: geometryFactory, _stateFunction: stateFunction } = this;
         const buffer = this._objectBuffer;
         const bufferLength = buffer.length;
 
@@ -377,13 +388,14 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         const batchList = batchFactory.access();
         const batchCount = batchFactory.size();
 
+        // Loop through batches and their display-object list to compose geometry
         for (let i = 0; i < batchCount; i++)// loop-per(batch)
         {
             const batch = batchList[i];
             const batchBuffer = batch.batchBuffer;
             const batchLength = batchBuffer.length;
 
-            let vertexCount = 0;// eslint-disable-line
+            let vertexCount = 0;
             let indexCount = 0;
 
             for (let j = 0; j < batchLength; j++)// loop-per(targetObject)
@@ -407,41 +419,12 @@ export class BatchRenderer extends PIXI.ObjectRenderer
             }
         }
 
-        // Upload the geometry
-        const geom = geometryFactory.build();
-
-        renderer.geometry.bind(geom);
-
-        // Draw each batch
-        for (let i = 0; i < batchCount; i++)
-        {
-            const batch = batchList[i];
-
-            batch.upload(renderer);
-
-            if (this._indexProperty)
-            {
-                gl.drawElements(gl.TRIANGLES,
-                    batch.$indexCount,
-                    gl.UNSIGNED_SHORT,
-                    batch.geometryOffset * 2);// * 2 cause Uint16 indices
-            }
-            else
-            {
-                gl.drawArrays(gl.TRIANGLES,
-                    batch.geometryOffset,
-                    batch.$vertexCount);// TODO: *vertexSize
-            }
-
-            batch.reset();
-        }
-
-        geometryFactory.release(geom);
+        // BatchDrawer handles the rest!
+        this._drawer.draw();
     }
 
     /**
-     * Internal method that stops buffering of display-objects and flushes any existing
-     * buffers.
+     * Internal method that stops buffering of display-objects and flushes any existing buffers.
      *
      * @override
      */
@@ -453,6 +436,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         }
     }
 
+    // Should we document this?
     protected _vertexCountFor(targetObject: PIXI.DisplayObject): number
     {
         return (this._vertexCountProperty)

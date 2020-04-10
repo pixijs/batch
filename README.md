@@ -29,7 +29,29 @@ no. of textures units in the GPU.
 efficiency if most batchable display-objects have different values for uniforms (because then they can't be batched together).
 
 * **Modular architecture**: With the modular architecture of this library, you change the behaviour of any component. The
-geometry composition, batch generation, and (not done yet!) draw call issuing stages done using external objects.
+geometry composition, batch generation, and drawing stages are componentized and can be modified by providing a custom
+implementation to `BatchRendererPluginFactory.from`.
+
+### Caveat with filtered/masked objects
+
+Before rendering itself, a `PIXI.Container` with filters or a mask will flush the batch renderer and will not batch itself. This
+is because the PixiJS batch renderer cannot batch filtered and masked objects. Although this does not break pixi-batch-renderer,
+it does reduce batching-efficiency. If you want to create a batch renderer that will batch filtered and masked objects too, your display-object must override `render` (**however, you will have to derive your own batch renderer class for that**):
+
+```
+render(renderer: PIXI.Renderer): void
+{
+  // If you registered the batch renderer as a plugin "pluginName", then replace <BatchRenderer> with
+  // renderer.plugins.pluginName
+  renderer.setObjectRenderer(<BatchRenderer>);
+  <BatchRenderer>.render(this);
+
+  for (let i = 0, j = this.children.length; i < j; i++)
+  {
+      this._children.render(renderer);
+  }
+}
+```
 
 # Usage
 
@@ -144,8 +166,14 @@ PIXI.Renderer.registerPlugin("ExampleRenderer", ExampleRenderer);
 
 ### Advanced/Customized Batch Generation
 
-The `BatchRendererPluginFactory.from` method also accepts:
+The `BatchRendererPluginFactory.from` method also accepts these (optional) options that can be used to extend the
+behaviour of built-in components:
 
-* `BatchFactoryClass`: Customized version of [StdBatchFactory]{@link https://pixijs.io/pixi-batch-renderer/PIXI.brend.StdBatchFactory.html}
+* `BatchFactoryClass`: Child class of [StdBatchFactory]{@link https://pixijs.io/pixi-batch-renderer/PIXI.brend.StdBatchFactory.html}
 
-* `BatchGeometryClass`: Customized version of [BatchGeometryClass]{@link https://pixijs.io/pixi-batch-renderer/PIXI.brend.BatchGeometryFactory.html}
+* `BatchGeometryClass`: Child class of [BatchGeometry]{@link https://pixijs.io/pixi-batch-renderer/PIXI.brend.BatchGeometryFactory.html}
+
+* `BatchDrawerClass`: Child class of [BatchDrawer]{@link https://pixijs.io/pixi-batch-renderer/PIXI.brend.BatchDrawer.html}
+
+* `BatchRendererClass`: If overriding a component does not meet your requirements, you can derive your own batch renderer by
+providing a child class of [BatchRenderer]{@link https://pixijs.io/pixi-batch-renderer/PIXI.brend.BatchRenderer.html}

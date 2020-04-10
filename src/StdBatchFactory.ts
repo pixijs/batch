@@ -49,7 +49,7 @@ export class StdBatchFactory
          * Textures per display-object
          * @member {number}
          */
-        this._textureCount = renderer._texturePerObject;
+        this._textureCount = renderer._texturesPerObject;
 
         /**
          * Property in which textures are kept of display-objects

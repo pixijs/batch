@@ -4,6 +4,7 @@ import BatchGeometryFactory from './BatchGeometryFactory';
 import StdBatchFactory from './StdBatchFactory';
 
 import * as PIXI from 'pixi.js';
+import { BatchDrawer } from './BatchDrawer';
 
 // Geometry+Textures is the standard pipeline in Pixi's AbstractBatchRenderer.
 interface IBatchRendererStdOptions
@@ -20,6 +21,7 @@ interface IBatchRendererStdOptions
     BatchFactoryClass?: typeof StdBatchFactory;
     BatchRendererClass?: typeof BatchRenderer;
     BatchGeometryFactoryClass?: typeof BatchGeometryFactory;
+    BatchDrawerFactoryClass?: typeof BatchDrawer;
 }
 
 /**
@@ -119,8 +121,8 @@ interface IBatchRendererStdOptions
 export class BatchRendererPluginFactory
 {
     /**
-     * Generates a fully customized `BatchRenderer` that aggregates primitives
-     * and textures. This is useful for non-uniform based display-objects.
+     * Generates a fully customized `BatchRenderer` that aggregates primitives and textures. This is useful
+     * for non-uniform based display-objects.
      *
      * @param {object} options
      * @param {PIXI.brend.AttributeRedirect[]} options.attribSet - set of geometry attributes
@@ -132,13 +134,15 @@ export class BatchRendererPluginFactory
      * @param {string | Function}[options.stateFunction= ()=>PIXI.State.for2d()] - callback that finds the WebGL
      *  state required for display-object shader
      * @param {Function} options.shaderFunction - shader generator function
-     * @param {PIXI.brend.BatchGeometryFactory}[options.geometryFactory]
+     * @param {Class}[options.BatchGeometryFactoryClass] - custom batch geometry factory class
      * @param {Class} [options.BatchFactoryClass] - custom batch factory class
      * @param {Class} [options.BatchRendererClass] - custom batch renderer class
+     * @param {Class} [options.BatchDrawerClass] - custom batch drawer class
      * @static
      */
     static from(options: IBatchRendererStdOptions): typeof BatchRenderer
     {
+        // This class wraps around BatchRendererClass's constructor and passes the options from the outer scope.
         return class extends (options.BatchRendererClass || BatchRenderer)
         {
             constructor(renderer: PIXI.Renderer)

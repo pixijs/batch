@@ -36,7 +36,7 @@ export class StdBatch
         this.textureBuffer = null;
 
         /**
-         * Map of in-batch IDs to texture indices.
+         * Map of base-texture UIDs to texture indices into `uSamplers`.
          *
          * @member {Map<number, number>}
          */

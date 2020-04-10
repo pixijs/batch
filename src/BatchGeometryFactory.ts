@@ -177,7 +177,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
         this._indexProperty = renderer._indexProperty;
         this._vertexCountProperty = renderer._vertexCountProperty;
         this._vertexSize = AttributeRedirect.vertexSizeFor(this._attribRedirects);
-        this._texturesPerObject = renderer._texturePerObject;
+        this._texturesPerObject = renderer._texturesPerObject;
         this._textureProperty = renderer._textureProperty;
         this._texIDAttrib = renderer._texIDAttrib;
 
