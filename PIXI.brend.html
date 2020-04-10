@@ -78,8 +78,6 @@
             
                 <li class="parent" data-name="PIXI.brend.IBatchGeometryFactory"><a href="PIXI.brend.IBatchGeometryFactory.html">IBatchGeometryFactory</a></li>
             
-                <li class="parent" data-name="PIXI.brend#IBatchRendererOptions"><a href="PIXI.brend_IBatchRendererOptions.html">IBatchRendererOptions</a></li>
-            
             </ul>
             
             <ul class="methods itemMembers">
@@ -137,6 +135,44 @@
             </ul>
             
             <ul class="methods itemMembers">
+            
+            </ul>
+            
+            <ul class="events itemMembers">
+            
+            </ul>
+            
+        </li>
+    
+        <li class="item" data-name="PIXI.brend.BatchDrawer">
+            <span class="title  ">
+                
+                
+                    <a href="PIXI.brend.BatchDrawer.html">PIXI.brend.BatchDrawer</a>
+                
+            </span>
+            
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="PIXI.brend.BatchDrawer#renderer"><a href="PIXI.brend.BatchDrawer.html#renderer">renderer</a></li>
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="PIXI.brend.BatchDrawer#draw"><a href="PIXI.brend.BatchDrawer.html#draw">draw</a></li>
             
             </ul>
             
@@ -210,11 +246,15 @@
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_attribRedirects"><a href="PIXI.brend.BatchRenderer.html#_attribRedirects">_attribRedirects</a></li>
             
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchDrawerClass"><a href="PIXI.brend.BatchRenderer.html#_BatchDrawerClass">_BatchDrawerClass</a></li>
+            
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_batchFactory"><a href="PIXI.brend.BatchRenderer.html#_batchFactory">_batchFactory</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchFactoryClass"><a href="PIXI.brend.BatchRenderer.html#_BatchFactoryClass">_BatchFactoryClass</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchGeometryFactoryClass"><a href="PIXI.brend.BatchRenderer.html#_BatchGeometryFactoryClass">_BatchGeometryFactoryClass</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_drawer"><a href="PIXI.brend.BatchRenderer.html#_drawer">_drawer</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_geometryFactory"><a href="PIXI.brend.BatchRenderer.html#_geometryFactory">_geometryFactory</a></li>
             
@@ -226,9 +266,9 @@
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_texIDAttrib"><a href="PIXI.brend.BatchRenderer.html#_texIDAttrib">_texIDAttrib</a></li>
             
-                <li class="parent " data-name="PIXI.brend.BatchRenderer#_texturePerObject"><a href="PIXI.brend.BatchRenderer.html#_texturePerObject">_texturePerObject</a></li>
-            
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_textureProperty"><a href="PIXI.brend.BatchRenderer.html#_textureProperty">_textureProperty</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_texturesPerObject"><a href="PIXI.brend.BatchRenderer.html#_texturesPerObject">_texturesPerObject</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_vertexCountProperty"><a href="PIXI.brend.BatchRenderer.html#_vertexCountProperty">_vertexCountProperty</a></li>
             
@@ -574,6 +614,9 @@ const BatchRendererPluginFactory = brend.BatchRendererPluginFactory;</code></pre
             <dt class=""><a href="PIXI.brend.AttributeRedirect.html">AttributeRedirect</a></dt>
             
         
+            <dt class=""><a href="PIXI.brend.BatchDrawer.html">BatchDrawer</a></dt>
+            
+        
             <dt class=""><a href="PIXI.brend.BatchGeometryFactory.html">BatchGeometryFactory</a></dt>
             
         
@@ -622,7 +665,7 @@ const BatchRendererPluginFactory = brend.BatchRendererPluginFactory;</code></pre
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1509">pixi-batch-renderer.mjs:1509</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1559">pixi-batch-renderer.mjs:1559</a>
         </div>
         
     </div>
@@ -768,7 +811,7 @@ const BatchRendererPluginFactory = brend.BatchRendererPluginFactory;</code></pre
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1499">pixi-batch-renderer.mjs:1499</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1549">pixi-batch-renderer.mjs:1549</a>
         </div>
         
     </div>
@@ -963,53 +1006,6 @@ geometry factory.</p>
     
 </dd>
 
-            
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="IBatchRendererOptions">
-            <a class="share-icon" href="#IBatchRendererOptions"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">IBatchRendererOptions</span>
-            
-            
-            
-            
-            
-        </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
             </dl>
     
 
@@ -1026,7 +1022,7 @@ geometry factory.</p>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Thu Apr 09 2020 15:02:07 GMT-0400 (Eastern Daylight Time)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Apr 10 2020 11:44:07 GMT-0400 (Eastern Daylight Time)
             </div>
         </footer>
     </div>

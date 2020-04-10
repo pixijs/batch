@@ -78,8 +78,6 @@
             
                 <li class="parent" data-name="PIXI.brend.IBatchGeometryFactory"><a href="PIXI.brend.IBatchGeometryFactory.html">IBatchGeometryFactory</a></li>
             
-                <li class="parent" data-name="PIXI.brend#IBatchRendererOptions"><a href="PIXI.brend_IBatchRendererOptions.html">IBatchRendererOptions</a></li>
-            
             </ul>
             
             <ul class="methods itemMembers">
@@ -137,6 +135,44 @@
             </ul>
             
             <ul class="methods itemMembers">
+            
+            </ul>
+            
+            <ul class="events itemMembers">
+            
+            </ul>
+            
+        </li>
+    
+        <li class="item" data-name="PIXI.brend.BatchDrawer">
+            <span class="title  ">
+                
+                
+                    <a href="PIXI.brend.BatchDrawer.html">PIXI.brend.BatchDrawer</a>
+                
+            </span>
+            
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="PIXI.brend.BatchDrawer#renderer"><a href="PIXI.brend.BatchDrawer.html#renderer">renderer</a></li>
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="PIXI.brend.BatchDrawer#draw"><a href="PIXI.brend.BatchDrawer.html#draw">draw</a></li>
             
             </ul>
             
@@ -210,11 +246,15 @@
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_attribRedirects"><a href="PIXI.brend.BatchRenderer.html#_attribRedirects">_attribRedirects</a></li>
             
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchDrawerClass"><a href="PIXI.brend.BatchRenderer.html#_BatchDrawerClass">_BatchDrawerClass</a></li>
+            
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_batchFactory"><a href="PIXI.brend.BatchRenderer.html#_batchFactory">_batchFactory</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchFactoryClass"><a href="PIXI.brend.BatchRenderer.html#_BatchFactoryClass">_BatchFactoryClass</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchGeometryFactoryClass"><a href="PIXI.brend.BatchRenderer.html#_BatchGeometryFactoryClass">_BatchGeometryFactoryClass</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_drawer"><a href="PIXI.brend.BatchRenderer.html#_drawer">_drawer</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_geometryFactory"><a href="PIXI.brend.BatchRenderer.html#_geometryFactory">_geometryFactory</a></li>
             
@@ -226,9 +266,9 @@
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_texIDAttrib"><a href="PIXI.brend.BatchRenderer.html#_texIDAttrib">_texIDAttrib</a></li>
             
-                <li class="parent " data-name="PIXI.brend.BatchRenderer#_texturePerObject"><a href="PIXI.brend.BatchRenderer.html#_texturePerObject">_texturePerObject</a></li>
-            
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_textureProperty"><a href="PIXI.brend.BatchRenderer.html#_textureProperty">_textureProperty</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_texturesPerObject"><a href="PIXI.brend.BatchRenderer.html#_texturesPerObject">_texturesPerObject</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_vertexCountProperty"><a href="PIXI.brend.BatchRenderer.html#_vertexCountProperty">_vertexCountProperty</a></li>
             
@@ -530,7 +570,7 @@
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1344">pixi-batch-renderer.mjs:1344</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1392">pixi-batch-renderer.mjs:1392</a>
         </div>
         
     </div>
@@ -717,7 +757,7 @@
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1364">pixi-batch-renderer.mjs:1364</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1413">pixi-batch-renderer.mjs:1413</a>
         </div>
         
     </div>
@@ -728,8 +768,8 @@
     
     
     <div class="description">
-        <p>Generates a fully customized <code>BatchRenderer</code> that aggregates primitives
-and textures. This is useful for non-uniform based display-objects.</p>
+        <p>Generates a fully customized <code>BatchRenderer</code> that aggregates primitives and textures. This is useful
+for non-uniform based display-objects.</p>
     </div>
     
 
@@ -1071,13 +1111,13 @@ state required for display-object shader</p></td>
 	
         <tr>
             
-                <td class="name"><code>geometryFactory</code></td>
+                <td class="name"><code>BatchGeometryFactoryClass</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type"><a href="PIXI.brend.BatchGeometryFactory.html">PIXI.brend.BatchGeometryFactory</a></span>
+<span class="param-type">Class</span>
 
 
             
@@ -1098,7 +1138,7 @@ state required for display-object shader</p></td>
                         
                     
                 
-                </td>
+                <p>custom batch geometry factory class</p></td>
         </tr>
 	
 	
@@ -1170,6 +1210,40 @@ state required for display-object shader</p></td>
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name"><code>BatchDrawerClass</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Class</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>custom batch drawer class</p></td>
+        </tr>
+	
+	
 	</tbody>
 </table>
             </td>
@@ -1237,7 +1311,7 @@ state required for display-object shader</p></td>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Thu Apr 09 2020 15:02:07 GMT-0400 (Eastern Daylight Time)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Apr 10 2020 11:44:07 GMT-0400 (Eastern Daylight Time)
             </div>
         </footer>
     </div>

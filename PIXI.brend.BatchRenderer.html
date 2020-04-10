@@ -78,8 +78,6 @@
             
                 <li class="parent" data-name="PIXI.brend.IBatchGeometryFactory"><a href="PIXI.brend.IBatchGeometryFactory.html">IBatchGeometryFactory</a></li>
             
-                <li class="parent" data-name="PIXI.brend#IBatchRendererOptions"><a href="PIXI.brend_IBatchRendererOptions.html">IBatchRendererOptions</a></li>
-            
             </ul>
             
             <ul class="methods itemMembers">
@@ -137,6 +135,44 @@
             </ul>
             
             <ul class="methods itemMembers">
+            
+            </ul>
+            
+            <ul class="events itemMembers">
+            
+            </ul>
+            
+        </li>
+    
+        <li class="item" data-name="PIXI.brend.BatchDrawer">
+            <span class="title  ">
+                
+                
+                    <a href="PIXI.brend.BatchDrawer.html">PIXI.brend.BatchDrawer</a>
+                
+            </span>
+            
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="PIXI.brend.BatchDrawer#renderer"><a href="PIXI.brend.BatchDrawer.html#renderer">renderer</a></li>
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="PIXI.brend.BatchDrawer#draw"><a href="PIXI.brend.BatchDrawer.html#draw">draw</a></li>
             
             </ul>
             
@@ -210,11 +246,15 @@
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_attribRedirects"><a href="PIXI.brend.BatchRenderer.html#_attribRedirects">_attribRedirects</a></li>
             
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchDrawerClass"><a href="PIXI.brend.BatchRenderer.html#_BatchDrawerClass">_BatchDrawerClass</a></li>
+            
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_batchFactory"><a href="PIXI.brend.BatchRenderer.html#_batchFactory">_batchFactory</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchFactoryClass"><a href="PIXI.brend.BatchRenderer.html#_BatchFactoryClass">_BatchFactoryClass</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchGeometryFactoryClass"><a href="PIXI.brend.BatchRenderer.html#_BatchGeometryFactoryClass">_BatchGeometryFactoryClass</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_drawer"><a href="PIXI.brend.BatchRenderer.html#_drawer">_drawer</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_geometryFactory"><a href="PIXI.brend.BatchRenderer.html#_geometryFactory">_geometryFactory</a></li>
             
@@ -226,9 +266,9 @@
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_texIDAttrib"><a href="PIXI.brend.BatchRenderer.html#_texIDAttrib">_texIDAttrib</a></li>
             
-                <li class="parent " data-name="PIXI.brend.BatchRenderer#_texturePerObject"><a href="PIXI.brend.BatchRenderer.html#_texturePerObject">_texturePerObject</a></li>
-            
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_textureProperty"><a href="PIXI.brend.BatchRenderer.html#_textureProperty">_textureProperty</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_texturesPerObject"><a href="PIXI.brend.BatchRenderer.html#_texturesPerObject">_texturesPerObject</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_vertexCountProperty"><a href="PIXI.brend.BatchRenderer.html#_vertexCountProperty">_vertexCountProperty</a></li>
             
@@ -508,27 +548,33 @@ reduce the number of draw calls issued per frame.</p>
 <p>The batch rendering pipeline consists of the following stages:</p>
 <ul>
 <li>
-<p><strong>Display-object buffering</strong>: Each display-object is kept in a buffer until it fills
-up or a flush is required.</p>
+<p><strong>Display-Object Buffering</strong>: Each display-object is kept in a buffer until it fills up or a
+flush is required.</p>
 </li>
 <li>
-<p><strong>Geometry compositing</strong>: The geometries of each display-object are merged together
-in one interleaved composite geometry.</p>
+<p><strong>Batch Generation</strong>: In a sliding window, display-object batches are generated based off of certain
+constraints like GPU texture units and the uniforms used in each display-object. This is done using an
+instance of PIXI.brend.BatchFactory.</p>
 </li>
 <li>
-<p><strong>Batch accumulation</strong>: In a sliding window, display-object batches are generated based
-off of certain constraints like GPU texture units and the uniforms used in each display-object.</p>
+<p><strong>Geometry Composition</strong>: The geometries of all display-objects are merged together in a
+composite geometry. This is done using an instance of <a href="PIXI.brend.BatchGeometryFactory.html">PIXI.brend.BatchGeometryFactory</a>.</p>
 </li>
 <li>
-<p><strong>Rendering</strong>: Each batch is rendered in-order using <code>gl.draw*</code>. The textures and
-uniforms of each display-object are uploaded as arrays.</p>
+<p><strong>Drawing</strong>: Each batch is rendered in-order using <code>gl.draw*</code>. The textures and
+uniforms of each display-object are uploaded as arrays. This is done using an instance of
+<a href="PIXI.brend.BatchDrawer.html">PIXI.brend.BatchDrawer</a>.</p>
 </li>
 </ul>
+<p>Each stage in this pipeline can be configured by overriding the appropriate component and passing that
+class to <code>BatchRendererPluginFactory.from*</code>.</p>
 <h2>Shaders</h2>
 <h3>Shader templates</h3>
 <p>Since the max. display-object count per batch is not known until the WebGL context is created,
 shaders are generated at runtime by processing shader templates. A shader templates has &quot;%macros%&quot;
 that are replaced by constants at runtime.</p>
+<p>To use shader templates, simply use <a href="PIXI.brend.BatchShaderFactory.html#derive">PIXI.brend.BatchShaderFactory#derive</a>. This will generate a
+function that derives a shader from your template at runtime.</p>
 <h3>Textures</h3>
 <p>The batch renderer uploads textures in the <code>uniform sampler2D uSamplers[%texturesPerBatch%];</code>. The
 <code>varying float vTextureId</code> defines the index into this array that holds the current display-object's
@@ -564,7 +610,7 @@ work-in-progress feature.</p>
             <span class="">
                 new BatchRenderer
             </span>
-            <span class="signature">(renderer, attributeRedirects, indexProperty, vertexCountProperty, textureProperty, texturePerObject, textureAttribute, stateFunction, shaderFunction, <span class="optional">packer</span>, <span class="optional">BatchGeneratorClass</span>)</span>
+            <span class="signature">(renderer, options)</span>
             
             
             
@@ -573,7 +619,7 @@ work-in-progress feature.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line993">pixi-batch-renderer.mjs:993</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1045">pixi-batch-renderer.mjs:1045</a>
         </div>
         
     </div>
@@ -584,10 +630,8 @@ work-in-progress feature.</p>
     
     
     <div class="description">
-        <p>Creates a batch renderer the renders display-objects with the described
-geometry.</p>
-<p>To register a batch-renderer plugin, you must use the API provided by
-<code>PIXI.brend.BatchRendererPluginFactory</code>.</p>
+        <p>Creates a batch renderer the renders display-objects with the described geometry.</p>
+<p>To register a batch-renderer plugin, you must use the API provided by <code>PIXI.brend.BatchRendererPluginFactory</code>.</p>
     </div>
     
 
@@ -607,8 +651,6 @@ geometry.</p>
 		
 		<th>Type</th>
 		
-		
-		<th>Default</th>
 		
 		
 		<th class="last">Description</th>
@@ -633,17 +675,8 @@ geometry.</p>
             </td>
             
             
-                <td class="default">
-                
-                </td>
-            
             
             <td class="description last">
-                
-                    
-                    
-                        
-                    
                 
                 <p>renderer to attach to</p></td>
         </tr>
@@ -652,7 +685,48 @@ geometry.</p>
 	
         <tr>
             
-                <td class="name"><code>attributeRedirects</code></td>
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attribSet</code></td>
             
             
             <td class="type">
@@ -743,6 +817,8 @@ geometry.</p>
             <td class="description last">
                 
                     
+                        <span class="optional">optional</span>
+                    
                     
                         
                     
@@ -789,7 +865,7 @@ geometry.</p>
 	
         <tr>
             
-                <td class="name"><code>texturePerObject</code></td>
+                <td class="name"><code>texturesPerObject</code></td>
             
             
             <td class="type">
@@ -804,11 +880,15 @@ geometry.</p>
             
                 <td class="default">
                 
+                    1
+                
                 </td>
             
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
                     
                     
                         
@@ -821,7 +901,7 @@ geometry.</p>
 	
         <tr>
             
-                <td class="name"><code>textureAttribute</code></td>
+                <td class="name"><code>texIDAttrib</code></td>
             
             
             <td class="type">
@@ -878,7 +958,7 @@ geometry.</p>
                         
                     
                 
-                <p>returns a {PIXI.State} for an object</p></td>
+                <p>returns a PIXI.State for an object</p></td>
         </tr>
 	
 	
@@ -917,13 +997,13 @@ geometry.</p>
 	
         <tr>
             
-                <td class="name"><code>packer</code></td>
+                <td class="name"><code>BatchGeometryFactory</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type"><a href="PIXI.brend.BatchGeometryFactory.html">PIXI.brend.BatchGeometryFactory</a></span>
+<span class="param-type">Class</span>
 
 
             
@@ -932,7 +1012,7 @@ geometry.</p>
             
                 <td class="default">
                 
-                    new PIXI.brend.BatchGeome
+                    PIXI.brend.BatchGeometry
                 
                 </td>
             
@@ -953,7 +1033,7 @@ geometry.</p>
 	
         <tr>
             
-                <td class="name"><code>BatchGeneratorClass</code></td>
+                <td class="name"><code>BatchFactoryClass</code></td>
             
             
             <td class="type">
@@ -968,7 +1048,7 @@ geometry.</p>
             
                 <td class="default">
                 
-                    PIXI.brend.BatchGenerator
+                    PIXI.brend.StdBatchFactory
                 
                 </td>
             
@@ -983,6 +1063,48 @@ geometry.</p>
                     
                 
                 </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>BatchDrawer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Class</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    PIXI.brend.BatchDrawer
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
         </tr>
 	
 	
@@ -1012,7 +1134,13 @@ geometry.</p>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>PIXI.brend.ShaderGenerator</li>
+            <li><a href="PIXI.brend.BatchShaderFactory.html">PIXI.brend.BatchShaderFactory</a></li>
+        
+            <li><a href="PIXI.brend.StdBatchFactory.html">PIXI.brend.StdBatchFactory</a></li>
+        
+            <li><a href="PIXI.brend.BatchGeometryFactory.html">PIXI.brend.BatchGeometryFactory</a></li>
+        
+            <li><a href="PIXI.brend.BatchDrawer.html">PIXI.brend.BatchDrawer</a></li>
         </ul>
     </dd>
     
@@ -1120,6 +1248,60 @@ class ExampleObject extends PIXI.Container
     
     
     
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="_BatchDrawerClass">
+            <a class="share-icon" href="#_BatchDrawerClass"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">_BatchDrawerClass</span>
+            <span class="type-signature type">Class</span>
+            
+            <span class="access-signature">protected</span><span class="access-signature">readonly</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Batch drawer class. Its constructor takes one argument - this batch renderer.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>PIXI.brend.BatchDrawer</li></ul></dd>
     
     
     
@@ -1254,8 +1436,7 @@ class ExampleObject extends PIXI.Container
 <dd>
     
     <div class="description">
-        <p>Batch-geometry factory class. It's constructor takes one argument - this batch
-renderer.</p>
+        <p>Batch-geometry factory class. Its constructor takes one argument - this batch renderer.</p>
     </div>
     
     
@@ -1276,6 +1457,53 @@ renderer.</p>
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy"><li>PIXI.brend.BatchGeometryFactory</li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="_drawer">
+            <a class="share-icon" href="#_drawer"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">_drawer</span>
+            <span class="type-signature type">_BatchDrawerClass</span>
+            
+            <span class="access-signature">protected</span><span class="access-signature">readonly</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -1554,60 +1782,6 @@ renderer.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="_texturePerObject">
-            <a class="share-icon" href="#_texturePerObject"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">_texturePerObject</span>
-            <span class="type-signature type">number</span>
-            
-            <span class="access-signature">protected</span><span class="access-signature">readonly</span>
-            
-            
-        </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Textures per display-object</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>1</li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
         <h4 class="name" id="_textureProperty">
             <a class="share-icon" href="#_textureProperty"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">_textureProperty</span>
@@ -1642,6 +1816,60 @@ renderer.</p>
     
     
     
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="_texturesPerObject">
+            <a class="share-icon" href="#_texturesPerObject"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">_texturesPerObject</span>
+            <span class="type-signature type">number</span>
+            
+            <span class="access-signature">protected</span><span class="access-signature">readonly</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Textures per display-object</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>1</li></ul></dd>
     
     
     
@@ -1730,7 +1958,7 @@ renderer.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1091">pixi-batch-renderer.mjs:1091</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1146">pixi-batch-renderer.mjs:1146</a>
         </div>
         
     </div>
@@ -1806,7 +2034,7 @@ renderer.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1154">pixi-batch-renderer.mjs:1154</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1216">pixi-batch-renderer.mjs:1216</a>
         </div>
         
     </div>
@@ -1817,8 +2045,8 @@ renderer.</p>
     
     
     <div class="description">
-        <p>Forces buffered display-objects to be rendered immediately. This should not
-be called unless absolutely necessary like the following scenarios:</p>
+        <p>Forces buffered display-objects to be rendered immediately. This should not be called unless absolutely
+necessary like the following scenarios:</p>
 <ul>
 <li>
 <p>before directly rendering your display-object, to preserve render-order.</p>
@@ -1892,7 +2120,7 @@ because the PixiJS renderer is not re-entrant.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1136">pixi-batch-renderer.mjs:1136</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1198">pixi-batch-renderer.mjs:1198</a>
         </div>
         
     </div>
@@ -1903,7 +2131,11 @@ because the PixiJS renderer is not re-entrant.</p>
     
     
     <div class="description">
-        <p>Adds the display-object to be rendered in a batch.</p>
+        <p>Adds the display-object to be rendered in a batch. Your display-object's render/_render method should call
+this as follows:</p>
+<pre class="prettyprint source lang-js"><code>renderer.setObjectRenderer(&lt;BatchRenderer>);
+&lt;BatchRenderer>.render(this);
+</code></pre>
     </div>
     
 
@@ -2013,7 +2245,7 @@ because the PixiJS renderer is not re-entrant.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1119">pixi-batch-renderer.mjs:1119</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1179">pixi-batch-renderer.mjs:1179</a>
         </div>
         
     </div>
@@ -2024,9 +2256,8 @@ because the PixiJS renderer is not re-entrant.</p>
     
     
     <div class="description">
-        <p>This is an internal method. It ensures that the batch renderer is ready
-to start buffering display-objects. This is automatically invoked by the
-renderer's batch system.</p>
+        <p>This is an internal method. It ensures that the batch renderer is ready to start buffering display-objects.
+This is automatically invoked by the renderer's batch system.</p>
     </div>
     
 
@@ -2091,7 +2322,7 @@ renderer's batch system.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1226">pixi-batch-renderer.mjs:1226</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1273">pixi-batch-renderer.mjs:1273</a>
         </div>
         
     </div>
@@ -2102,8 +2333,7 @@ renderer's batch system.</p>
     
     
     <div class="description">
-        <p>Internal method that stops buffering of display-objects and flushes any existing
-buffers.</p>
+        <p>Internal method that stops buffering of display-objects and flushes any existing buffers.</p>
     </div>
     
 
@@ -2170,7 +2400,7 @@ buffers.</p>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Thu Apr 09 2020 15:02:07 GMT-0400 (Eastern Daylight Time)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Apr 10 2020 11:44:07 GMT-0400 (Eastern Daylight Time)
             </div>
         </footer>
     </div>

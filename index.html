@@ -78,8 +78,6 @@
             
                 <li class="parent" data-name="PIXI.brend.IBatchGeometryFactory"><a href="PIXI.brend.IBatchGeometryFactory.html">IBatchGeometryFactory</a></li>
             
-                <li class="parent" data-name="PIXI.brend#IBatchRendererOptions"><a href="PIXI.brend_IBatchRendererOptions.html">IBatchRendererOptions</a></li>
-            
             </ul>
             
             <ul class="methods itemMembers">
@@ -137,6 +135,44 @@
             </ul>
             
             <ul class="methods itemMembers">
+            
+            </ul>
+            
+            <ul class="events itemMembers">
+            
+            </ul>
+            
+        </li>
+    
+        <li class="item" data-name="PIXI.brend.BatchDrawer">
+            <span class="title  ">
+                
+                
+                    <a href="PIXI.brend.BatchDrawer.html">PIXI.brend.BatchDrawer</a>
+                
+            </span>
+            
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="PIXI.brend.BatchDrawer#renderer"><a href="PIXI.brend.BatchDrawer.html#renderer">renderer</a></li>
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="PIXI.brend.BatchDrawer#draw"><a href="PIXI.brend.BatchDrawer.html#draw">draw</a></li>
             
             </ul>
             
@@ -210,11 +246,15 @@
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_attribRedirects"><a href="PIXI.brend.BatchRenderer.html#_attribRedirects">_attribRedirects</a></li>
             
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchDrawerClass"><a href="PIXI.brend.BatchRenderer.html#_BatchDrawerClass">_BatchDrawerClass</a></li>
+            
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_batchFactory"><a href="PIXI.brend.BatchRenderer.html#_batchFactory">_batchFactory</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchFactoryClass"><a href="PIXI.brend.BatchRenderer.html#_BatchFactoryClass">_BatchFactoryClass</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_BatchGeometryFactoryClass"><a href="PIXI.brend.BatchRenderer.html#_BatchGeometryFactoryClass">_BatchGeometryFactoryClass</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_drawer"><a href="PIXI.brend.BatchRenderer.html#_drawer">_drawer</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_geometryFactory"><a href="PIXI.brend.BatchRenderer.html#_geometryFactory">_geometryFactory</a></li>
             
@@ -226,9 +266,9 @@
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_texIDAttrib"><a href="PIXI.brend.BatchRenderer.html#_texIDAttrib">_texIDAttrib</a></li>
             
-                <li class="parent " data-name="PIXI.brend.BatchRenderer#_texturePerObject"><a href="PIXI.brend.BatchRenderer.html#_texturePerObject">_texturePerObject</a></li>
-            
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_textureProperty"><a href="PIXI.brend.BatchRenderer.html#_textureProperty">_textureProperty</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_texturesPerObject"><a href="PIXI.brend.BatchRenderer.html#_texturesPerObject">_texturesPerObject</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_vertexCountProperty"><a href="PIXI.brend.BatchRenderer.html#_vertexCountProperty">_vertexCountProperty</a></li>
             
@@ -546,9 +586,27 @@ efficiency if most batchable display-objects have different values for uniforms 
 </li>
 <li>
 <p><strong>Modular architecture</strong>: With the modular architecture of this library, you change the behaviour of any component. The
-geometry composition, batch generation, and (not done yet!) draw call issuing stages done using external objects.</p>
+geometry composition, batch generation, and drawing stages are componentized and can be modified by providing a custom
+implementation to <code>BatchRendererPluginFactory.from</code>.</p>
 </li>
 </ul>
+<h3>Caveat with filtered/masked objects</h3>
+<p>Before rendering itself, a <code>PIXI.Container</code> with filters or a mask will flush the batch renderer and will not batch itself. This
+is because the PixiJS batch renderer cannot batch filtered and masked objects. Although this does not break pixi-batch-renderer,
+it does reduce batching-efficiency. If you want to create a batch renderer that will batch filtered and masked objects too, your display-object must override <code>render</code> (<strong>however, you will have to derive your own batch renderer class for that</strong>):</p>
+<pre class="prettyprint source"><code>render(renderer: PIXI.Renderer): void
+{
+  // If you registered the batch renderer as a plugin &quot;pluginName&quot;, then replace &lt;BatchRenderer> with
+  // renderer.plugins.pluginName
+  renderer.setObjectRenderer(&lt;BatchRenderer>);
+  &lt;BatchRenderer>.render(this);
+
+  for (let i = 0, j = this.children.length; i &lt; j; i++)
+  {
+      this._children.render(renderer);
+  }
+}
+</code></pre>
 <h1>Usage</h1>
 <h3>Standard Batch Renderer Generation</h3>
 <p>For most use cases, <code>PIXI.brend.BatchRendererPluginFactory</code> is all you'll need from this library. You need to do these three things:</p>
@@ -660,13 +718,21 @@ const ExampleRenderer = BatchRendererPluginFactory.from({
 PIXI.Renderer.registerPlugin(&quot;ExampleRenderer&quot;, ExampleRenderer);
 </code></pre>
 <h3>Advanced/Customized Batch Generation</h3>
-<p>The <code>BatchRendererPluginFactory.from</code> method also accepts:</p>
+<p>The <code>BatchRendererPluginFactory.from</code> method also accepts these (optional) options that can be used to extend the
+behaviour of built-in components:</p>
 <ul>
 <li>
-<p><code>BatchFactoryClass</code>: Customized version of <a target="_blank" href="https://pixijs.io/pixi-batch-renderer/PIXI.brend.StdBatchFactory.html">StdBatchFactory</a></p>
+<p><code>BatchFactoryClass</code>: Child class of <a target="_blank" href="https://pixijs.io/pixi-batch-renderer/PIXI.brend.StdBatchFactory.html">StdBatchFactory</a></p>
 </li>
 <li>
-<p><code>BatchGeometryClass</code>: Customized version of <a target="_blank" href="https://pixijs.io/pixi-batch-renderer/PIXI.brend.BatchGeometryFactory.html">BatchGeometryClass</a></p>
+<p><code>BatchGeometryClass</code>: Child class of <a target="_blank" href="https://pixijs.io/pixi-batch-renderer/PIXI.brend.BatchGeometryFactory.html">BatchGeometry</a></p>
+</li>
+<li>
+<p><code>BatchDrawerClass</code>: Child class of <a target="_blank" href="https://pixijs.io/pixi-batch-renderer/PIXI.brend.BatchDrawer.html">BatchDrawer</a></p>
+</li>
+<li>
+<p><code>BatchRendererClass</code>: If overriding a component does not meet your requirements, you can derive your own batch renderer by
+providing a child class of <a target="_blank" href="https://pixijs.io/pixi-batch-renderer/PIXI.brend.BatchRenderer.html">BatchRenderer</a></p>
 </li>
 </ul></article>
     </section>
@@ -680,7 +746,7 @@ PIXI.Renderer.registerPlugin(&quot;ExampleRenderer&quot;, ExampleRenderer);
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Thu Apr 09 2020 15:02:07 GMT-0400 (Eastern Daylight Time)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Apr 10 2020 11:44:07 GMT-0400 (Eastern Daylight Time)
             </div>
         </footer>
     </div>
