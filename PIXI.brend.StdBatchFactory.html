@@ -258,6 +258,8 @@
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_geometryFactory"><a href="PIXI.brend.BatchRenderer.html#_geometryFactory">_geometryFactory</a></li>
             
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_inBatchIDAttrib"><a href="PIXI.brend.BatchRenderer.html#_inBatchIDAttrib">_inBatchIDAttrib</a></li>
+            
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_indexProperty"><a href="PIXI.brend.BatchRenderer.html#_indexProperty">_indexProperty</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_shaderFunction"><a href="PIXI.brend.BatchRenderer.html#_shaderFunction">_shaderFunction</a></li>
@@ -269,6 +271,8 @@
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_textureProperty"><a href="PIXI.brend.BatchRenderer.html#_textureProperty">_textureProperty</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_texturesPerObject"><a href="PIXI.brend.BatchRenderer.html#_texturesPerObject">_texturesPerObject</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_uniformRedirects"><a href="PIXI.brend.BatchRenderer.html#_uniformRedirects">_uniformRedirects</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_vertexCountProperty"><a href="PIXI.brend.BatchRenderer.html#_vertexCountProperty">_vertexCountProperty</a></li>
             
@@ -476,6 +480,8 @@
             
                 <li class="parent " data-name="PIXI.brend.StdBatchFactory#_batchPool"><a href="PIXI.brend.StdBatchFactory.html#_batchPool">_batchPool</a></li>
             
+                <li class="parent " data-name="PIXI.brend.StdBatchFactory#_renderer"><a href="PIXI.brend.StdBatchFactory.html#_renderer">_renderer</a></li>
+            
                 <li class="parent " data-name="PIXI.brend.StdBatchFactory#_textureBuffer"><a href="PIXI.brend.StdBatchFactory.html#_textureBuffer">_textureBuffer</a></li>
             
                 <li class="parent " data-name="PIXI.brend.StdBatchFactory#_textureCount"><a href="PIXI.brend.StdBatchFactory.html#_textureCount">_textureCount</a></li>
@@ -577,7 +583,7 @@ textures are treated as &quot;special&quot; uniforms.</p></div>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line219">pixi-batch-renderer.mjs:219</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line221">pixi-batch-renderer.mjs:221</a>
         </div>
         
     </div>
@@ -661,7 +667,7 @@ textures are treated as &quot;special&quot; uniforms.</p></div>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>PIXI.brend.UtgBatchFactory</li>
+            <li>PIXI.brend.AggregateUniformsBatchFactory</li>
         </ul>
     </dd>
     
@@ -826,6 +832,53 @@ textures are treated as &quot;special&quot; uniforms.</p></div>
     <div class="description">
         <p>Pool to batch objects into which data is fed.</p>
     </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="_renderer">
+            <a class="share-icon" href="#_renderer"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">_renderer</span>
+            <span class="type-signature type"><a href="PIXI.brend.BatchRenderer.html">PIXI.brend.BatchRenderer</a></span>
+            
+            <span class="access-signature">protected</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
     
     
     
@@ -1079,7 +1132,7 @@ textures are treated as &quot;special&quot; uniforms.</p></div>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line390">pixi-batch-renderer.mjs:390</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line397">pixi-batch-renderer.mjs:397</a>
         </div>
         
     </div>
@@ -1216,7 +1269,7 @@ you must call <code>super._buildBatch</code> and clear any state.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line360">pixi-batch-renderer.mjs:360</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line367">pixi-batch-renderer.mjs:367</a>
         </div>
         
     </div>
@@ -1328,7 +1381,7 @@ you must call <code>super._buildBatch</code> and clear any state.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line366">pixi-batch-renderer.mjs:366</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line373">pixi-batch-renderer.mjs:373</a>
         </div>
         
     </div>
@@ -1445,7 +1498,7 @@ you must call <code>super._buildBatch</code> and clear any state.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line347">pixi-batch-renderer.mjs:347</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line354">pixi-batch-renderer.mjs:354</a>
         </div>
         
     </div>
@@ -1600,7 +1653,7 @@ added.</li>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line329">pixi-batch-renderer.mjs:329</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line336">pixi-batch-renderer.mjs:336</a>
         </div>
         
     </div>
@@ -1706,7 +1759,7 @@ itself.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line299">pixi-batch-renderer.mjs:299</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line306">pixi-batch-renderer.mjs:306</a>
         </div>
         
     </div>
@@ -1828,7 +1881,7 @@ so that a new batch can be started again.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line274">pixi-batch-renderer.mjs:274</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line281">pixi-batch-renderer.mjs:281</a>
         </div>
         
     </div>
@@ -2001,7 +2054,7 @@ so that a new batch can be started again.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line314">pixi-batch-renderer.mjs:314</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line321">pixi-batch-renderer.mjs:321</a>
         </div>
         
     </div>
@@ -2105,7 +2158,7 @@ so that a new batch can be started again.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line320">pixi-batch-renderer.mjs:320</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line327">pixi-batch-renderer.mjs:327</a>
         </div>
         
     </div>
@@ -2181,7 +2234,7 @@ so that a new batch can be started again.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line335">pixi-batch-renderer.mjs:335</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line342">pixi-batch-renderer.mjs:342</a>
         </div>
         
     </div>
@@ -2259,7 +2312,7 @@ so that a new batch can be started again.</p>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Apr 10 2020 11:44:07 GMT-0400 (Eastern Daylight Time)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Sat Apr 11 2020 16:17:41 GMT-0400 (Eastern Daylight Time)
             </div>
         </footer>
     </div>

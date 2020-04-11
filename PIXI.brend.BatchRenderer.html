@@ -258,6 +258,8 @@
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_geometryFactory"><a href="PIXI.brend.BatchRenderer.html#_geometryFactory">_geometryFactory</a></li>
             
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_inBatchIDAttrib"><a href="PIXI.brend.BatchRenderer.html#_inBatchIDAttrib">_inBatchIDAttrib</a></li>
+            
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_indexProperty"><a href="PIXI.brend.BatchRenderer.html#_indexProperty">_indexProperty</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_shaderFunction"><a href="PIXI.brend.BatchRenderer.html#_shaderFunction">_shaderFunction</a></li>
@@ -269,6 +271,8 @@
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_textureProperty"><a href="PIXI.brend.BatchRenderer.html#_textureProperty">_textureProperty</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_texturesPerObject"><a href="PIXI.brend.BatchRenderer.html#_texturesPerObject">_texturesPerObject</a></li>
+            
+                <li class="parent " data-name="PIXI.brend.BatchRenderer#_uniformRedirects"><a href="PIXI.brend.BatchRenderer.html#_uniformRedirects">_uniformRedirects</a></li>
             
                 <li class="parent " data-name="PIXI.brend.BatchRenderer#_vertexCountProperty"><a href="PIXI.brend.BatchRenderer.html#_vertexCountProperty">_vertexCountProperty</a></li>
             
@@ -476,6 +480,8 @@
             
                 <li class="parent " data-name="PIXI.brend.StdBatchFactory#_batchPool"><a href="PIXI.brend.StdBatchFactory.html#_batchPool">_batchPool</a></li>
             
+                <li class="parent " data-name="PIXI.brend.StdBatchFactory#_renderer"><a href="PIXI.brend.StdBatchFactory.html#_renderer">_renderer</a></li>
+            
                 <li class="parent " data-name="PIXI.brend.StdBatchFactory#_textureBuffer"><a href="PIXI.brend.StdBatchFactory.html#_textureBuffer">_textureBuffer</a></li>
             
                 <li class="parent " data-name="PIXI.brend.StdBatchFactory#_textureCount"><a href="PIXI.brend.StdBatchFactory.html#_textureCount">_textureCount</a></li>
@@ -619,7 +625,7 @@ work-in-progress feature.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1045">pixi-batch-renderer.mjs:1045</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1076">pixi-batch-renderer.mjs:1076</a>
         </div>
         
     </div>
@@ -1568,6 +1574,58 @@ class ExampleObject extends PIXI.Container
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="_inBatchIDAttrib">
+            <a class="share-icon" href="#_inBatchIDAttrib"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">_inBatchIDAttrib</span>
+            <span class="type-signature type">string</span>
+            
+            <span class="access-signature">protected</span><span class="access-signature">readonly</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Indexes the display-object in the batch. It is used to fetch the corresponding uniform
+from an array.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="_indexProperty">
             <a class="share-icon" href="#_indexProperty"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">_indexProperty</span>
@@ -1887,6 +1945,61 @@ class ExampleObject extends PIXI.Container
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="_uniformRedirects">
+            <a class="share-icon" href="#_uniformRedirects"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">_uniformRedirects</span>
+            <span class="type-signature type">Array.&lt;PIXI.brend.UniformRedirect></span>
+            
+            <span class="access-signature">protected</span><span class="access-signature">readonly</span>
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Uniform redirects. If you use uniforms in your shader, be sure to use one the compatible
+batch factories (like <code>PIXI.brend.AggregateUniformsBatchFactory</code>).</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="_vertexCountProperty">
             <a class="share-icon" href="#_vertexCountProperty"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">_vertexCountProperty</span>
@@ -1958,7 +2071,7 @@ class ExampleObject extends PIXI.Container
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1146">pixi-batch-renderer.mjs:1146</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1194">pixi-batch-renderer.mjs:1194</a>
         </div>
         
     </div>
@@ -2034,7 +2147,7 @@ class ExampleObject extends PIXI.Container
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1216">pixi-batch-renderer.mjs:1216</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1265">pixi-batch-renderer.mjs:1265</a>
         </div>
         
     </div>
@@ -2120,7 +2233,7 @@ because the PixiJS renderer is not re-entrant.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1198">pixi-batch-renderer.mjs:1198</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1247">pixi-batch-renderer.mjs:1247</a>
         </div>
         
     </div>
@@ -2245,7 +2358,7 @@ this as follows:</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1179">pixi-batch-renderer.mjs:1179</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1227">pixi-batch-renderer.mjs:1227</a>
         </div>
         
     </div>
@@ -2322,7 +2435,7 @@ This is automatically invoked by the renderer's batch system.</p>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1273">pixi-batch-renderer.mjs:1273</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1322">pixi-batch-renderer.mjs:1322</a>
         </div>
         
     </div>
@@ -2400,7 +2513,7 @@ This is automatically invoked by the renderer's batch system.</p>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Apr 10 2020 11:44:07 GMT-0400 (Eastern Daylight Time)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Sat Apr 11 2020 16:17:41 GMT-0400 (Eastern Daylight Time)
             </div>
         </footer>
     </div>
