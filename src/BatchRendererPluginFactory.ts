@@ -5,6 +5,7 @@ import StdBatchFactory from './StdBatchFactory';
 
 import * as PIXI from 'pixi.js';
 import { BatchDrawer } from './BatchDrawer';
+import { UniformRedirect } from './redirects';
 
 // Geometry+Textures is the standard pipeline in Pixi's AbstractBatchRenderer.
 interface IBatchRendererStdOptions
@@ -22,6 +23,9 @@ interface IBatchRendererStdOptions
     BatchRendererClass?: typeof BatchRenderer;
     BatchGeometryFactoryClass?: typeof BatchGeometryFactory;
     BatchDrawerFactoryClass?: typeof BatchDrawer;
+
+    uniformSet?: UniformRedirect[];
+    inBatchIDAttrib?: string;
 }
 
 /**

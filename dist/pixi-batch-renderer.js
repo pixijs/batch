@@ -1,6 +1,6 @@
 /*!
  * pixi-batch-renderer
- * Compiled Fri, 10 Apr 2020 15:43:22 UTC
+ * Compiled Sat, 11 Apr 2020 20:17:30 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -181,6 +181,8 @@ var __batch_renderer = (function (exports, PIXI) {
         /**
          * Uploads the resources required before rendering this batch. If you override
          * this, you must call `super.upload`.
+         *
+         * @param {PIXI.Renderer} renderer
          */
         upload(renderer) {
             this.textureBuffer.forEach((tex, i) => {
@@ -213,13 +215,18 @@ var __batch_renderer = (function (exports, PIXI) {
      *
      * @memberof PIXI.brend
      * @class
-     * @see PIXI.brend.UtgBatchFactory
+     * @see PIXI.brend.AggregateUniformsBatchFactory
      */
     class StdBatchFactory {
         /**
          * @param {PIXI.brend.BatchRenderer} renderer
          */
         constructor(renderer) {
+            /**
+             * @member {PIXI.brend.BatchRenderer}
+             * @protected
+             */
+            this._renderer = renderer;
             this._state = null;
             /**
              * Textures per display-object
@@ -446,8 +453,10 @@ var __batch_renderer = (function (exports, PIXI) {
 
     // BatchGeometryFactory uses this class internally to setup the attributes of
     // the batches.
+    //
+    // Supports Uniforms+Standard Pipeline's in-batch/uniform ID.
     class BatchGeometry extends PIXI.Geometry {
-        constructor(attributeRedirects, hasIndex, textureAttribute, texturePerObject) {
+        constructor(attributeRedirects, hasIndex, texIDAttrib, texturesPerObject, inBatchIDAttrib) {
             super();
             const attributeBuffer = new PIXI.Buffer(null, false, false);
             const indexBuffer = hasIndex ? new PIXI.Buffer(null, false, true) : null;
@@ -455,8 +464,11 @@ var __batch_renderer = (function (exports, PIXI) {
                 const { glslIdentifer, glType, glSize, normalize } = redirect;
                 this.addAttribute(glslIdentifer, attributeBuffer, glSize, normalize, glType);
             });
-            if (textureAttribute && texturePerObject > 0) {
-                this.addAttribute(textureAttribute, attributeBuffer, texturePerObject, true, PIXI.TYPES.FLOAT);
+            if (texIDAttrib && texturesPerObject > 0) {
+                this.addAttribute(texIDAttrib, attributeBuffer, texturesPerObject, true, PIXI.TYPES.FLOAT);
+            }
+            if (inBatchIDAttrib) {
+                this.addAttribute(inBatchIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
             }
             if (hasIndex) {
                 this.addIndex(indexBuffer);
@@ -536,6 +548,10 @@ var __batch_renderer = (function (exports, PIXI) {
      * also define your draw call issuer. This is not supported by pixi-batch-render
      * but is work-in-progress.
      *
+     * **inBatchID Support**: If you specified an `inBatchID` attribute in the batch-renderer,
+     * then this will support it automatically. The aggregate-uniforms pipeline doesn't need a custom
+     * geometry factory.
+     *
      * @memberof PIXI.brend
      * @class
      * @implements PIXI.brend.IBatchGeometryFactory
@@ -557,7 +573,11 @@ var __batch_renderer = (function (exports, PIXI) {
             this._texturesPerObject = renderer._texturesPerObject;
             this._textureProperty = renderer._textureProperty;
             this._texIDAttrib = renderer._texIDAttrib;
+            this._inBatchIDAttrib = renderer._inBatchIDAttrib;
             this._vertexSize += this._texturesPerObject * 4; // texture indices are also passed
+            if (this._inBatchIDAttrib) {
+                this._vertexSize += 4;
+            }
             if (this._texturesPerObject === 1) {
                 this._texID = 0;
             }
@@ -601,6 +621,7 @@ var __batch_renderer = (function (exports, PIXI) {
         append(targetObject, batch_) {
             const batch = batch_;
             const tex = targetObject[this._textureProperty];
+            // GeometryMerger uses _texID for texIDAttrib
             if (this._texturesPerObject === 1) {
                 const texUID = tex.baseTexture ? tex.baseTexture.uid : tex.uid;
                 this._texID = batch.uidMap[texUID];
@@ -612,6 +633,10 @@ var __batch_renderer = (function (exports, PIXI) {
                     const texUID = _tex.BaseTexture ? _tex.baseTexture.uid : _tex.uid;
                     this._texID[k] = batch.uidMap[texUID];
                 }
+            }
+            // GeometryMerger uses this
+            if (this._inBatchIDAttrib) {
+                this._inBatchID = batch.batchBuffer.indexOf(targetObject);
             }
             this.geometryMerger(targetObject, this);
         }
@@ -632,7 +657,7 @@ var __batch_renderer = (function (exports, PIXI) {
          * }
          */
         build() {
-            const geom = (this._geometryPool.pop() || new BatchGeometry(this._attribRedirects, true, this._texIDAttrib, this._texturesPerObject));
+            const geom = (this._geometryPool.pop() || new BatchGeometry(this._attribRedirects, true, this._texIDAttrib, this._texturesPerObject, this._inBatchIDAttrib));
             // We don't really have to remove the buffers because BatchRenderer won't reuse
             // the data in these buffers after the next build() call.
             geom.attribBuffer.update(this._targetCompositeAttributeBuffer.float32View);
@@ -775,7 +800,7 @@ var __batch_renderer = (function (exports, PIXI) {
             // Appends a vertice's attributes (inside the for-loop above).
             for (let i = 0; i < packer._attribRedirects.length; i++) {
                 const redirect = packer._attribRedirects[i];
-                /* Initialize adjsutedAIndex in terms of source type. */
+                // Initialize adjsutedAIndex in terms of source type.
                 if (!skipReverseTransformation) {
                     packerBody += `
                     adjustedAIndex = aIndex / ${this._sizeOf(i)};
@@ -842,6 +867,11 @@ var __batch_renderer = (function (exports, PIXI) {
                     aIndex = adjustedAIndex * 4;
                 `;
                 }
+            }
+            if (packer._inBatchIDAttrib) {
+                packerBody += `
+                float32View[adjustedAIndex++] = ${packer._inBatchID};
+            `;
             }
             /* Close the packing for-loop. */
             packerBody += `}
@@ -928,6 +958,7 @@ var __batch_renderer = (function (exports, PIXI) {
             const batchCount = batchFactory.size();
             const geom = geometryFactory.build();
             const { gl } = renderer;
+            renderer.shader.bind(this.renderer._shader, false);
             renderer.geometry.bind(geom);
             for (let i = 0; i < batchCount; i++) {
                 const batch = batchList[i];
@@ -1130,6 +1161,23 @@ var __batch_renderer = (function (exports, PIXI) {
              * @readonly
              */
             this._BatchDrawerClass = options.BatchDrawerClass || BatchDrawer;
+            /**
+             * Uniform redirects. If you use uniforms in your shader, be sure to use one the compatible
+             * batch factories (like `PIXI.brend.AggregateUniformsBatchFactory`).
+             * @member {PIXI.brend.UniformRedirect[]}
+             * @protected
+             * @default null
+             * @readonly
+             */
+            this._uniformRedirects = options.uniformSet || null;
+            /**
+             * Indexes the display-object in the batch. It is used to fetch the corresponding uniform
+             * from an array.
+             * @member {string}
+             * @protected
+             * @readonly
+             */
+            this._inBatchIDAttrib = options.inBatchIDAttrib;
             // Although the runners property is not a public API, it is required to
             // handle contextChange events.
             this.renderer.runners.contextChange.add(this);
@@ -1184,6 +1232,7 @@ var __batch_renderer = (function (exports, PIXI) {
             this._bufferedVertices = 0;
             this._bufferedIndices = 0;
             this._shader = this._shaderFunction(this);
+            // Doesn't hurt?
             this.renderer.shader.bind(this._shader, false);
         }
         /**
@@ -1284,17 +1333,6 @@ var __batch_renderer = (function (exports, PIXI) {
                 ? resolveConstantOrProperty(targetObject, this._vertexCountProperty)
                 : resolveFunctionOrProperty(targetObject, this._attribRedirects[0].source).length
                     / this._attribRedirects[0].size;
-        }
-        /**
-         * @private
-         * @param {number} count
-         */
-        static generateTextureArray(count) {
-            const array = new Int32Array(count);
-            for (let i = 0; i < count; i++) {
-                array[i] = i;
-            }
-            return array;
         }
     }
 
@@ -1432,6 +1470,11 @@ var __batch_renderer = (function (exports, PIXI) {
     function injectTexturesPerBatch(batchRenderer) {
         return `${batchRenderer.MAX_TEXTURES}`;
     }
+    const INJECTORS = {
+        uniformsPerBatch(renderer) {
+            return `${renderer._batchFactory.MAX_UNIFORMS}`;
+        },
+    };
     /**
      * Exposes an easy-to-use API for generating shader-functions to use in
      * the batch renderer!
@@ -1441,6 +1484,11 @@ var __batch_renderer = (function (exports, PIXI) {
      * injector is used - the textures per batch `%texturesPerBatch%` macro. This is replaced by
      * the number of textures passed to the `uSamplers` textures uniform.
      *
+     * **Built-in Injectors**:
+     *
+     * * `%texturesPerBatch%`: replaced by the max. textures allowed by WebGL context
+     *
+     * * `%uniformsPerBatch%`: replaced by the (aggregate-uniforms) batch factory's `MAX_UNIFORMS` property.
      *
      * @memberof PIXI.brend
      * @class

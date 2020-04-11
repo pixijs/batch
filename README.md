@@ -55,7 +55,7 @@ render(renderer: PIXI.Renderer): void
 
 # Usage
 
-### Standard Batch Renderer Generation
+### Standard Pipeline
 
 For most use cases, `PIXI.brend.BatchRendererPluginFactory` is all you'll need from this library. You need to do these three things:
 
@@ -162,6 +162,88 @@ const ExampleRenderer = BatchRendererPluginFactory.from({
 
 // Remember to do this before instantiating a PIXI.Application or PIXI.Renderer!
 PIXI.Renderer.registerPlugin("ExampleRenderer", ExampleRenderer);
+```
+
+### Uniforms Pipeline [Experimental]
+
+You can take advantage of shader uniforms in batching too! pixi-batch-renderer supports this out of the box
+with the `AggregateUniformsBatchFactory`. Adding to the previous example,
+
+```js
+const { UniformRedirect, AggregateUniformsBatchFactory } = require('pixi-batch-renderer');
+
+const shaderFunction = new BatchShaderFactory(
+// Vertex Shader
+`
+attribute vec2 aVertex;
+attribute vec2 aTextureCoord;
+attribute float aTextureId;
+attribute float aUniformId;
+
+varying float vTextureId;
+varying vec2 vTextureCoord;
+varying float vUniformId;
+
+uniform mat3 projectionMatrix;
+
+void main()
+{
+    gl_Position = vec4((projectionMatrix * vec3(aVertex.xy, 1), 0, 1);
+    vTextureId = aTextureId;
+    vTextureCoord = aTextureCoord;
+
+    vUniformId = aUniformId;
+}
+`,
+
+// Fragment Shader
+`
+// You can also use this in the vertex shader.
+uniform shaderType[%uniformsPerBatch%];
+varying float vUniformId;
+
+uniform uSamplers[%texturesPerBatch%];/* %texturesPerBatch% is a macro and will become a number */\
+varying float vTextureId;
+varying vec2 vTextureCoord;
+
+void main(void){
+    vec4 color;
+    float type;
+
+    /* get color & shaderType */
+    for (int k = 0; k < max(%texturesPerBatch%); ++k)
+    {
+        if (int(vTextureId) == k) {
+            color = texture2D(uSamplers[k], vTextureCoord);
+        }
+        if (int(vUniformId) == k) {
+            type = shaderType[vUniformId];
+        }
+    }
+
+
+    gl_FragColor = type == 1 ? color : vec4(color.rgb, 1);
+}
+`,
+{}).derive();
+
+const uniformSet = [
+  new UniformRedirect({ source: "type", uniform: "shadingType" });
+];
+
+const ExampleRenderer = BatchRendererPluginFactory.from({
+  uniformSet,
+  inBatchAttribID: "aUniformId",
+
+  // Previous example's stuff
+  attribSet,
+  indexProperty: "indices",
+  textureProperty: "texture",
+  texIDAttrib: "aTextureId",
+  shaderFunction,
+
+  BatchFactoryClass: AggregateUniformsBatchFactory
+})
 ```
 
 ### Advanced/Customized Batch Generation

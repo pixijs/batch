@@ -53,6 +53,8 @@ export class StdBatch
     /**
      * Uploads the resources required before rendering this batch. If you override
      * this, you must call `super.upload`.
+     *
+     * @param {PIXI.Renderer} renderer
      */
     upload(renderer: PIXI.Renderer): void
     {

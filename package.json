@@ -1,6 +1,6 @@
 {
   "name": "pixi-batch-renderer",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Batch rendering library for WebGL/PixiJS applications",
   "main": "lib/pixi-batch-renderer.cjs",
   "module": "lib/pixi-batch-renderer.mjs",

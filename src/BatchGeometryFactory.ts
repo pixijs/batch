@@ -6,6 +6,8 @@ import { StdBatch } from './StdBatch';
 
 // BatchGeometryFactory uses this class internally to setup the attributes of
 // the batches.
+//
+// Supports Uniforms+Standard Pipeline's in-batch/uniform ID.
 export class BatchGeometry extends PIXI.Geometry
 {
     // Interleaved attribute data buffer
@@ -16,8 +18,9 @@ export class BatchGeometry extends PIXI.Geometry
 
     constructor(attributeRedirects: AttributeRedirect[],
         hasIndex: boolean,
-        textureAttribute: string,
-        texturePerObject: number,
+        texIDAttrib: string,
+        texturesPerObject: number,
+        inBatchIDAttrib: string,
     )
     {
         super();
@@ -32,9 +35,13 @@ export class BatchGeometry extends PIXI.Geometry
             this.addAttribute(glslIdentifer, attributeBuffer, glSize, normalize, glType);
         });
 
-        if (textureAttribute && texturePerObject > 0)
+        if (texIDAttrib && texturesPerObject > 0)
         {
-            this.addAttribute(textureAttribute, attributeBuffer, texturePerObject, true, PIXI.TYPES.FLOAT);
+            this.addAttribute(texIDAttrib, attributeBuffer, texturesPerObject, true, PIXI.TYPES.FLOAT);
+        }
+        if (inBatchIDAttrib)
+        {
+            this.addAttribute(inBatchIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
         }
 
         if (hasIndex)
@@ -131,6 +138,10 @@ export abstract class IBatchGeometryFactory
  * also define your draw call issuer. This is not supported by pixi-batch-render
  * but is work-in-progress.
  *
+ * **inBatchID Support**: If you specified an `inBatchID` attribute in the batch-renderer,
+ * then this will support it automatically. The aggregate-uniforms pipeline doesn't need a custom
+ * geometry factory.
+ *
  * @memberof PIXI.brend
  * @class
  * @implements PIXI.brend.IBatchGeometryFactory
@@ -142,6 +153,9 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
     _aIndex: number;
     _iIndex: number;
 
+    // These properties are not protected because GeometryMerger uses them!
+
+    // Standard Pipeline
     _attribRedirects: AttributeRedirect[];
     _indexProperty: string;
     _vertexCountProperty: string | number;
@@ -149,6 +163,10 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
     _texturesPerObject: number;
     _textureProperty: string;
     _texIDAttrib: string;
+
+    // Uniform+Standard Pipeline
+    _inBatchIDAttrib: string;
+    _inBatchID: number;
 
     /* Set to the indicies of the display-object's textures in uSamplers uniform before
         invoking geometryMerger(). */
@@ -181,7 +199,14 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
         this._textureProperty = renderer._textureProperty;
         this._texIDAttrib = renderer._texIDAttrib;
 
+        this._inBatchIDAttrib = renderer._inBatchIDAttrib;
+
         this._vertexSize += this._texturesPerObject * 4;// texture indices are also passed
+
+        if (this._inBatchIDAttrib)
+        {
+            this._vertexSize += 4;
+        }
 
         if (this._texturesPerObject === 1)
         {
@@ -238,6 +263,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
         const batch: StdBatch = batch_ as StdBatch;
         const tex = (targetObject as any)[this._textureProperty];
 
+        // GeometryMerger uses _texID for texIDAttrib
         if (this._texturesPerObject === 1)
         {
             const texUID = tex.baseTexture ? tex.baseTexture.uid : tex.uid;
@@ -256,6 +282,12 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
 
                 (this._texID as number[])[k] = batch.uidMap[texUID];
             }
+        }
+
+        // GeometryMerger uses this
+        if (this._inBatchIDAttrib)
+        {
+            this._inBatchID = batch.batchBuffer.indexOf(targetObject);
         }
 
         this.geometryMerger(targetObject, this);
@@ -280,7 +312,12 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
     build(): PIXI.Geometry
     {
         const geom: BatchGeometry = (this._geometryPool.pop() || new BatchGeometry(
-            this._attribRedirects, true, this._texIDAttrib, this._texturesPerObject)) as BatchGeometry;
+            this._attribRedirects,
+            true,
+            this._texIDAttrib,
+            this._texturesPerObject,
+            this._inBatchIDAttrib,
+        )) as BatchGeometry;
 
         // We don't really have to remove the buffers because BatchRenderer won't reuse
         // the data in these buffers after the next build() call.
@@ -466,7 +503,7 @@ const GeometryMergerFactory = class
         {
             const redirect = packer._attribRedirects[i];
 
-            /* Initialize adjsutedAIndex in terms of source type. */
+            // Initialize adjsutedAIndex in terms of source type.
             if (!skipReverseTransformation)
             {
                 packerBody += `
@@ -554,6 +591,13 @@ const GeometryMergerFactory = class
                     aIndex = adjustedAIndex * 4;
                 `;
             }
+        }
+
+        if (packer._inBatchIDAttrib)
+        {
+            packerBody += `
+                float32View[adjustedAIndex++] = ${packer._inBatchID};
+            `;
         }
 
         /* Close the packing for-loop. */

@@ -15,10 +15,12 @@ import BatchRenderer from './BatchRenderer';
  *
  * @memberof PIXI.brend
  * @class
- * @see PIXI.brend.UtgBatchFactory
+ * @see PIXI.brend.AggregateUniformsBatchFactory
  */
 export class StdBatchFactory
 {
+    protected _renderer: BatchRenderer;
+
     protected _textureCount: number;
     protected _textureLimit: number;
     protected _textureProperty: string;
@@ -43,6 +45,11 @@ export class StdBatchFactory
      */
     constructor(renderer: BatchRenderer)
     {
+        /**
+         * @member {PIXI.brend.BatchRenderer}
+         * @protected
+         */
+        this._renderer = renderer;
         this._state = null;
 
         /**

@@ -4,9 +4,11 @@ import * as PIXI from 'pixi.js';
 import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve';
 import { AttributeRedirect } from './redirects/AttributeRedirect';
 import { BatchDrawer } from './BatchDrawer';
+import { UniformRedirect } from './redirects/UniformRedirect';
 
 export interface IBatchRendererOptions
 {
+    // Standard pipeline
     attribSet: AttributeRedirect[];
     indexProperty: string;
     vertexCountProperty?: string | number;
@@ -15,9 +17,15 @@ export interface IBatchRendererOptions
     texIDAttrib: string;
     stateFunction: (renderer: PIXI.DisplayObject) => PIXI.State;
     shaderFunction: (renderer: BatchRenderer) => PIXI.Shader;
+
+    // Components
     BatchFactoryClass?: typeof StdBatchFactory;
     BatchGeometryFactoryClass?: typeof BatchGeometryFactory;
     BatchDrawerClass?: typeof BatchDrawer;
+
+    // Uniforms+Standard Pipeline
+    uniformSet?: UniformRedirect[];
+    inBatchIDAttrib?: string;
 }
 
 /**
@@ -97,6 +105,7 @@ export interface IBatchRendererOptions
  */
 export class BatchRenderer extends PIXI.ObjectRenderer
 {
+    // Standard pipeline
     readonly _attribRedirects: AttributeRedirect[];
     readonly _indexProperty: string;
     readonly _vertexCountProperty: string | number;
@@ -106,18 +115,30 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     readonly _stateFunction: Function;
     readonly _shaderFunction: Function;
 
+    // Uniforms+Standard Pipeline
+    readonly _uniformRedirects: UniformRedirect[];
+    readonly _inBatchIDAttrib: string;
+
+    // API Visiblity Note: These properties are used by component/factories and must be public;
+    // however, they are prefixed with an underscore because they are not for exposure to the end-user.
+
+    // Components
     _batchFactory: StdBatchFactory;
     _geometryFactory: BatchGeometryFactory;
     _drawer: BatchDrawer;
 
-    _shader: PIXI.Shader;
-
+    // Display-object buffering
     _objectBuffer: PIXI.DisplayObject[];
     _bufferedVertices: number;
     _bufferedIndices: number;
 
+    // Drawer
+    _shader: PIXI.Shader;
+
+    // WebGL Context config
     MAX_TEXTURES: number;
 
+    // Component ctors
     protected readonly _BatchFactoryClass: typeof StdBatchFactory;
     protected readonly _BatchGeometryFactoryClass: typeof BatchGeometryFactory;
     protected readonly _BatchDrawerClass: typeof BatchDrawer;
@@ -243,6 +264,25 @@ export class BatchRenderer extends PIXI.ObjectRenderer
          */
         this._BatchDrawerClass = options.BatchDrawerClass || BatchDrawer;
 
+        /**
+         * Uniform redirects. If you use uniforms in your shader, be sure to use one the compatible
+         * batch factories (like `PIXI.brend.AggregateUniformsBatchFactory`).
+         * @member {PIXI.brend.UniformRedirect[]}
+         * @protected
+         * @default null
+         * @readonly
+         */
+        this._uniformRedirects = options.uniformSet || null;
+
+        /**
+         * Indexes the display-object in the batch. It is used to fetch the corresponding uniform
+         * from an array.
+         * @member {string}
+         * @protected
+         * @readonly
+         */
+        this._inBatchIDAttrib = options.inBatchIDAttrib;
+
         // Although the runners property is not a public API, it is required to
         // handle contextChange events.
         this.renderer.runners.contextChange.add(this);
@@ -312,6 +352,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
         this._shader = this._shaderFunction(this);
 
+        // Doesn't hurt?
         this.renderer.shader.bind(this._shader, false);
     }
 
@@ -444,22 +485,6 @@ export class BatchRenderer extends PIXI.ObjectRenderer
             : resolveFunctionOrProperty(targetObject,
                 this._attribRedirects[0].source).length
                     / (this._attribRedirects[0].size as number);
-    }
-
-    /**
-     * @private
-     * @param {number} count
-     */
-    static generateTextureArray(count: number): Int32Array
-    {
-        const array = new Int32Array(count);
-
-        for (let i = 0; i < count; i++)
-        {
-            array[i] = i;
-        }
-
-        return array;
     }
 }
 

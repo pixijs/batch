@@ -40,6 +40,7 @@ export class BatchDrawer
         const geom = geometryFactory.build();
         const { gl } = renderer;
 
+        renderer.shader.bind(this.renderer._shader, false);
         renderer.geometry.bind(geom);
 
         for (let i = 0; i < batchCount; i++)

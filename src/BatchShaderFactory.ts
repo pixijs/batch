@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import BatchRenderer from './BatchRenderer';
+import { AggregateUniformsBatchFactory } from './AggregateUniformsBatchFactory';
 
 // This file might need a cleanup :)
 
@@ -15,6 +16,13 @@ function injectTexturesPerBatch(batchRenderer: BatchRenderer): string
     return `${batchRenderer.MAX_TEXTURES}`;
 }
 
+const INJECTORS = {
+    uniformsPerBatch(renderer: BatchRenderer): string
+    {
+        return `${(renderer._batchFactory as AggregateUniformsBatchFactory).MAX_UNIFORMS}`;
+    },
+};
+
 /**
  * Exposes an easy-to-use API for generating shader-functions to use in
  * the batch renderer!
@@ -24,6 +32,11 @@ function injectTexturesPerBatch(batchRenderer: BatchRenderer): string
  * injector is used - the textures per batch `%texturesPerBatch%` macro. This is replaced by
  * the number of textures passed to the `uSamplers` textures uniform.
  *
+ * **Built-in Injectors**:
+ *
+ * * `%texturesPerBatch%`: replaced by the max. textures allowed by WebGL context
+ *
+ * * `%uniformsPerBatch%`: replaced by the (aggregate-uniforms) batch factory's `MAX_UNIFORMS` property.
  *
  * @memberof PIXI.brend
  * @class
