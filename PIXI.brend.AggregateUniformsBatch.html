@@ -678,7 +678,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="PIXI.brend.AttributeRedirect.html">Class: AttributeRedirect</h1>
+        <h1 class="page-title" data-filename="PIXI.brend.AggregateUniformsBatch.html">Class: AggregateUniformsBatch</h1>
         
 
 
@@ -687,12 +687,28 @@
     
 <header>
     <div class="header content-size">
-        <h2><span class="ancestors"><a href="PIXI.brend.html">.brend</a>~</span>AttributeRedirect
+        <h2><span class="ancestors"><a href="PIXI.brend.html">.brend</a>~</span>AggregateUniformsBatch
         </h2>
         
-            <div class="class-description"><p>This redirect defines an attribute of a display-object's geometry. The attribute
-data is expected to be stored in a <code>PIXI.ViewableBuffer</code>, in an array, or (if
-just one element) as the property itself.</p></div>
+            <div class="class-description"><p>Allows usage of uniforms when rendering display-objects in batches. It expects you to
+aggregate each display-object's uniforms in an array and that the shader will pick
+the appropriate uniform at runtime (an index into the uniforms array will be passed).</p>
+<p><strong>Usage in shader:</strong></p>
+<pre class="prettyprint source"><code>// Your display-objects' affine transforms are aggregated into this array.
+uniform mat3d affineTransform[];
+
+// For WebGL1+ machines, your uniforms may be fetched by the uniform-ID attrib (float).
+varying float vUniformID;
+
+// For WebGL-2 only, to prevent interpolation overhead, you may use the flat in variables. You
+// can configure this in AggregateUniformShaderFactory.
+flat in int uniformID;
+</code></pre>
+<h1>No Aggregation Mode</h1>
+<p>Aggregating uniforms into arrays requries a uniform-ID attribute to be uploaded as well. This
+may cost a lot of memory if your uniforms don't really change a lot. For these cases, you can
+disable uniform aggregation by not passing a <code>uniformIDAttrib</code>. This will make batches <strong>only</strong>
+have one value for each uniform. The uniforms will still be uploaded as 1-element arrays, however.</p></div>
         
     </div>
 </header>  
@@ -706,12 +722,12 @@ just one element) as the property itself.</p></div>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="AttributeRedirect">
-            <a class="share-icon" href="#AttributeRedirect"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="AggregateUniformsBatch">
+            <a class="share-icon" href="#AggregateUniformsBatch"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                new AttributeRedirect
+                new AggregateUniformsBatch
             </span>
-            <span class="signature">(options)</span>
+            <span class="signature">()</span>
             
             
             
@@ -720,7 +736,7 @@ just one element) as the property itself.</p></div>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line78">pixi-batch-renderer.mjs:78</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1663">pixi-batch-renderer.mjs:1663</a>
         </div>
         
     </div>
@@ -735,321 +751,6 @@ just one element) as the property itself.</p></div>
     
     
     
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                
-                
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>source</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">function</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                <p>redirect source</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>attrib</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                <p>shader attribute variable</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    'float32'
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>the type of data stored in the source</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>size</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-|
-
-<span class="param-type">'%notarray%'</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>size of the source array ('%notarray' if not an array &amp; just one element)</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>glType</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">PIXI.TYPES</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    PIXI.TYPES.FLOAT
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>data format to be uploaded in</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>glSize</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                <p>number of elements to be uploaded as (size of source and upload must match)</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>normalize</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>whether to normalize the data before uploading</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-            </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -1087,30 +788,6 @@ just one element) as the property itself.</p></div>
     
     
     
-        <h5>Example</h5>
-        
-
-    
-    <pre class="prettyprint"><code>// This attribute redirect calculates the tint used on top of a texture. Since the
-// tintMode can change anytime, it is better to use a derived source (function).
-//
-// Furthermore, the color is uploaded as four bytes (`attribute vec4 aTint`) while the
-// source returns an integer. This is done by splitting the 32-bit integer into four
-// 8-bit bytes.
-new PIXI.brend.AttributeRedirect({
-    source: (tgt: ExampleDisplay) => (tgt.alpha < 1.0 && tgt.tintMode === PREMULTIPLY)
-         ? premultiplyTint(tgt.rgb, tgt.alpha)
-         : tgt.rgb + (tgt.alpha << 24);
-    attrib: 'aTint',
-    type: 'int32',
-    size: '%notarray%', // optional/default
-    glType: PIXI.TYPES.UNSIGNED_BYTE,
-    glSize: 4,
-    normalize: true // We are using [0, 255] range for RGBA here. Must normalize to [0, 1].
-});</code></pre>
-    
-
-    
 </dd>
 
         
@@ -1121,7 +798,7 @@ new PIXI.brend.AttributeRedirect({
         <h3 class="subsection-title">Extends</h3>
         
         <ul>
-            <li><a href="PIXI.brend.Redirect.html">PIXI.brend.Redirect</a></li>
+            <li><a href="PIXI.brend.StdBatch.html">PIXI.brend.StdBatch</a></li>
         </ul>
     
     
@@ -1142,13 +819,17 @@ new PIXI.brend.AttributeRedirect({
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="glSize">
-            <a class="share-icon" href="#glSize"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">glSize</span>
+        <h4 class="name" id="geometryOffset">
+            <a class="share-icon" href="#geometryOffset"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">geometryOffset</span>
+            <span class="type-signature type">number</span>
             
             
-            <span class="access-signature">readonly</span>
             
+                <span class="access-signature inherited"><a href="PIXI.brend.StdBatch.html#geometryOffset">inherited</a></span>
+            
+            
+                <span class="access-signature overrides"><a href="PIXI.brend.StdBatch.html#geometryOffset">overrides</a></span>
             
         </h4>
     </div>
@@ -1158,8 +839,7 @@ new PIXI.brend.AttributeRedirect({
 <dd>
     
     <div class="description">
-        <p>Size of attribute in terms of <code>glType</code>.</p>
-<p>Note that <code>glSize * glType &lt;= size * type</code></p>
+        <p>Index of the first vertex of this batch's geometry in the uploaded geometry.</p>
     </div>
     
     
@@ -1194,17 +874,13 @@ new PIXI.brend.AttributeRedirect({
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="glslIdentifer">
-            <a class="share-icon" href="#glslIdentifer"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">glslIdentifer</span>
-            <span class="type-signature type">string</span>
+        <h4 class="name" id="renderer">
+            <a class="share-icon" href="#renderer"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">renderer</span>
+            <span class="type-signature type"><a href="PIXI.brend.BatchRenderer.html">PIXI.brend.BatchRenderer</a></span>
             
             
             
-                <span class="access-signature inherited"><a href="PIXI.brend.Redirect.html#glslIdentifer">inherited</a></span>
-            
-            
-                <span class="access-signature overrides"><a href="PIXI.brend.Redirect.html#glslIdentifer">overrides</a></span>
             
         </h4>
     </div>
@@ -1214,8 +890,7 @@ new PIXI.brend.AttributeRedirect({
 <dd>
     
     <div class="description">
-        <p>The shader variable that references the resource, e.g. attribute or uniform
-name.</p>
+        <p>Renderer holding the uniform redirects</p>
     </div>
     
     
@@ -1250,13 +925,17 @@ name.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="glType">
-            <a class="share-icon" href="#glType"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">glType</span>
-            <span class="type-signature type">PIXI.TYPES</span>
+        <h4 class="name" id="state">
+            <a class="share-icon" href="#state"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">state</span>
+            <span class="type-signature type">PIXI.State</span>
             
             
             
+                <span class="access-signature inherited"><a href="PIXI.brend.StdBatch.html#state">inherited</a></span>
+            
+            
+                <span class="access-signature overrides"><a href="PIXI.brend.StdBatch.html#state">overrides</a></span>
             
         </h4>
     </div>
@@ -1266,13 +945,7 @@ name.</p>
 <dd>
     
     <div class="description">
-        <p>Type of attribute, when uploading.</p>
-<p>Normally, you would use the corresponding type for
-the view on source. However, to speed up uploads
-you can aggregate attribute values in larger data
-types. For example, an RGBA vec4 (byte-sized channels)
-can be represented as one <code>Uint32</code>, while having
-a <code>glType</code> of <code>UNSIGNED_BYTE</code>.</p>
+        <p>State required to render this batch.</p>
     </div>
     
     
@@ -1307,13 +980,17 @@ a <code>glType</code> of <code>UNSIGNED_BYTE</code>.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="normalize">
-            <a class="share-icon" href="#normalize"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">normalize</span>
-            <span class="type-signature type">boolean</span>
+        <h4 class="name" id="textureBuffer">
+            <a class="share-icon" href="#textureBuffer"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">textureBuffer</span>
+            <span class="type-signature type">Array.&lt;PIXI.Texture></span>
             
-            <span class="access-signature">readonly</span>
             
+            
+                <span class="access-signature inherited"><a href="PIXI.brend.StdBatch.html#textureBuffer">inherited</a></span>
+            
+            
+                <span class="access-signature overrides"><a href="PIXI.brend.StdBatch.html#textureBuffer">overrides</a></span>
             
         </h4>
     </div>
@@ -1323,7 +1000,7 @@ a <code>glType</code> of <code>UNSIGNED_BYTE</code>.</p>
 <dd>
     
     <div class="description">
-        <p>Whether to normalize the attribute values.</p>
+        <p>Textures that are used by the display-object's in this batch.</p>
     </div>
     
     
@@ -1358,9 +1035,115 @@ a <code>glType</code> of <code>UNSIGNED_BYTE</code>.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="properSize">
-            <a class="share-icon" href="#properSize"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">properSize</span>
+        <h4 class="name" id="uidMap">
+            <a class="share-icon" href="#uidMap"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">uidMap</span>
+            <span class="type-signature type">Map.&lt;number, number></span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="PIXI.brend.StdBatch.html#uidMap">inherited</a></span>
+            
+            
+                <span class="access-signature overrides"><a href="PIXI.brend.StdBatch.html#uidMap">overrides</a></span>
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Map of base-texture UIDs to texture indices into <code>uSamplers</code>.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="uniformBuffer">
+            <a class="share-icon" href="#uniformBuffer"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">uniformBuffer</span>
+            <span class="type-signature type">Object.&lt;string, Array.&lt;UniformGroup>></span>
+            
+            
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The buffer of uniform arrays of the display-objects</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="uniformLength">
+            <a class="share-icon" href="#uniformLength"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">uniformLength</span>
             <span class="type-signature type">number</span>
             
             
@@ -1374,7 +1157,7 @@ a <code>glType</code> of <code>UNSIGNED_BYTE</code>.</p>
 <dd>
     
     <div class="description">
-        <p>This is equal to <code>size</code> or 1 if size is <code>%notarray%</code>.</p>
+        <p>No. of uniforms buffered (per uniform name)</p>
     </div>
     
     
@@ -1409,10 +1192,10 @@ a <code>glType</code> of <code>UNSIGNED_BYTE</code>.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="size">
-            <a class="share-icon" href="#size"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">size</span>
-            <span class="type-signature type">number | '%notarray%'</span>
+        <h4 class="name" id="uniformMap">
+            <a class="share-icon" href="#uniformMap"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">uniformMap</span>
+            <span class="type-signature type">Array.&lt;number></span>
             
             
             
@@ -1425,10 +1208,7 @@ a <code>glType</code> of <code>UNSIGNED_BYTE</code>.</p>
 <dd>
     
     <div class="description">
-        <p>Number of elements to extract out of <code>source</code> with
-the given view type, for one vertex.</p>
-<p>If source isn't an array (only one element), then
-you can set this to <code>'%notarray%'</code>.</p>
+        <p>Array mapping the in-batch ID to the uniform ID.</p>
     </div>
     
     
@@ -1450,125 +1230,6 @@ you can set this to <code>'%notarray%'</code>.</p>
     
     
     
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="source">
-            <a class="share-icon" href="#source"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">source</span>
-            <span class="type-signature type">string | function</span>
-            
-            
-            
-                <span class="access-signature inherited"><a href="PIXI.brend.Redirect.html#source">inherited</a></span>
-            
-            
-                <span class="access-signature overrides"><a href="PIXI.brend.Redirect.html#source">overrides</a></span>
-            
-        </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The property on the display-object that holds the resource.</p>
-<p>Instead of a property, you can provide a callback that generates the resource
-on invokation.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="type">
-            <a class="share-icon" href="#type"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">type</span>
-            <span class="type-signature type">string</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The type of data stored in the source buffer. This can be any of: <code>int8</code>, <code>uint8</code>,
-<code>int16</code>, <code>uint16</code>, <code>int32</code>, <code>uint32</code>, or (by default) <code>float32</code>.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>'float32'</li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><p><a target="_blank" href="https://pixijs.download/dev/docs/PIXI.ViewableBuffer.html">PIXI.ViewableBuffer#view</a></p></li>
-        </ul>
-    </dd>
     
     
     
@@ -1581,6 +1242,216 @@ on invokation.</p>
         </dl>
     
     
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl class="list-methods">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="reset">
+            <a class="share-icon" href="#reset"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                reset
+            </span>
+            <span class="signature">()</span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="PIXI.brend.AggregateUniformsBatch.html#reset">inherited</a></span>
+            
+            
+                <span class="access-signature overrides"><a href="PIXI.brend.StdBatch.html#reset">overrides</a></span>
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1702">pixi-batch-renderer.mjs:1702</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Reset this batch to become &quot;fresh&quot;!</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="upload">
+            <a class="share-icon" href="#upload"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                upload
+            </span>
+            <span class="signature">(renderer)</span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="PIXI.brend.AggregateUniformsBatch.html#upload">inherited</a></span>
+            
+            
+                <span class="access-signature overrides"><a href="PIXI.brend.StdBatch.html#upload">overrides</a></span>
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line1690">pixi-batch-renderer.mjs:1690</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Uploads the resources required before rendering this batch. If you override
+this, you must call <code>super.upload</code>.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>renderer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.Renderer</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
     
     
     

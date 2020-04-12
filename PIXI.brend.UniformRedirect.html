@@ -678,7 +678,7 @@
 </div>
 
     <div class="main">
-        <h1 class="page-title" data-filename="PIXI.brend.AttributeRedirect.html">Class: AttributeRedirect</h1>
+        <h1 class="page-title" data-filename="PIXI.brend.UniformRedirect.html">Class: UniformRedirect</h1>
         
 
 
@@ -687,12 +687,11 @@
     
 <header>
     <div class="header content-size">
-        <h2><span class="ancestors"><a href="PIXI.brend.html">.brend</a>~</span>AttributeRedirect
+        <h2><span class="ancestors"><a href="PIXI.brend.html">.brend</a>~</span>UniformRedirect
         </h2>
         
-            <div class="class-description"><p>This redirect defines an attribute of a display-object's geometry. The attribute
-data is expected to be stored in a <code>PIXI.ViewableBuffer</code>, in an array, or (if
-just one element) as the property itself.</p></div>
+            <div class="class-description"><p>This redirect is used to aggregate &amp; upload uniforms required for shading the
+display-object.</p></div>
         
     </div>
 </header>  
@@ -706,12 +705,12 @@ just one element) as the property itself.</p></div>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="AttributeRedirect">
-            <a class="share-icon" href="#AttributeRedirect"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="UniformRedirect">
+            <a class="share-icon" href="#UniformRedirect"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                new AttributeRedirect
+                new UniformRedirect
             </span>
-            <span class="signature">(options)</span>
+            <span class="signature">()</span>
             
             
             
@@ -720,7 +719,7 @@ just one element) as the property itself.</p></div>
     
         
         <div class="tag-source">
-            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line78">pixi-batch-renderer.mjs:78</a>
+            <a href="-_Users_shukantpal_Web%20Projects_pixi-batch-renderer_lib_pixi-batch-renderer.mjs.html#line156">pixi-batch-renderer.mjs:156</a>
         </div>
         
     </div>
@@ -735,321 +734,6 @@ just one element) as the property itself.</p></div>
     
     
     
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                
-                
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>source</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">function</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                <p>redirect source</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>attrib</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                <p>shader attribute variable</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    'float32'
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>the type of data stored in the source</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>size</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-|
-
-<span class="param-type">'%notarray%'</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>size of the source array ('%notarray' if not an array &amp; just one element)</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>glType</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">PIXI.TYPES</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    PIXI.TYPES.FLOAT
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>data format to be uploaded in</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>glSize</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                <p>number of elements to be uploaded as (size of source and upload must match)</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>normalize</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>whether to normalize the data before uploading</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-            </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -1091,22 +775,10 @@ just one element) as the property itself.</p></div>
         
 
     
-    <pre class="prettyprint"><code>// This attribute redirect calculates the tint used on top of a texture. Since the
-// tintMode can change anytime, it is better to use a derived source (function).
-//
-// Furthermore, the color is uploaded as four bytes (`attribute vec4 aTint`) while the
-// source returns an integer. This is done by splitting the 32-bit integer into four
-// 8-bit bytes.
-new PIXI.brend.AttributeRedirect({
-    source: (tgt: ExampleDisplay) => (tgt.alpha < 1.0 && tgt.tintMode === PREMULTIPLY)
-         ? premultiplyTint(tgt.rgb, tgt.alpha)
-         : tgt.rgb + (tgt.alpha << 24);
-    attrib: 'aTint',
-    type: 'int32',
-    size: '%notarray%', // optional/default
-    glType: PIXI.TYPES.UNSIGNED_BYTE,
-    glSize: 4,
-    normalize: true // We are using [0, 255] range for RGBA here. Must normalize to [0, 1].
+    <pre class="prettyprint"><code>// The data-type of this uniform is defined in your shader.
+new PIXI.brend.UniformRedirect({
+     source: (dob: PIXI.DisplayObject) => dob.transform.worldTransform,
+     uniform: "transform"
 });</code></pre>
     
 
@@ -1142,58 +814,6 @@ new PIXI.brend.AttributeRedirect({
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="glSize">
-            <a class="share-icon" href="#glSize"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">glSize</span>
-            
-            
-            <span class="access-signature">readonly</span>
-            
-            
-        </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Size of attribute in terms of <code>glType</code>.</p>
-<p>Note that <code>glSize * glType &lt;= size * type</code></p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
         <h4 class="name" id="glslIdentifer">
             <a class="share-icon" href="#glslIdentifer"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">glslIdentifer</span>
@@ -1216,219 +836,6 @@ new PIXI.brend.AttributeRedirect({
     <div class="description">
         <p>The shader variable that references the resource, e.g. attribute or uniform
 name.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="glType">
-            <a class="share-icon" href="#glType"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">glType</span>
-            <span class="type-signature type">PIXI.TYPES</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Type of attribute, when uploading.</p>
-<p>Normally, you would use the corresponding type for
-the view on source. However, to speed up uploads
-you can aggregate attribute values in larger data
-types. For example, an RGBA vec4 (byte-sized channels)
-can be represented as one <code>Uint32</code>, while having
-a <code>glType</code> of <code>UNSIGNED_BYTE</code>.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="normalize">
-            <a class="share-icon" href="#normalize"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">normalize</span>
-            <span class="type-signature type">boolean</span>
-            
-            <span class="access-signature">readonly</span>
-            
-            
-        </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Whether to normalize the attribute values.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="properSize">
-            <a class="share-icon" href="#properSize"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">properSize</span>
-            <span class="type-signature type">number</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>This is equal to <code>size</code> or 1 if size is <code>%notarray%</code>.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="size">
-            <a class="share-icon" href="#size"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">size</span>
-            <span class="type-signature type">number | '%notarray%'</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Number of elements to extract out of <code>source</code> with
-the given view type, for one vertex.</p>
-<p>If source isn't an array (only one element), then
-you can set this to <code>'%notarray%'</code>.</p>
     </div>
     
     
@@ -1507,68 +914,6 @@ on invokation.</p>
     
     
     
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="type">
-            <a class="share-icon" href="#type"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">type</span>
-            <span class="type-signature type">string</span>
-            
-            
-            
-            
-        </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The type of data stored in the source buffer. This can be any of: <code>int8</code>, <code>uint8</code>,
-<code>int16</code>, <code>uint16</code>, <code>int32</code>, <code>uint32</code>, or (by default) <code>float32</code>.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>'float32'</li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><p><a target="_blank" href="https://pixijs.download/dev/docs/PIXI.ViewableBuffer.html">PIXI.ViewableBuffer#view</a></p></li>
-        </ul>
-    </dd>
     
     
     
