@@ -167,7 +167,17 @@ PIXI.Renderer.registerPlugin("ExampleRenderer", ExampleRenderer);
 ### Uniforms Pipeline [Experimental]
 
 You can take advantage of shader uniforms in batching too! pixi-batch-renderer supports this out of the box
-with the `AggregateUniformsBatchFactory`. Adding to the previous example,
+with the `AggregateUniformsBatchFactory`. There are two modes for uniforms:
+
+* **Aggregation mode**: Uniforms of each display-object are aggregated into an array. Then an uniform-ID attribute
+is uploaded (say `aUniformId`) that tells the shader which uniform to pick out of an array. The attribute is passed
+to the plugin factory via the `uniformIDAttrib` option.
+
+* **No-aggregation mode**: Uniforms are uploaded in one-element arrays. Display-objects with different uniform values
+are not batched together. This is useful if your uniform values don't differ a lot and will avoid another attribute. To
+use this mode, simply don't pass an `uniformIDAttrib`.
+
+1. Aggregation Mode (Example)
 
 ```js
 const { UniformRedirect, AggregateUniformsBatchFactory } = require('pixi-batch-renderer');
@@ -188,7 +198,7 @@ uniform mat3 projectionMatrix;
 
 void main()
 {
-    gl_Position = vec4((projectionMatrix * vec3(aVertex.xy, 1), 0, 1);
+    gl_Position = vec4((projectionMatrix * vec3(aVertex.xy, 1)), 0, 1);
     vTextureId = aTextureId;
     vTextureCoord = aTextureCoord;
 
@@ -211,7 +221,7 @@ void main(void){
     float type;
 
     /* get color & shaderType */
-    for (int k = 0; k < max(%texturesPerBatch%); ++k)
+    for (int k = 0; k < int(max(%texturesPerBatch%., %uniformsPerBatch%.)); ++k)
     {
         if (int(vTextureId) == k) {
             color = texture2D(uSamplers[k], vTextureCoord);
@@ -222,7 +232,14 @@ void main(void){
     }
 
 
-    gl_FragColor = type == 1 ? color : vec4(color.rgb, 1);
+    if (type == 1)
+    {
+        gl_FragColor = color;
+    }
+    else
+    {
+        gl_FragColor = vec4(color.rgb * vTextureCoord.x, vTextureCoord.x);
+    }
 }
 `,
 {}).derive();
@@ -233,7 +250,7 @@ const uniformSet = [
 
 const ExampleRenderer = BatchRendererPluginFactory.from({
   uniformSet,
-  inBatchAttribID: "aUniformId",
+  uniformIDAttrib: "aUniformId",
 
   // Previous example's stuff
   attribSet,
@@ -244,6 +261,92 @@ const ExampleRenderer = BatchRendererPluginFactory.from({
 
   BatchFactoryClass: AggregateUniformsBatchFactory
 })
+```
+
+2. No Aggregation Mode (Example)
+
+
+```js
+const { UniformRedirect, AggregateUniformsBatchFactory } = require('pixi-batch-renderer');
+
+const shaderFunction = new BatchShaderFactory(
+// Vertex Shader (no changes to standard pipeline example!)
+`
+attribute vec2 aVertex;
+attribute vec2 aTextureCoord;
+attribute float aTextureId;
+varying float vTextureId;
+varying vec2 vTextureCoord;
+
+uniform mat3 projectionMatrix;
+
+void main()
+{
+    gl_Position = vec4((projectionMatrix * vec3(aVertex.xy, 1)), 0, 1);
+    vTextureId = aTextureId;
+    vTextureCoord = aTextureCoord;
+}
+`,
+
+// Fragment Shader
+`
+// Look only one-element instead of %uniformsPerBatch%
+uniform shaderType[1];
+varying float vUniformId;
+
+uniform uSamplers[%texturesPerBatch%];/* %texturesPerBatch% is a macro and will become a number */\
+varying float vTextureId;
+varying vec2 vTextureCoord;
+
+void main(void){
+    vec4 color;
+    float type = shaderType;
+
+    /* get color & shaderType */
+    for (int k = 0; k < %texturesPerBatch%; ++k)
+    {
+        if (int(vTextureId) == k) {
+            color = texture2D(uSamplers[k], vTextureCoord);
+        }
+    }
+
+    if (type == 1)
+    {
+        gl_FragColor = color;
+    }
+    else
+    {
+        gl_FragColor = vec4(color.rgb * vTextureCoord.x, vTextureCoord.x);
+    }
+}
+`,
+{}).derive();
+
+const uniformSet = [
+  new UniformRedirect({ source: "type", uniform: "shaderType" });
+];
+
+const ExampleRenderer = BatchRendererPluginFactory.from({
+  uniformSet,
+  uniformIDAttrib: "aUniformId",
+
+  // Previous example's stuff
+  attribSet,
+  indexProperty: "indices",
+  textureProperty: "texture",
+  texIDAttrib: "aTextureId",
+  shaderFunction,
+
+  BatchFactoryClass: AggregateUniformsBatchFactory
+});
+
+PIXI.Renderer.registerPlugin("erend", ExampleRenderer);
+
+// Try using with a Sprite!
+const sprite = PIXI.Sprite.from(<url>);
+
+sprite.pluginName = "erend";
+sprite.type = 0;// will fade out horizontally in shader
 ```
 
 ### Advanced/Customized Batch Generation
