@@ -1,6 +1,6 @@
 /*!
  * pixi-batch-renderer
- * Compiled Sun, 12 Apr 2020 19:57:06 UTC
+ * Compiled Sun, 12 Apr 2020 20:13:19 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -988,6 +988,8 @@ var __batch_renderer = (function (exports, PIXI) {
             const batchCount = batchFactory.size();
             const geom = geometryFactory.build();
             const { gl } = renderer;
+            // PixiJS bugs - the shader can't be bound before uploading because uniform sync caching
+            // and geometry requires the shader to be bound.
             batchList[0].upload(renderer);
             renderer.shader.bind(this.renderer._shader, false);
             renderer.geometry.bind(geom);
@@ -1713,8 +1715,6 @@ var __batch_renderer = (function (exports, PIXI) {
     /**
      * Factory for producing aggregate-uniforms batches. This is useful for shaders that
      * **must** use uniforms.
-     *
-     * **Hint**: Use this with `PIXI.brend.AggregateUniformsBatchDrawer`.
      *
      * @memberof PIXI.brend.AggregateUniformsBatchFactory
      */

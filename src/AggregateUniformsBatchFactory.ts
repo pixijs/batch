@@ -7,8 +7,6 @@ import * as PIXI from 'pixi.js';
  * Factory for producing aggregate-uniforms batches. This is useful for shaders that
  * **must** use uniforms.
  *
- * **Hint**: Use this with `PIXI.brend.AggregateUniformsBatchDrawer`.
- *
  * @memberof PIXI.brend.AggregateUniformsBatchFactory
  */
 export class AggregateUniformsBatchFactory extends StdBatchFactory
