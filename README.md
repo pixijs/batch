@@ -328,7 +328,6 @@ const uniformSet = [
 
 const ExampleRenderer = BatchRendererPluginFactory.from({
   uniformSet,
-  uniformIDAttrib: "aUniformId",
 
   // Previous example's stuff
   attribSet,
