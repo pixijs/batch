@@ -123,7 +123,7 @@ uniform mat3 projectionMatrix;
 
 void main()
 {
-    gl_Position = vec4((projectionMatrix * vec3(aVertex.xy, 1), 0, 1);
+    gl_Position = vec4((projectionMatrix * vec3(aVertex.xy, 1)), 0, 1);
     vTextureId = aTextureId;
     vTextureCoord = aTextureCoord;
 }

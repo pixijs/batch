@@ -40,6 +40,9 @@ export class BatchDrawer
         const geom = geometryFactory.build();
         const { gl } = renderer;
 
+        // PixiJS bugs - the shader can't be bound before uploading because uniform sync caching
+        // and geometry requires the shader to be bound.
+        batchList[0].upload(renderer);
         renderer.shader.bind(this.renderer._shader, false);
         renderer.geometry.bind(geom);
 
@@ -48,6 +51,7 @@ export class BatchDrawer
             const batch = batchList[i];
 
             batch.upload(renderer);
+            renderer.shader.bind(this.renderer._shader, false);
 
             if (indexProperty)
             {

@@ -15,6 +15,7 @@ export interface IBatchRendererOptions
     textureProperty: string;
     texturesPerObject?: number;
     texIDAttrib: string;
+    inBatchIDAttrib?: string;
     stateFunction: (renderer: PIXI.DisplayObject) => PIXI.State;
     shaderFunction: (renderer: BatchRenderer) => PIXI.Shader;
 
@@ -25,7 +26,7 @@ export interface IBatchRendererOptions
 
     // Uniforms+Standard Pipeline
     uniformSet?: UniformRedirect[];
-    inBatchIDAttrib?: string;
+    uniformIDAttrib?: string;
 }
 
 /**
@@ -112,12 +113,13 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     readonly _textureProperty: string;
     readonly _texturesPerObject: number;
     readonly _texIDAttrib: string;
+    readonly _inBatchIDAttrib: string;
     readonly _stateFunction: Function;
     readonly _shaderFunction: Function;
 
     // Uniforms+Standard Pipeline
     readonly _uniformRedirects: UniformRedirect[];
-    readonly _inBatchIDAttrib: string;
+    readonly _uniformIDAttrib: string;
 
     // API Visiblity Note: These properties are used by component/factories and must be public;
     // however, they are prefixed with an underscore because they are not for exposure to the end-user.
@@ -142,6 +144,9 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     protected readonly _BatchFactoryClass: typeof StdBatchFactory;
     protected readonly _BatchGeometryFactoryClass: typeof BatchGeometryFactory;
     protected readonly _BatchDrawerClass: typeof BatchDrawer;
+
+    // Additional args
+    protected readonly options: any;
 
     /**
      * Creates a batch renderer the renders display-objects with the described geometry.
@@ -220,6 +225,14 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         this._texIDAttrib = options.texIDAttrib;
 
         /**
+         * Indexes the display-object in the batch.
+         * @member {string}
+         * @protected
+         * @readonly
+         */
+        this._inBatchIDAttrib = options.inBatchIDAttrib;
+
+        /**
          * State generating function (takes a display-object)
          * @member {Function}
          * @default () => PIXI.State.for2d()
@@ -275,13 +288,21 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         this._uniformRedirects = options.uniformSet || null;
 
         /**
-         * Indexes the display-object in the batch. It is used to fetch the corresponding uniform
-         * from an array.
+         * Indexes the uniforms of the display-object in the uniform arrays. This is not equal to the
+         * in-batch ID because equal uniforms are not uploaded twice.
          * @member {string}
          * @protected
          * @readonly
          */
-        this._inBatchIDAttrib = options.inBatchIDAttrib;
+        this._uniformIDAttrib = options.uniformIDAttrib;
+
+        /**
+         * The options used to create this batch renderer.
+         * @readonly {object}
+         * @protected
+         * @readonly
+         */
+        this.options = options;
 
         // Although the runners property is not a public API, it is required to
         // handle contextChange events.
@@ -351,9 +372,6 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         this._bufferedIndices = 0;
 
         this._shader = this._shaderFunction(this);
-
-        // Doesn't hurt?
-        this.renderer.shader.bind(this._shader, false);
     }
 
     /**
@@ -428,6 +446,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
         const batchList = batchFactory.access();
         const batchCount = batchFactory.size();
+        let indices = 0;
 
         // Loop through batches and their display-object list to compose geometry
         for (let i = 0; i < batchCount; i++)// loop-per(batch)
@@ -455,6 +474,8 @@ export class BatchRenderer extends PIXI.ObjectRenderer
                 // externally-defined properties for draw calls
                 batch.$vertexCount = vertexCount;
                 batch.$indexCount = indexCount;
+                batch.geometryOffset = indices;
+                indices += batch.$indexCount;
 
                 geometryFactory.append(targetObject, batch);
             }

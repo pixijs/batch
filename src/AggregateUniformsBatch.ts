@@ -20,6 +20,13 @@ import BatchRenderer from './BatchRenderer';
  * flat in int uniformID;
  * ```
  *
+ * # No Aggregation Mode
+ *
+ * Aggregating uniforms into arrays requries a uniform-ID attribute to be uploaded as well. This
+ * may cost a lot of memory if your uniforms don't really change a lot. For these cases, you can
+ * disable uniform aggregation by not passing a `uniformIDAttrib`. This will make batches **only**
+ * have one value for each uniform. The uniforms will still be uploaded as 1-element arrays, however.
+ *
  * @memberof PIXI.brend
  * @class
  * @extends PIXI.brend.StdBatch
@@ -29,6 +36,7 @@ export class AggregateUniformsBatch extends StdBatch
     renderer: BatchRenderer;
 
     uniformBuffer: { [id: string]: Array<UniformGroup> };
+    uniformMap: Array<number>;
     uniformLength: number;
 
     constructor(renderer: BatchRenderer, geometryOffset?: number)
@@ -45,7 +53,13 @@ export class AggregateUniformsBatch extends StdBatch
          * The buffer of uniform arrays of the display-objects
          * @member {Object<string, Array<UniformGroup>>}
          */
-        this.uniformBuffer = {};
+        this.uniformBuffer = null;
+
+        /**
+         * Array mapping the in-batch ID to the uniform ID.
+         * @member {Array<number>}
+         */
+        this.uniformMap = null;
 
         /**
          * No. of uniforms buffered (per uniform name)
@@ -71,7 +85,7 @@ export class AggregateUniformsBatch extends StdBatch
             shader.uniforms[glslIdentifer] = this.uniformBuffer[glslIdentifer];
         }
 
-        shader.uniformGroup.update();
+        //        shader.uniformGroup.update();
     }
 
     /**

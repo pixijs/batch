@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js';
 import Redirect from './redirects/Redirect';
 import BatchRenderer from './BatchRenderer';
 import { StdBatch } from './StdBatch';
+import { AggregateUniformsBatch } from './AggregateUniformsBatch';
 
 // BatchGeometryFactory uses this class internally to setup the attributes of
 // the batches.
@@ -21,6 +22,7 @@ export class BatchGeometry extends PIXI.Geometry
         texIDAttrib: string,
         texturesPerObject: number,
         inBatchIDAttrib: string,
+        uniformIDAttrib: string,
     )
     {
         super();
@@ -42,6 +44,10 @@ export class BatchGeometry extends PIXI.Geometry
         if (inBatchIDAttrib)
         {
             this.addAttribute(inBatchIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+        }
+        if (uniformIDAttrib)
+        {
+            this.addAttribute(uniformIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
         }
 
         if (hasIndex)
@@ -163,10 +169,12 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
     _texturesPerObject: number;
     _textureProperty: string;
     _texIDAttrib: string;
-
-    // Uniform+Standard Pipeline
     _inBatchIDAttrib: string;
     _inBatchID: number;
+
+    // Uniform+Standard Pipeline
+    _uniformIDAttrib: string;
+    _uniformID: number;
 
     /* Set to the indicies of the display-object's textures in uSamplers uniform before
         invoking geometryMerger(). */
@@ -200,10 +208,15 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
         this._texIDAttrib = renderer._texIDAttrib;
 
         this._inBatchIDAttrib = renderer._inBatchIDAttrib;
+        this._uniformIDAttrib = renderer._uniformIDAttrib;
 
         this._vertexSize += this._texturesPerObject * 4;// texture indices are also passed
 
         if (this._inBatchIDAttrib)
+        {
+            this._vertexSize += 4;
+        }
+        if (this._uniformIDAttrib)
         {
             this._vertexSize += 4;
         }
@@ -289,6 +302,10 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
         {
             this._inBatchID = batch.batchBuffer.indexOf(targetObject);
         }
+        if (this._uniformIDAttrib)
+        {
+            this._uniformID = (batch as AggregateUniformsBatch).uniformMap[this._inBatchID];
+        }
 
         this.geometryMerger(targetObject, this);
     }
@@ -317,6 +334,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
             this._texIDAttrib,
             this._texturesPerObject,
             this._inBatchIDAttrib,
+            this._uniformIDAttrib,
         )) as BatchGeometry;
 
         // We don't really have to remove the buffers because BatchRenderer won't reuse
@@ -496,18 +514,18 @@ const GeometryMergerFactory = class
 
         // Eliminate offset conversion when adjacent attributes
         // have similar source-types.
-        let skipReverseTransformation = false;
+        let skipByteIndexConversion = false;
 
         // Appends a vertice's attributes (inside the for-loop above).
         for (let i = 0; i < packer._attribRedirects.length; i++)
         {
             const redirect = packer._attribRedirects[i];
 
-            // Initialize adjsutedAIndex in terms of source type.
-            if (!skipReverseTransformation)
+            // Initialize adjustedAIndex in terms of source type.
+            if (!skipByteIndexConversion)
             {
                 packerBody += `
-                    adjustedAIndex = aIndex / ${this._sizeOf(i)};
+        adjustedAIndex = aIndex / ${this._sizeOf(i)};
                 `;
             }
 
@@ -516,42 +534,37 @@ const GeometryMergerFactory = class
                 for (let j = 0; j < redirect.size; j++)
                 {
                     packerBody += `
-                        ${redirect.type}View[adjustedAIndex++] =
-                            __buffer_${i}[__offset_${i}++];
+        ${redirect.type}View[adjustedAIndex++] = __buffer_${i}[__offset_${i}++];
                     `;
                 }
             }
             else
             {
                 packerBody += `
-                        ${redirect.type}View[adjustedAIndex++] =
-                            __buffer_${i};
+        ${redirect.type}View[adjustedAIndex++] = __buffer_${i};
                 `;
             }
 
-            if (packer._attribRedirects[i + 1]
-                && (this._sizeOf(i + 1) !== this._sizeOf(i)))
+            if (packer._attribRedirects[i + 1] && (this._sizeOf(i + 1) !== this._sizeOf(i)))
             {
                 packerBody += `
-                    aIndex = adjustedAIndex * ${this._sizeOf(i)};
+        aIndex = adjustedAIndex * ${this._sizeOf(i)};
                 `;
             }
             else
             {
-                skipReverseTransformation = true;
+                skipByteIndexConversion = true;
             }
         }
 
-        if (skipReverseTransformation)
+        if (skipByteIndexConversion)
         {
-            if (this._sizeOf(packer._attribRedirects.length - 1)
-                    !== 4)
+            if (this._sizeOf(packer._attribRedirects.length - 1) !== 4)
             {
                 packerBody += `
-                    aIndex = adjustedAIndex * ${this._sizeOf(
-        packer._attribRedirects.length - 1)}
+        aIndex = adjustedAIndex * ${this._sizeOf(packer._attribRedirects.length - 1)}
                 `;
-                skipReverseTransformation = false;
+                skipByteIndexConversion = false;
             }
         }
 
@@ -559,44 +572,50 @@ const GeometryMergerFactory = class
         {
             if (packer._texturesPerObject > 1)
             {
-                if (!skipReverseTransformation)
+                if (!skipByteIndexConversion)
                 {
                     packerBody += `
-                        adjustedAIndex = aIndex / 4;
+        adjustedAIndex = aIndex / 4;
                     `;
                 }
 
                 for (let k = 0; k < packer._texturesPerObject; k++)
                 {
                     packerBody += `
-                        float32View[adjustedAIndex++] = textureId[${k}];
+        float32View[adjustedAIndex++] = textureId[${k}];
                     `;
                 }
 
                 packerBody += `
-                    aIndex = adjustedAIndex * 4;
+        aIndex = adjustedAIndex * 4;
                 `;
             }
-            else if (!skipReverseTransformation)
+            else if (!skipByteIndexConversion)
             {
                 packerBody += `
-                    float32View[aIndex] = textureId;
-                    aIndex += 4;
+        float32View[aIndex / 4] = textureId;
                 `;
             }
             else
             {
                 packerBody += `
-                    float32View[adjustedAIndex++] = textureId;
-                    aIndex = adjustedAIndex * 4;
+        float32View[adjustedAIndex++] = textureId;
+        aIndex = adjustedAIndex * 4;
                 `;
             }
         }
-
         if (packer._inBatchIDAttrib)
         {
             packerBody += `
-                float32View[adjustedAIndex++] = ${packer._inBatchID};
+                float32View[adjustedAIndex++] = factory._inBatchID;
+                aIndex = adjustedAIndex * 4;
+            `;
+        }
+        if (packer._uniformIDAttrib)
+        {
+            packerBody += `
+                float32View[adjustedAIndex++] = factory._uniformID;
+                aIndex = adjustedAIndex * 4;
             `;
         }
 
@@ -611,17 +630,15 @@ const GeometryMergerFactory = class
         if (this.packer._indexProperty)
         {
             packerBody += `
-                const verticesBefore = oldAIndex / ${this.packer._vertexSize}
-                const indexCount
-                    = targetObject['${this.packer._indexProperty}'].length;
+    const verticesBefore = oldAIndex / ${this.packer._vertexSize}
+    const indexCount  = targetObject['${this.packer._indexProperty}'].length;
 
-                for (let j = 0; j < indexCount; j++)
-                {
-                    compositeIndices[iIndex++] = verticesBefore +
-                        targetObject['${this.packer._indexProperty}'][j];
-                }
+    for (let j = 0; j < indexCount; j++)
+    {
+        compositeIndices[iIndex++] = verticesBefore + targetObject['${this.packer._indexProperty}'][j];
+    }
 
-                this._iIndex = iIndex;
+    this._iIndex = iIndex;
             `;
         }
 

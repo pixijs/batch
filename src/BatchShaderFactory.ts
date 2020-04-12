@@ -68,15 +68,17 @@ export class BatchShaderFactory
         vertexShaderTemplate: string,
         fragmentShaderTemplate: string,
         uniforms = {},
-        templateInjectors = {
-            '%texturesPerBatch%': injectTexturesPerBatch,
-        },
+        templateInjectors: any = {},
         disableVertexShaderTemplate = true,
     )
     {
         if (!templateInjectors['%texturesPerBatch%'])
         {
             templateInjectors['%texturesPerBatch%'] = injectTexturesPerBatch;
+        }
+        if (!templateInjectors['%uniformsPerBatch%'])
+        {
+            templateInjectors['%uniformsPerBatch%'] = INJECTORS.uniformsPerBatch;
         }
 
         this._vertexShaderTemplate = vertexShaderTemplate;
