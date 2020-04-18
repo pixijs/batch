@@ -2,6 +2,7 @@ node_modules
 example
 docs
 src
+compile
 
 # Build Tools
 .eslintrc.json
@@ -10,3 +11,4 @@ src
 rollup.config.js
 tsconfig.json
 README.md
+api-extractor.json

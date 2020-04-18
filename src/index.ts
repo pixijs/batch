@@ -2,7 +2,7 @@ export * from './redirects';
 export { StdBatchFactory as BatchGenerator } from './StdBatchFactory';
 export { BatchRenderer } from './BatchRenderer';
 export { BatchRendererPluginFactory } from './BatchRendererPluginFactory';
-export { BatchGeometryFactory as GeometryPacker } from './BatchGeometryFactory';
+export { BatchGeometryFactory } from './BatchGeometryFactory';
 export { Redirect } from './redirects/Redirect';
 export { BatchShaderFactory } from './BatchShaderFactory';
 export { StdBatch as Batch } from './StdBatch';

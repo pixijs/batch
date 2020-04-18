@@ -3,7 +3,7 @@
         "target": "es6",
         "allowJs": true,
         "sourceMap": true,
-        "removeComments": false,
+        "removeComments": true,
         "strict": true,
         "noImplicitAny": true,
         "noUnusedLocals": true,
@@ -13,7 +13,12 @@
         "esModuleInterop": true,
         "moduleResolution": "node",
         "baseUrl": "./",
+        "outDir": "compile",
+        "declaration": true
     },
+    "include": [
+        "src/**/*.ts"
+    ],
     "exclude": [
         "node_modules",
         "**/dist/**",
