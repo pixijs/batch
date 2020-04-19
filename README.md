@@ -1,8 +1,9 @@
+
+# PixiJS Batch Rendering Library
+--
 [![install size](https://packagephobia.now.sh/badge?p=pixi-batch-renderer)](https://packagephobia.now.sh/result?p=pixi-batch-renderer)
 [![](https://data.jsdelivr.com/v1/package/npm/pixi-batch-renderer-alpha/badge)](https://www.jsdelivr.com/package/npm/pixi-batch-renderer-alpha)
 ![dependencies](https://david-dm.org/sukantpal/pixi-batch-renderer.svg)
-
-# PixiJS Batch Rendering Library
 
 `pixi-batch-renderer` is a PixiJS plugin that allows you to add batch rendering to your custom display objects. I have documented each class in the `PIXI.brend` namespace.
 
