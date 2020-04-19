@@ -1,5 +1,6 @@
 [![install size](https://packagephobia.now.sh/badge?p=pixi-batch-renderer)](https://packagephobia.now.sh/result?p=pixi-batch-renderer)
 [![](https://data.jsdelivr.com/v1/package/npm/pixi-batch-renderer-alpha/badge)](https://www.jsdelivr.com/package/npm/pixi-batch-renderer-alpha)
+![dependencies](https://david-dm.org/sukantpal/pixi-batch-renderer.svg)
 
 # PixiJS Batch Rendering Library
 
