@@ -16,7 +16,7 @@ export interface IBatchRendererOptions
     texturesPerObject?: number;
     texIDAttrib: string;
     inBatchIDAttrib?: string;
-    stateFunction: (renderer: PIXI.DisplayObject) => PIXI.State;
+    stateFunction?: (renderer: PIXI.DisplayObject) => PIXI.State;
     shaderFunction: (renderer: BatchRenderer) => PIXI.Shader;
 
     // Components
@@ -161,7 +161,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
      * @param {string | null} options.textureProperty
      * @param {number} [options.texturesPerObject=1]
      * @param {string} options.texIDAttrib - name of texture-id attribute variable
-     * @param {Function} options.stateFunction - returns a PIXI.State for an object
+     * @param {Function}[options.stateFunction=PIXI.State.for2d()] - returns a `PIXI.State` for an object
      * @param {Function} options.shaderFunction - generates a shader given this instance
      * @param {Class} [options.BatchGeometryFactory=PIXI.brend.BatchGeometry]
      * @param {Class} [options.BatchFactoryClass=PIXI.brend.StdBatchFactory]

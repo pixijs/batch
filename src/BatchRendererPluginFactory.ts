@@ -11,15 +11,14 @@ import { UniformRedirect } from './redirects';
 interface IBatchRendererStdOptions
 {
     attribSet: AttributeRedirect[];
-    vertexCountProperty: string | number;
+    vertexCountProperty?: string | number;
     indexProperty: string;
     textureProperty: string;
     texturesPerObject?: number;
     texIDAttrib: string;
     inBatchIDAttrib?: string;
-    stateFunction: (brend: PIXI.DisplayObject) => any;
+    stateFunction?: (brend: PIXI.DisplayObject) => any;
     shaderFunction: (brend: BatchRenderer) => any;
-    geometryFactory: BatchGeometryFactory;
     BatchFactoryClass?: typeof StdBatchFactory;
     BatchRendererClass?: typeof BatchRenderer;
     BatchGeometryFactoryClass?: typeof BatchGeometryFactory;
@@ -132,7 +131,7 @@ export class BatchRendererPluginFactory
      * @param {object} options
      * @param {PIXI.brend.AttributeRedirect[]} options.attribSet - set of geometry attributes
      * @param {string | Array<number>} options.indexProperty - no. of indices on display-object
-     * @param {string | number} options.vertexCountProperty - no. of vertices on display-object
+     * @param {string | number}[options.vertexCountProperty] - no. of vertices on display-object
      * @param {string} options.textureProperty - textures used in display-object
      * @param {number} options.texturePerObject - no. of textures used per display-object
      * @param {string} options.texIDAttrib - used to find texture for each display-object (index into array)

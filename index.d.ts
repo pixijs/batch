@@ -196,7 +196,7 @@ declare interface IBatchRendererOptions {
     texturesPerObject?: number;
     texIDAttrib: string;
     inBatchIDAttrib?: string;
-    stateFunction: (renderer: PIXI_2.DisplayObject) => PIXI_2.State;
+    stateFunction?: (renderer: PIXI_2.DisplayObject) => PIXI_2.State;
     shaderFunction: (renderer: BatchRenderer) => PIXI_2.Shader;
     BatchFactoryClass?: typeof BatchGenerator;
     BatchGeometryFactoryClass?: typeof BatchGeometryFactory;
@@ -207,15 +207,14 @@ declare interface IBatchRendererOptions {
 
 declare interface IBatchRendererStdOptions {
     attribSet: AttributeRedirect[];
-    vertexCountProperty: string | number;
+    vertexCountProperty?: string | number;
     indexProperty: string;
     textureProperty: string;
     texturesPerObject?: number;
     texIDAttrib: string;
     inBatchIDAttrib?: string;
-    stateFunction: (brend: PIXI_2.DisplayObject) => any;
+    stateFunction?: (brend: PIXI_2.DisplayObject) => any;
     shaderFunction: (brend: BatchRenderer) => any;
-    geometryFactory: BatchGeometryFactory;
     BatchFactoryClass?: typeof BatchGenerator;
     BatchRendererClass?: typeof BatchRenderer;
     BatchGeometryFactoryClass?: typeof BatchGeometryFactory;
