@@ -1,6 +1,7 @@
 
 # PixiJS Batch Rendering Library
 
+![Node.js CI](https://github.com/pixijs/pixi-batch-renderer/workflows/Node.js%20CI/badge.svg)
 [![install size](https://packagephobia.now.sh/badge?p=pixi-batch-renderer)](https://packagephobia.now.sh/result?p=pixi-batch-renderer)
 ![](https://img.shields.io/bundlephobia/min/pixi-batch-renderer)
 ![](https://img.shields.io/npm/v/pixi-batch-renderer/latest)
