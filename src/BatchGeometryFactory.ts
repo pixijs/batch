@@ -495,7 +495,7 @@ const GeometryMergerFactory = class
             let aIndex = factory._aIndex;
             let iIndex = factory._iIndex;
             const textureId = factory._texID;
-            const attributeRedirects = factory.attributeRedirects;
+            const attributeRedirects = factory._attribRedirects;
         `;
 
         // Define __offset_${i}, the offset of each attribute in the display-object's
