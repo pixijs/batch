@@ -16,6 +16,7 @@ export interface IBatchRendererOptions
     texturesPerObject?: number;
     texIDAttrib: string;
     inBatchIDAttrib?: string;
+    masterIDAttrib?: string;
     stateFunction?: (renderer: PIXI.DisplayObject) => PIXI.State;
     shaderFunction: (renderer: BatchRenderer) => PIXI.Shader;
 
@@ -120,6 +121,9 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     // Uniforms+Standard Pipeline
     readonly _uniformRedirects: UniformRedirect[];
     readonly _uniformIDAttrib: string;
+
+    // Master-ID optimization
+    readonly _masterIDAttrib: string;
 
     // API Visiblity Note: These properties are used by component/factories and must be public;
     // however, they are prefixed with an underscore because they are not for exposure to the end-user.
@@ -297,12 +301,30 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         this._uniformIDAttrib = options.uniformIDAttrib;
 
         /**
+         * This is an advanced feature that allows you to pack the {@code _texIDAttrib}, {@code _uniformIDAttrib},
+         * {@code _inBatchIDAttrib}, and other information into one 32-bit float attribute. You can then unpack
+         * them in the vertex shader and pass varyings to the fragment shader (because {@code int} varyings are not
+         * supported).
+         *
+         * To use it, you must provide your own {@link BatchGeometryFactory} that overrides
+         * {@link BatchGeometryFactory#append} and sets the {@code _masterIDAttrib}.
+         */
+        this._masterIDAttrib = options.masterIDAttrib;
+
+        /**
          * The options used to create this batch renderer.
          * @readonly {object}
          * @protected
          * @readonly
          */
         this.options = options;
+
+        if (options.masterIDAttrib)
+        {
+            this._texIDAttrib = this._masterIDAttrib;
+            this._uniformIDAttrib = this._masterIDAttrib;
+            this._inBatchIDAttrib = this._masterIDAttrib;
+        }
 
         // Although the runners property is not a public API, it is required to
         // handle contextChange events.

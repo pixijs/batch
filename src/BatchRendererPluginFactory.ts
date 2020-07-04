@@ -17,6 +17,7 @@ interface IBatchRendererStdOptions
     texturesPerObject?: number;
     texIDAttrib: string;
     inBatchIDAttrib?: string;
+    styleIDAttrib?: string;
     stateFunction?: (brend: PIXI.DisplayObject) => any;
     shaderFunction: (brend: BatchRenderer) => any;
     BatchFactoryClass?: typeof StdBatchFactory;
@@ -135,6 +136,11 @@ export class BatchRendererPluginFactory
      * @param {string} options.textureProperty - textures used in display-object
      * @param {number} options.texturePerObject - no. of textures used per display-object
      * @param {string} options.texIDAttrib - used to find texture for each display-object (index into array)
+     * @param {string} options.uniformIDAttrib - used to find the uniform data for each display-object (index into array)
+     * @param {string} options.inBatchIDAttrib - used get the index of the object in the batch
+     * @param {string} options.masterIDAttrib - used to combine texture-ID, batch-ID, uniform-ID and other
+     *      information into one attribute. This is an advanced optimization. It is expected you override
+     *      {@code BatchGeometryFactory#append} and supply the `_masterID` property.
      * @param {string | Function}[options.stateFunction= ()=>PIXI.State.for2d()] - callback that finds the WebGL
      *  state required for display-object shader
      * @param {Function} options.shaderFunction - shader generator function

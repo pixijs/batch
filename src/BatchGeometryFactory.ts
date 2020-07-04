@@ -23,6 +23,7 @@ export class BatchGeometry extends PIXI.Geometry
         texturesPerObject: number,
         inBatchIDAttrib: string,
         uniformIDAttrib: string,
+        masterIDAttrib: string,
     )
     {
         super();
@@ -37,17 +38,26 @@ export class BatchGeometry extends PIXI.Geometry
             this.addAttribute(glslIdentifer, attributeBuffer, glSize, normalize, glType);
         });
 
-        if (texIDAttrib && texturesPerObject > 0)
+        if (!masterIDAttrib)
         {
-            this.addAttribute(texIDAttrib, attributeBuffer, texturesPerObject, true, PIXI.TYPES.FLOAT);
+            if (texIDAttrib && texturesPerObject > 0)
+            {
+                this.addAttribute(texIDAttrib, attributeBuffer, texturesPerObject, true, PIXI.TYPES.FLOAT);
+            }
+            if (inBatchIDAttrib)
+            {
+                this.addAttribute(inBatchIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+            }
+            if (uniformIDAttrib)
+            {
+                this.addAttribute(uniformIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+            }
         }
-        if (inBatchIDAttrib)
+        else
         {
-            this.addAttribute(inBatchIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
-        }
-        if (uniformIDAttrib)
-        {
-            this.addAttribute(uniformIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+            // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants
+            // uint data type = 0x1405
+            this.addAttribute(masterIDAttrib, attributeBuffer, 1, false, 0x1405);
         }
 
         if (hasIndex)
@@ -176,6 +186,9 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
     _uniformIDAttrib: string;
     _uniformID: number;
 
+    // Master-ID attribute feature
+    _masterIDAttrib: string;
+
     /* Set to the indicies of the display-object's textures in uSamplers uniform before
         invoking geometryMerger(). */
     protected _texID: number | number[];
@@ -209,6 +222,8 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
 
         this._inBatchIDAttrib = renderer._inBatchIDAttrib;
         this._uniformIDAttrib = renderer._uniformIDAttrib;
+
+        this._masterIDAttrib = renderer._masterIDAttrib;
 
         this._vertexSize += this._texturesPerObject * 4;// texture indices are also passed
 
@@ -307,6 +322,8 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
             this._uniformID = (batch as AggregateUniformsBatch).uniformMap[this._inBatchID];
         }
 
+        // If _masterIDAttrib, then it is expected you override this function.
+
         this.geometryMerger(targetObject, this);
     }
 
@@ -335,6 +352,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
             this._texturesPerObject,
             this._inBatchIDAttrib,
             this._uniformIDAttrib,
+            this._masterIDAttrib,
         )) as BatchGeometry;
 
         // We don't really have to remove the buffers because BatchRenderer won't reuse
@@ -568,54 +586,71 @@ const GeometryMergerFactory = class
             }
         }
 
-        if (packer._texturesPerObject > 0)
+        if (!packer._masterIDAttrib)
         {
-            if (packer._texturesPerObject > 1)
+            if (packer._texturesPerObject > 0)
             {
-                if (!skipByteIndexConversion)
+                if (packer._texturesPerObject > 1)
                 {
+                    if (!skipByteIndexConversion)
+                    {
+                        packerBody += `
+            adjustedAIndex = aIndex / 4;
+                        `;
+                    }
+
+                    for (let k = 0; k < packer._texturesPerObject; k++)
+                    {
+                        packerBody += `
+            float32View[adjustedAIndex++] = textureId[${k}];
+                        `;
+                    }
+
                     packerBody += `
-        adjustedAIndex = aIndex / 4;
+            aIndex = adjustedAIndex * 4;
                     `;
                 }
-
-                for (let k = 0; k < packer._texturesPerObject; k++)
+                else if (!skipByteIndexConversion)
                 {
                     packerBody += `
-        float32View[adjustedAIndex++] = textureId[${k}];
+            float32View[aIndex / 4] = textureId;
                     `;
                 }
-
-                packerBody += `
-        aIndex = adjustedAIndex * 4;
-                `;
+                else
+                {
+                    packerBody += `
+            float32View[adjustedAIndex++] = textureId;
+            aIndex = adjustedAIndex * 4;
+                    `;
+                }
             }
-            else if (!skipByteIndexConversion)
+            if (packer._inBatchIDAttrib)
             {
                 packerBody += `
-        float32View[aIndex / 4] = textureId;
+                    float32View[adjustedAIndex++] = factory._inBatchID;
+                    aIndex = adjustedAIndex * 4;
                 `;
             }
-            else
+            if (packer._uniformIDAttrib)
             {
                 packerBody += `
-        float32View[adjustedAIndex++] = textureId;
-        aIndex = adjustedAIndex * 4;
+                    float32View[adjustedAIndex++] = factory._uniformID;
+                    aIndex = adjustedAIndex * 4;
                 `;
             }
         }
-        if (packer._inBatchIDAttrib)
+        else
         {
+            if (!skipByteIndexConversion)
+            {
+                packerBody += `
+                    adjustedAIndex = aIndex / 4;
+                `;
+            }
+
             packerBody += `
-                float32View[adjustedAIndex++] = factory._inBatchID;
-                aIndex = adjustedAIndex * 4;
-            `;
-        }
-        if (packer._uniformIDAttrib)
-        {
-            packerBody += `
-                float32View[adjustedAIndex++] = factory._uniformID;
-                aIndex = adjustedAIndex * 4;
+                    float32View[adjustedAIndex++] = factory._masterID;
+                    aIndex = adjustedAIndex * 4;
             `;
         }
 
