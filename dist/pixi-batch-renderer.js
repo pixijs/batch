@@ -1,6 +1,6 @@
 /*!
  * pixi-batch-renderer
- * Compiled Sat, 04 Jul 2020 17:53:03 UTC
+ * Compiled Sat, 04 Jul 2020 21:21:29 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -346,7 +346,14 @@ var __batch_renderer = (function (exports, PIXI) {
         }
         compile() {
             const packer = this.packer;
-            let packerBody = ``;
+            let packerBody = `
+            const compositeAttributes = factory._targetCompositeAttributeBuffer;
+            const compositeIndices = factory._targetCompositeIndexBuffer;
+            let aIndex = factory._aIndex;
+            let iIndex = factory._iIndex;
+            const textureId = factory._texID;
+            const attributeRedirects = factory.attributeRedirects;
+        `;
             packer._attribRedirects.forEach((redirect, i) => {
                 packerBody += `
                 let __offset_${i} = 0;
@@ -355,13 +362,6 @@ var __batch_renderer = (function (exports, PIXI) {
             `;
             });
             packerBody += `
-            const compositeAttributes = factory._targetCompositeAttributeBuffer;
-            const compositeIndices = factory._targetCompositeIndexBuffer;
-            let aIndex = factory._aIndex;
-            let iIndex = factory._iIndex;
-            const textureId = factory._texID;
-            const attributeRedirects = factory.attributeRedirects;
-
             const {
                 int8View,
                 uint8View,
