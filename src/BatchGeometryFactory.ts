@@ -489,7 +489,14 @@ const GeometryMergerFactory = class
         const packer = this.packer;
 
         // The function's body/code is placed here.
-        let packerBody = ``;
+        let packerBody = `
+            const compositeAttributes = factory._targetCompositeAttributeBuffer;
+            const compositeIndices = factory._targetCompositeIndexBuffer;
+            let aIndex = factory._aIndex;
+            let iIndex = factory._iIndex;
+            const textureId = factory._texID;
+            const attributeRedirects = factory.attributeRedirects;
+        `;
 
         // Define __offset_${i}, the offset of each attribute in the display-object's
         // geometry, __buffer_${i} the source buffer of the attribute data.
@@ -505,13 +512,6 @@ const GeometryMergerFactory = class
         // This loops through each vertex in the display-object's geometry and appends
         // them (attributes are interleaved, so each attribute element is pushed per vertex)
         packerBody += `
-            const compositeAttributes = factory._targetCompositeAttributeBuffer;
-            const compositeIndices = factory._targetCompositeIndexBuffer;
-            let aIndex = factory._aIndex;
-            let iIndex = factory._iIndex;
-            const textureId = factory._texID;
-            const attributeRedirects = factory.attributeRedirects;
-
             const {
                 int8View,
                 uint8View,
