@@ -55,9 +55,7 @@ export class BatchGeometry extends PIXI.Geometry
         }
         else
         {
-            // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants
-            // uint data type = 0x1405
-            this.addAttribute(masterIDAttrib, attributeBuffer, 1, false, 0x1405);
+            this.addAttribute(masterIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
         }
 
         if (hasIndex)
