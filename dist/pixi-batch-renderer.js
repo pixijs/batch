@@ -1,6 +1,6 @@
 /*!
  * pixi-batch-renderer
- * Compiled Fri, 22 May 2020 21:09:33 UTC
+ * Compiled Sat, 04 Jul 2020 17:53:03 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -190,7 +190,7 @@ var __batch_renderer = (function (exports, PIXI) {
     }
 
     class BatchGeometry extends PIXI.Geometry {
-        constructor(attributeRedirects, hasIndex, texIDAttrib, texturesPerObject, inBatchIDAttrib, uniformIDAttrib) {
+        constructor(attributeRedirects, hasIndex, texIDAttrib, texturesPerObject, inBatchIDAttrib, uniformIDAttrib, masterIDAttrib) {
             super();
             const attributeBuffer = new PIXI.Buffer(null, false, false);
             const indexBuffer = hasIndex ? new PIXI.Buffer(null, false, true) : null;
@@ -198,14 +198,19 @@ var __batch_renderer = (function (exports, PIXI) {
                 const { glslIdentifer, glType, glSize, normalize } = redirect;
                 this.addAttribute(glslIdentifer, attributeBuffer, glSize, normalize, glType);
             });
-            if (texIDAttrib && texturesPerObject > 0) {
-                this.addAttribute(texIDAttrib, attributeBuffer, texturesPerObject, true, PIXI.TYPES.FLOAT);
+            if (!masterIDAttrib) {
+                if (texIDAttrib && texturesPerObject > 0) {
+                    this.addAttribute(texIDAttrib, attributeBuffer, texturesPerObject, true, PIXI.TYPES.FLOAT);
+                }
+                if (inBatchIDAttrib) {
+                    this.addAttribute(inBatchIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+                }
+                if (uniformIDAttrib) {
+                    this.addAttribute(uniformIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+                }
             }
-            if (inBatchIDAttrib) {
-                this.addAttribute(inBatchIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
-            }
-            if (uniformIDAttrib) {
-                this.addAttribute(uniformIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+            else {
+                this.addAttribute(masterIDAttrib, attributeBuffer, 1, false, 0x1405);
             }
             if (hasIndex) {
                 this.addIndex(indexBuffer);
@@ -234,6 +239,7 @@ var __batch_renderer = (function (exports, PIXI) {
             this._texIDAttrib = renderer._texIDAttrib;
             this._inBatchIDAttrib = renderer._inBatchIDAttrib;
             this._uniformIDAttrib = renderer._uniformIDAttrib;
+            this._masterIDAttrib = renderer._masterIDAttrib;
             this._vertexSize += this._texturesPerObject * 4;
             if (this._inBatchIDAttrib) {
                 this._vertexSize += 4;
@@ -282,7 +288,7 @@ var __batch_renderer = (function (exports, PIXI) {
             this.geometryMerger(targetObject, this);
         }
         build() {
-            const geom = (this._geometryPool.pop() || new BatchGeometry(this._attribRedirects, true, this._texIDAttrib, this._texturesPerObject, this._inBatchIDAttrib, this._uniformIDAttrib));
+            const geom = (this._geometryPool.pop() || new BatchGeometry(this._attribRedirects, true, this._texIDAttrib, this._texturesPerObject, this._inBatchIDAttrib, this._uniformIDAttrib, this._masterIDAttrib));
             geom.attribBuffer.update(this._targetCompositeAttributeBuffer.float32View);
             geom.indexBuffer.update(this._targetCompositeIndexBuffer);
             return geom;
@@ -410,44 +416,57 @@ var __batch_renderer = (function (exports, PIXI) {
                     skipByteIndexConversion = false;
                 }
             }
-            if (packer._texturesPerObject > 0) {
-                if (packer._texturesPerObject > 1) {
-                    if (!skipByteIndexConversion) {
+            if (!packer._masterIDAttrib) {
+                if (packer._texturesPerObject > 0) {
+                    if (packer._texturesPerObject > 1) {
+                        if (!skipByteIndexConversion) {
+                            packerBody += `
+            adjustedAIndex = aIndex / 4;
+                        `;
+                        }
+                        for (let k = 0; k < packer._texturesPerObject; k++) {
+                            packerBody += `
+            float32View[adjustedAIndex++] = textureId[${k}];
+                        `;
+                        }
                         packerBody += `
-        adjustedAIndex = aIndex / 4;
+            aIndex = adjustedAIndex * 4;
                     `;
                     }
-                    for (let k = 0; k < packer._texturesPerObject; k++) {
+                    else if (!skipByteIndexConversion) {
                         packerBody += `
-        float32View[adjustedAIndex++] = textureId[${k}];
+            float32View[aIndex / 4] = textureId;
                     `;
                     }
+                    else {
+                        packerBody += `
+            float32View[adjustedAIndex++] = textureId;
+            aIndex = adjustedAIndex * 4;
+                    `;
+                    }
+                }
+                if (packer._inBatchIDAttrib) {
                     packerBody += `
-        aIndex = adjustedAIndex * 4;
+                    float32View[adjustedAIndex++] = factory._inBatchID;
+                    aIndex = adjustedAIndex * 4;
                 `;
                 }
-                else if (!skipByteIndexConversion) {
+                if (packer._uniformIDAttrib) {
                     packerBody += `
-        float32View[aIndex / 4] = textureId;
-                `;
-                }
-                else {
-                    packerBody += `
-        float32View[adjustedAIndex++] = textureId;
-        aIndex = adjustedAIndex * 4;
+                    float32View[adjustedAIndex++] = factory._uniformID;
+                    aIndex = adjustedAIndex * 4;
                 `;
                 }
             }
-            if (packer._inBatchIDAttrib) {
+            else {
+                if (!skipByteIndexConversion) {
+                    packerBody += `
+                    adjustedAIndex = aIndex / 4;
+                `;
+                }
                 packerBody += `
-                float32View[adjustedAIndex++] = factory._inBatchID;
-                aIndex = adjustedAIndex * 4;
-            `;
-            }
-            if (packer._uniformIDAttrib) {
-                packerBody += `
-                float32View[adjustedAIndex++] = factory._uniformID;
-                aIndex = adjustedAIndex * 4;
+                    float32View[adjustedAIndex++] = factory._masterID;
+                    aIndex = adjustedAIndex * 4;
             `;
             }
             packerBody += `}
@@ -547,7 +566,13 @@ var __batch_renderer = (function (exports, PIXI) {
             this._BatchDrawerClass = options.BatchDrawerClass || BatchDrawer;
             this._uniformRedirects = options.uniformSet || null;
             this._uniformIDAttrib = options.uniformIDAttrib;
+            this._masterIDAttrib = options.masterIDAttrib;
             this.options = options;
+            if (options.masterIDAttrib) {
+                this._texIDAttrib = this._masterIDAttrib;
+                this._uniformIDAttrib = this._masterIDAttrib;
+                this._inBatchIDAttrib = this._masterIDAttrib;
+            }
             this.renderer.runners.contextChange.add(this);
             if (this.renderer.gl) {
                 this.contextChange();
