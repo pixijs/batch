@@ -223,13 +223,20 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
 
         this._masterIDAttrib = renderer._masterIDAttrib;
 
-        this._vertexSize += this._texturesPerObject * 4;// texture indices are also passed
-
-        if (this._inBatchIDAttrib)
+        if (!this._masterIDAttrib)
         {
-            this._vertexSize += 4;
+            this._vertexSize += this._texturesPerObject * 4;// texture indices are also passed
+
+            if (this._inBatchIDAttrib)
+            {
+                this._vertexSize += 4;
+            }
+            if (this._uniformIDAttrib)
+            {
+                this._vertexSize += 4;
+            }
         }
-        if (this._uniformIDAttrib)
+        else
         {
             this._vertexSize += 4;
         }
