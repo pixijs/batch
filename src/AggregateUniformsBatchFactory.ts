@@ -79,11 +79,11 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
         if (!this._renderer._uniformIDAttrib)
         {
             // No aggregation mode! If uniforms already buffered, they **must** match or batch will break.
-            if (this.uniformLength > 0)
+            if (this.uniformLength >= 0)
             {
                 const id = this._matchUniforms(displayObject);
 
-                if (id > 0)
+                if (id >= 0)
                 {
                     return true;
                 }
@@ -101,7 +101,7 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
         {
             const id = this._matchUniforms(displayObject);
 
-            if (id > 0)
+            if (id >= 0)
             {
                 this.uniformMap.push(id);
 
@@ -273,6 +273,6 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
             return u1.uid === u2.uid;
         }
 
-        return true;
+        return false;
     }
 }

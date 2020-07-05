@@ -1,6 +1,6 @@
 /*!
  * pixi-batch-renderer
- * Compiled Sun, 05 Jul 2020 02:02:27 UTC
+ * Compiled Sun, 05 Jul 2020 02:35:56 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -790,9 +790,9 @@ var __batch_renderer = (function (exports, PIXI) {
         }
         _put(displayObject) {
             if (!this._renderer._uniformIDAttrib) {
-                if (this.uniformLength > 0) {
+                if (this.uniformLength >= 0) {
                     const id = this._matchUniforms(displayObject);
-                    if (id > 0) {
+                    if (id >= 0) {
                         return true;
                     }
                     return false;
@@ -803,7 +803,7 @@ var __batch_renderer = (function (exports, PIXI) {
             }
             if (this._renderer._uniformIDAttrib) {
                 const id = this._matchUniforms(displayObject);
-                if (id > 0) {
+                if (id >= 0) {
                     this.uniformMap.push(id);
                     return true;
                 }
@@ -897,7 +897,7 @@ var __batch_renderer = (function (exports, PIXI) {
             if (u1 instanceof PIXI.BaseTexture && u2 instanceof PIXI.BaseTexture) {
                 return u1.uid === u2.uid;
             }
-            return true;
+            return false;
         }
     }
 
