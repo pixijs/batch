@@ -480,6 +480,8 @@ export class BatchRenderer extends PIXI.ObjectRenderer
             let vertexCount = 0;
             let indexCount = 0;
 
+            batch.geometryOffset = indices;
+
             for (let j = 0; j < batchLength; j++)// loop-per(targetObject)
             {
                 const targetObject = batchBuffer[j];
@@ -496,7 +498,6 @@ export class BatchRenderer extends PIXI.ObjectRenderer
                 // externally-defined properties for draw calls
                 batch.$vertexCount = vertexCount;
                 batch.$indexCount = indexCount;
-                batch.geometryOffset = indices;
                 indices += batch.$indexCount;
 
                 geometryFactory.append(targetObject, batch);

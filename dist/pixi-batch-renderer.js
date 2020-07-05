@@ -1,6 +1,6 @@
 /*!
  * pixi-batch-renderer
- * Compiled Sat, 04 Jul 2020 22:00:26 UTC
+ * Compiled Sun, 05 Jul 2020 01:50:04 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -637,6 +637,7 @@ var __batch_renderer = (function (exports, PIXI) {
                 const batchLength = batchBuffer.length;
                 let vertexCount = 0;
                 let indexCount = 0;
+                batch.geometryOffset = indices;
                 for (let j = 0; j < batchLength; j++) {
                     const targetObject = batchBuffer[j];
                     if (this._indexProperty) {
@@ -647,7 +648,6 @@ var __batch_renderer = (function (exports, PIXI) {
                     }
                     batch.$vertexCount = vertexCount;
                     batch.$indexCount = indexCount;
-                    batch.geometryOffset = indices;
                     indices += batch.$indexCount;
                     geometryFactory.append(targetObject, batch);
                 }
