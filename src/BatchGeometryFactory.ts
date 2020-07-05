@@ -412,10 +412,9 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
      */
     protected getAttributeBuffer(size: number): PIXI.ViewableBuffer
     {
-        // 8 vertices is enough for 2 quads
-        const roundedP2 = PIXI.utils.nextPow2(Math.ceil(size / 8));
+        const roundedP2 = PIXI.utils.nextPow2(size);
         const roundedSizeIndex = PIXI.utils.log2(roundedP2);
-        const roundedSize = roundedP2 * 8;
+        const roundedSize = roundedP2;
 
         if (this._aBuffers.length <= roundedSizeIndex)
         {
@@ -426,7 +425,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
 
         if (!buffer)
         {
-            this._aBuffers[roundedSize] = buffer = new PIXI.ViewableBuffer(roundedSize * this._vertexSize);
+            this._aBuffers[roundedSizeIndex] = buffer = new PIXI.ViewableBuffer(roundedSize * this._vertexSize);
         }
 
         return buffer;

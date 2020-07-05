@@ -495,12 +495,12 @@ export class BatchRenderer extends PIXI.ObjectRenderer
                     vertexCount += resolveConstantOrProperty(targetObject, this._vertexCountProperty);
                 }
 
-                // externally-defined properties for draw calls
-                batch.$vertexCount = vertexCount;
-                batch.$indexCount = indexCount;
-
                 geometryFactory.append(targetObject, batch);
             }
+
+            // externally-defined properties for draw calls
+            batch.$vertexCount = vertexCount;
+            batch.$indexCount = indexCount;
 
             indices += batch.$indexCount;
         }
