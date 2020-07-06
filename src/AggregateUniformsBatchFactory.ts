@@ -198,7 +198,7 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
 
                 const value = typeof source === 'string'
                     ? displayObject[source]
-                    : source(displayObject as PIXI.DisplayObject);
+                    : source(displayObject as PIXI.DisplayObject, this._renderer);
 
                 if (!this._compareUniforms(value, this.uniformBuffer[glslIdentifer][i]))
                 {

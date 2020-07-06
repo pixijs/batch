@@ -1,6 +1,6 @@
 /*!
  * pixi-batch-renderer
- * Compiled Sun, 05 Jul 2020 15:07:29 UTC
+ * Compiled Mon, 06 Jul 2020 17:09:43 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -221,6 +221,7 @@ var __batch_renderer = (function (exports, PIXI) {
     }
     class IBatchGeometryFactory {
         constructor(renderer) {
+            this._renderer = renderer;
         }
     }
     class BatchGeometryFactory extends IBatchGeometryFactory {
@@ -498,7 +499,7 @@ var __batch_renderer = (function (exports, PIXI) {
         _compileSourceBufferExpression(redirect, i) {
             return (typeof redirect.source === 'string')
                 ? `targetObject['${redirect.source}']`
-                : `attributeRedirects[${i}].source(targetObject)`;
+                : `attributeRedirects[${i}].source(targetObject, factory._renderer)`;
         }
         _compileVertexCountExpression() {
             if (!this.packer._vertexCountProperty) {
@@ -853,7 +854,7 @@ var __batch_renderer = (function (exports, PIXI) {
                     const { glslIdentifer, source } = uniforms[k];
                     const value = typeof source === 'string'
                         ? displayObject[source]
-                        : source(displayObject);
+                        : source(displayObject, this._renderer);
                     if (!this._compareUniforms(value, this.uniformBuffer[glslIdentifer][i])) {
                         isMatch = false;
                         break;
