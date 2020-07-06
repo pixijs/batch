@@ -1,6 +1,6 @@
 /*!
  * pixi-batch-renderer
- * Compiled Mon, 06 Jul 2020 17:09:43 UTC
+ * Compiled Mon, 06 Jul 2020 17:21:06 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -813,7 +813,7 @@ var __batch_renderer = (function (exports, PIXI) {
                 const uniformRedirect = this._renderer._uniformRedirects[i];
                 const { source, glslIdentifer } = uniformRedirect;
                 this.uniformBuffer[glslIdentifer].push(typeof source === 'string'
-                    ? displayObject[source] : source(displayObject));
+                    ? displayObject[source] : source(displayObject, this._renderer));
             }
             this.uniformMap.push(this.uniformLength);
             ++this.uniformLength;

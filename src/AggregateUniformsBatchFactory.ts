@@ -116,7 +116,7 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
             const { source, glslIdentifer } = uniformRedirect;
 
             this.uniformBuffer[glslIdentifer].push(typeof source === 'string'
-                ? (displayObject as any)[source] : source(displayObject));
+                ? (displayObject as any)[source] : source(displayObject, this._renderer));
         }
 
         this.uniformMap.push(this.uniformLength);
