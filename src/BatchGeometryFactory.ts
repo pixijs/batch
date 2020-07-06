@@ -72,10 +72,13 @@ export class BatchGeometry extends PIXI.Geometry
 // as an interface.
 export abstract class IBatchGeometryFactory
 {
+    protected _renderer: BatchRenderer;
+
     // eslint-disable-next-line @typescript-eslint/no-useless-constructor, @typescript-eslint/no-unused-vars
     constructor(renderer: BatchRenderer)
     {
         // Implementation
+        this._renderer = renderer;
     }
 
     abstract init(verticesBatched: number, indiciesBatched: number): void;
@@ -694,7 +697,7 @@ const GeometryMergerFactory = class
     {
         return (typeof redirect.source === 'string')
             ? `targetObject['${redirect.source}']`
-            : `attributeRedirects[${i}].source(targetObject)`;
+            : `attributeRedirects[${i}].source(targetObject, factory._renderer)`;
     }
 
     _compileVertexCountExpression(): string
