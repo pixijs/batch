@@ -321,7 +321,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
         }
 
         // GeometryMerger uses this
-        if (this._inBatchIDAttrib)
+        if (this._inBatchIDAttrib || this._uniformIDAttrib)
         {
             this._inBatchID = batch.batchBuffer.indexOf(targetObject);
         }
