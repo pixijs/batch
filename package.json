@@ -1,6 +1,6 @@
 {
   "name": "pixi-batch-renderer",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "Batch rendering library for WebGL/PixiJS applications",
   "main": "lib/pixi-batch-renderer.cjs",
   "module": "lib/pixi-batch-renderer.mjs",
@@ -11,7 +11,8 @@
     "predeploy": "npm run docs",
     "deploy": "gh-pages -d docs",
     "compile": "rollup -c",
-    "compile:types": "rm -rf compile && tsc; api-extractor run; echo Done"
+    "compile:types": "rm -rf compile && tsc; api-extractor run; echo Done",
+    "prepublishOnly": "npm run build"
   },
   "author": "Shukant Pal <shukantpal@outlook.com>",
   "license": "MIT",
