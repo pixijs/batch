@@ -1,0 +1,32 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
+  "rushVersion": "5.29.1",
+  "pnpmVersion": "4.14.4",
+  "pnpmOptions": {
+    "pnpmStore": "global",
+    "strictPeerDependencies": true,
+    "resolutionStrategy": "fast",
+  },
+  "nodeSupportedVersionRange": ">=10.0.0 <13.0.0",
+  "projectFolderMinDepth": 2,
+  "projectFolderMaxDepth": 2,
+  "repository": {
+    "url": "https://github.com/pixijs/pixi-batch-renderer",
+    "defaultBranch": "master",
+    "defaultRemote": "origin"
+  },
+  "eventHooks": {
+    "preRushInstall": [],
+    "postRushInstall": [],
+    "preRushBuild": [],
+    "postRushBuild": []
+  },
+  "telemetryEnabled": false,
+  "projects": [
+    {
+      "packageName": "pixi-batch-renderer",
+      "projectFolder": "packages/pixi-batch-renderer",
+      "reviewCategory": "production"
+    }
+  ]
+}
