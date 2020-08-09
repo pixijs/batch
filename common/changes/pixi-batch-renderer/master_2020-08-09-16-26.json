@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "pixi-batch-renderer",
+      "comment": ".cjs -> .js, .mjs -> .es.js for bundles",
+      "type": "patch"
+    }
+  ],
+  "packageName": "pixi-batch-renderer",
+  "email": "shukantpal@outlook.com"
+}
