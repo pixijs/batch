@@ -2,8 +2,8 @@
   "name": "pixi-batch-renderer",
   "version": "2.3.2",
   "description": "Batch rendering library for WebGL/PixiJS applications",
-  "main": "lib/pixi-batch-renderer.cjs",
-  "module": "lib/pixi-batch-renderer.mjs",
+  "main": "lib/pixi-batch-renderer.js",
+  "module": "lib/pixi-batch-renderer.es.js",
   "bundle": "dist/pixi-batch-renderer.js",
   "scripts": {
     "build": "npm run compile; npm run docs",

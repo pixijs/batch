@@ -4,9 +4,9 @@
     },
     "source": {
         "include": [
-            "lib/pixi-batch-renderer.mjs"
+            "lib/pixi-batch-renderer.es.js"
         ],
-        "includePattern": ".+\\.mjs(doc)?$"
+        "includePattern": ".+\\.es.js(doc)?$"
     },
     "plugins": [
         "plugins/markdown"
@@ -19,7 +19,7 @@
         },
         "applicationName": "pixi-batch-renderer",
         "footer": "Made with ♥ by Shukant Pal",
-        "copyright": "Copyright © 2019 Shukant Pal",
+        "copyright": "Copyright © 2019-2020 Shukant Pal",
         "disqus": "",
         "openGraph": {
             "title": "",

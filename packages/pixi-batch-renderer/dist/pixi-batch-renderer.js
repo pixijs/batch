@@ -1,9 +1,13 @@
+/* eslint-disable */
+
 /*!
  * pixi-batch-renderer
- * Compiled Sun, 02 Aug 2020 18:37:54 UTC
+ * Compiled Sun, 09 Aug 2020 16:23:10 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
+ * 
+ * Copyright (C) 2019-2020, Shukant Pal All Rights Reserved
  */
 this.PIXI = this.PIXI || {}
 this.PIXI.brend = this.PIXI.brend || {}

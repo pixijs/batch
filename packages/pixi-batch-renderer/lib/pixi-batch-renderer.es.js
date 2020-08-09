@@ -1,15 +1,15 @@
+/* eslint-disable */
+
 /*!
  * pixi-batch-renderer
- * Compiled Sun, 02 Aug 2020 18:37:54 UTC
+ * Compiled Sun, 09 Aug 2020 16:23:10 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
+ * 
+ * Copyright (C) 2019-2020, Shukant Pal All Rights Reserved
  */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-var PIXI = require('pixi.js');
+import { ViewableBuffer, Geometry, Buffer, TYPES, utils, ObjectRenderer, State, settings, ENV, Shader, Point, Matrix, BaseTexture } from 'pixi.js';
 
 class Redirect {
     constructor(source, glslIdentifer) {
@@ -29,7 +29,7 @@ class AttributeRedirect extends Redirect {
         this.normalize = !!options.normalize;
     }
     static vertexSizeFor(attributeRedirects) {
-        return attributeRedirects.reduce((acc, redirect) => (PIXI.ViewableBuffer.sizeOf(redirect.type)
+        return attributeRedirects.reduce((acc, redirect) => (ViewableBuffer.sizeOf(redirect.type)
             * redirect.properSize)
             + acc, 0);
     }
@@ -190,28 +190,28 @@ class StdBatchFactory {
     }
 }
 
-class BatchGeometry extends PIXI.Geometry {
+class BatchGeometry extends Geometry {
     constructor(attributeRedirects, hasIndex, texIDAttrib, texturesPerObject, inBatchIDAttrib, uniformIDAttrib, masterIDAttrib) {
         super();
-        const attributeBuffer = new PIXI.Buffer(null, false, false);
-        const indexBuffer = hasIndex ? new PIXI.Buffer(null, false, true) : null;
+        const attributeBuffer = new Buffer(null, false, false);
+        const indexBuffer = hasIndex ? new Buffer(null, false, true) : null;
         attributeRedirects.forEach((redirect) => {
             const { glslIdentifer, glType, glSize, normalize } = redirect;
             this.addAttribute(glslIdentifer, attributeBuffer, glSize, normalize, glType);
         });
         if (!masterIDAttrib) {
             if (texIDAttrib && texturesPerObject > 0) {
-                this.addAttribute(texIDAttrib, attributeBuffer, texturesPerObject, true, PIXI.TYPES.FLOAT);
+                this.addAttribute(texIDAttrib, attributeBuffer, texturesPerObject, true, TYPES.FLOAT);
             }
             if (inBatchIDAttrib) {
-                this.addAttribute(inBatchIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+                this.addAttribute(inBatchIDAttrib, attributeBuffer, 1, false, TYPES.FLOAT);
             }
             if (uniformIDAttrib) {
-                this.addAttribute(uniformIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+                this.addAttribute(uniformIDAttrib, attributeBuffer, 1, false, TYPES.FLOAT);
             }
         }
         else {
-            this.addAttribute(masterIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+            this.addAttribute(masterIDAttrib, attributeBuffer, 1, false, TYPES.FLOAT);
         }
         if (hasIndex) {
             this.addIndex(indexBuffer);
@@ -313,21 +313,21 @@ class BatchGeometryFactory extends IBatchGeometryFactory {
         this._geometryMerger = func;
     }
     getAttributeBuffer(size) {
-        const roundedP2 = PIXI.utils.nextPow2(size);
-        const roundedSizeIndex = PIXI.utils.log2(roundedP2);
+        const roundedP2 = utils.nextPow2(size);
+        const roundedSizeIndex = utils.log2(roundedP2);
         const roundedSize = roundedP2;
         if (this._aBuffers.length <= roundedSizeIndex) {
             this._aBuffers.length = roundedSizeIndex + 1;
         }
         let buffer = this._aBuffers[roundedSizeIndex];
         if (!buffer) {
-            this._aBuffers[roundedSizeIndex] = buffer = new PIXI.ViewableBuffer(roundedSize * this._vertexSize);
+            this._aBuffers[roundedSizeIndex] = buffer = new ViewableBuffer(roundedSize * this._vertexSize);
         }
         return buffer;
     }
     getIndexBuffer(size) {
-        const roundedP2 = PIXI.utils.nextPow2(Math.ceil(size / 12));
-        const roundedSizeIndex = PIXI.utils.log2(roundedP2);
+        const roundedP2 = utils.nextPow2(Math.ceil(size / 12));
+        const roundedSizeIndex = utils.log2(roundedP2);
         const roundedSize = roundedP2 * 12;
         if (this._iBuffers.length <= roundedSizeIndex) {
             this._iBuffers.length = roundedSizeIndex + 1;
@@ -511,7 +511,7 @@ const GeometryMergerFactory = class {
             : `${this.packer._vertexCountProperty}`);
     }
     _sizeOf(i) {
-        return PIXI.ViewableBuffer.sizeOf(this.packer._attribRedirects[i].type);
+        return ViewableBuffer.sizeOf(this.packer._attribRedirects[i].type);
     }
 };
 
@@ -556,7 +556,7 @@ class BatchDrawer {
     }
 }
 
-class BatchRenderer extends PIXI.ObjectRenderer {
+class BatchRenderer extends ObjectRenderer {
     constructor(renderer, options) {
         super(renderer);
         this._attribRedirects = options.attribSet;
@@ -566,7 +566,7 @@ class BatchRenderer extends PIXI.ObjectRenderer {
         this._texturesPerObject = typeof options.texturesPerObject !== 'undefined' ? options.texturesPerObject : 1;
         this._texIDAttrib = options.texIDAttrib;
         this._inBatchIDAttrib = options.inBatchIDAttrib;
-        this._stateFunction = options.stateFunction || (() => PIXI.State.for2d());
+        this._stateFunction = options.stateFunction || (() => State.for2d());
         this._shaderFunction = options.shaderFunction;
         this._BatchFactoryClass = options.BatchFactoryClass || StdBatchFactory;
         this._BatchGeometryFactoryClass = options.BatchGeometryFactoryClass || BatchGeometryFactory;
@@ -591,11 +591,11 @@ class BatchRenderer extends PIXI.ObjectRenderer {
     }
     contextChange() {
         const gl = this.renderer.gl;
-        if (PIXI.settings.PREFER_ENV === PIXI.ENV.WEBGL_LEGACY) {
+        if (settings.PREFER_ENV === ENV.WEBGL_LEGACY) {
             this.MAX_TEXTURES = 1;
         }
         else {
-            this.MAX_TEXTURES = Math.min(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS), PIXI.settings.SPRITE_MAX_TEXTURES);
+            this.MAX_TEXTURES = Math.min(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS), settings.SPRITE_MAX_TEXTURES);
         }
         this._batchFactory = new this._BatchFactoryClass(this);
         this._geometryFactory = new this._BatchGeometryFactoryClass(this);
@@ -740,7 +740,7 @@ class BatchShaderFactory {
             }
             fragmentShaderTemplate = _replaceAll(fragmentShaderTemplate, injectorTemplate, this._cState[injectorTemplate]);
         }
-        const shader = PIXI.Shader.from(vertexShaderTemplate, fragmentShaderTemplate, this._uniforms);
+        const shader = Shader.from(vertexShaderTemplate, fragmentShaderTemplate, this._uniforms);
         const textures = new Array(renderer.MAX_TEXTURES);
         for (let i = 0; i < textures.length; i++) {
             textures[i] = i;
@@ -895,30 +895,20 @@ class AggregateUniformsBatchFactory extends StdBatchFactory {
             }
             return true;
         }
-        if (u1 instanceof PIXI.Point && u2 instanceof PIXI.Point) {
+        if (u1 instanceof Point && u2 instanceof Point) {
             return u1.x === u2.x && u1.y === u2.y;
         }
-        if (u1 instanceof PIXI.Matrix && u2 instanceof PIXI.Matrix) {
+        if (u1 instanceof Matrix && u2 instanceof Matrix) {
             return u1.a === u2.a && u1.b === u2.b
                 && u1.c === u2.c && u1.d === u2.d
                 && u1.tx === u2.tx && u1.ty === u2.ty;
         }
-        if (u1 instanceof PIXI.BaseTexture && u2 instanceof PIXI.BaseTexture) {
+        if (u1 instanceof BaseTexture && u2 instanceof BaseTexture) {
             return u1.uid === u2.uid;
         }
         return false;
     }
 }
 
-exports.AggregateUniformsBatch = AggregateUniformsBatch;
-exports.AggregateUniformsBatchFactory = AggregateUniformsBatchFactory;
-exports.AttributeRedirect = AttributeRedirect;
-exports.Batch = StdBatch;
-exports.BatchGenerator = StdBatchFactory;
-exports.BatchGeometryFactory = BatchGeometryFactory;
-exports.BatchRenderer = BatchRenderer;
-exports.BatchRendererPluginFactory = BatchRendererPluginFactory;
-exports.BatchShaderFactory = BatchShaderFactory;
-exports.Redirect = Redirect;
-exports.UniformRedirect = UniformRedirect;
-//# sourceMappingURL=pixi-batch-renderer.cjs.map
+export { AggregateUniformsBatch, AggregateUniformsBatchFactory, AttributeRedirect, StdBatch as Batch, StdBatchFactory as BatchGenerator, BatchGeometryFactory, BatchRenderer, BatchRendererPluginFactory, BatchShaderFactory, Redirect, UniformRedirect };
+//# sourceMappingURL=pixi-batch-renderer.es.js.map

@@ -26,7 +26,8 @@
     {
       "packageName": "pixi-batch-renderer",
       "projectFolder": "packages/pixi-batch-renderer",
-      "reviewCategory": "production"
+      "reviewCategory": "production",
+      "shouldPublish": true
     }
   ]
 }

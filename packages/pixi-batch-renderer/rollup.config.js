@@ -21,12 +21,16 @@ const globals = {
 const compiled = (new Date()).toUTCString().replace(/GMT/g, 'UTC');
 
 const banner = [
+    `/* eslint-disable */`,
+    ``,
     `/*!`,
     ` * pixi-batch-renderer`,
     ` * Compiled ${compiled}`,
     ` *`,
     ` * pixi-batch-renderer is licensed under the MIT License.`,
     ` * http://www.opensource.org/licenses/mit-license`,
+    ` * `,
+    ` * Copyright (C) 2019-2020, Shukant Pal All Rights Reserved`,
     ` */`,
 ].join('\n');
 
@@ -47,14 +51,14 @@ export default [{
     output: [
         {
             banner,
-            file: 'lib/pixi-batch-renderer.mjs',
+            file: 'lib/pixi-batch-renderer.es.js',
             format: 'esm',
             sourcemap: true,
             freeze: false,
         },
         {
             banner,
-            file: 'lib/pixi-batch-renderer.cjs',
+            file: 'lib/pixi-batch-renderer.js',
             format: 'cjs',
             sourcemap: true,
             freeze: false,
