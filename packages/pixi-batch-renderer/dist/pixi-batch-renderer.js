@@ -2,7 +2,7 @@
 
 /*!
  * pixi-batch-renderer
- * Compiled Sun, 09 Aug 2020 16:23:10 UTC
+ * Compiled Sun, 09 Aug 2020 16:28:07 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
