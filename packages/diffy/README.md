@@ -33,3 +33,7 @@ const YourRenderer = BatchRendererPluginFactory.from({
     BatchDrawerClass: DiffDrawer
 });
 ```
+
+## Collaboration
+
+I'd like to thank [Strytegy](https://www.strytegy.com) for funding the initial development of this package.

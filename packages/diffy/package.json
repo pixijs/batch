@@ -2,8 +2,12 @@
   "name": "@pixi-pbr/diffy",
   "version": "1.0.0",
   "description": "Geometry factory that minimizes buffer uploads by tracking & updating only modified regions of data",
-  "main": "lib/geomf-diff.js",
+  "main": "lib/diffy.js",
+  "module": "lib/diffy.es.js",
+  "bundle": "dist/diffy.js",
+  "namespace": "PIXI.brend",
   "scripts": {
+    "build": "rollup -c node_modules/@pixi-build-tools/rollup-configurator/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -31,6 +35,8 @@
     "pixi-batch-renderer": "~2.3.3"
   },
   "peerDependencies": {
+    "@pixi/utils": "~5.3.3",
+    "@pixi/core": "~5.3.3",
     "@pixi-essentials/object-pool": "~0.0.5"
   },
   "devDependencies": {
@@ -41,6 +47,8 @@
     "@pixi/utils": "~5.3.3",
     "@pixi/core": "~5.3.3",
     "pixi.js": "~5.3.3",
-    "@pixi-essentials/object-pool": "~0.0.5"
+    "@pixi-essentials/object-pool": "~0.0.5",
+    "rollup": "~2.26.7",
+    "@pixi-build-tools/rollup-configurator": "~1.0.4"
   }
 }

@@ -3,6 +3,8 @@ example/node_modules
 docs
 .DS_Store
 compile
+lib
+dist
 
 # Logs
 *.log
