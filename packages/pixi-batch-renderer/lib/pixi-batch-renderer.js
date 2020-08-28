@@ -2,7 +2,7 @@
 
 /*!
  * pixi-batch-renderer
- * Compiled Sun, 09 Aug 2020 16:28:07 UTC
+ * Compiled Fri, 28 Aug 2020 15:53:25 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -195,10 +195,10 @@ class StdBatchFactory {
 }
 
 class BatchGeometry extends PIXI.Geometry {
-    constructor(attributeRedirects, hasIndex, texIDAttrib, texturesPerObject, inBatchIDAttrib, uniformIDAttrib, masterIDAttrib) {
+    constructor(attributeRedirects, hasIndex, texIDAttrib, texturesPerObject, inBatchIDAttrib, uniformIDAttrib, masterIDAttrib, attributeBuffer, indexBuffer) {
         super();
-        const attributeBuffer = new PIXI.Buffer(null, false, false);
-        const indexBuffer = hasIndex ? new PIXI.Buffer(null, false, true) : null;
+        attributeBuffer = attributeBuffer || new PIXI.Buffer(null, false, false);
+        indexBuffer = indexBuffer || (hasIndex ? new PIXI.Buffer(null, false, true) : null);
         attributeRedirects.forEach((redirect) => {
             const { glslIdentifer, glType, glSize, normalize } = redirect;
             this.addAttribute(glslIdentifer, attributeBuffer, glSize, normalize, glType);
@@ -755,6 +755,28 @@ class BatchShaderFactory {
     }
 }
 
+class BufferPool {
+    constructor(bufferType) {
+        this._bufferPools = [];
+        this._bufferType = bufferType;
+    }
+    allocateBuffer(size) {
+        const roundedP2 = PIXI.utils.nextPow2(size);
+        const roundedSizeIndex = PIXI.utils.log2(roundedP2);
+        const roundedSize = roundedP2;
+        if (this._bufferPools.length <= roundedSizeIndex) {
+            this._bufferPools.length = roundedSizeIndex + 1;
+        }
+        let bufferPool = this._bufferPools[roundedSizeIndex];
+        if (!bufferPool) {
+            this._bufferPools[roundedSizeIndex] = bufferPool = [];
+        }
+        return bufferPool.pop() || new (this._bufferType)(roundedSize);
+    }
+    releaseBuffer(buffer) {
+    }
+}
+
 class AggregateUniformsBatch extends StdBatch {
     constructor(renderer, geometryOffset) {
         super(geometryOffset);
@@ -918,11 +940,14 @@ exports.AggregateUniformsBatch = AggregateUniformsBatch;
 exports.AggregateUniformsBatchFactory = AggregateUniformsBatchFactory;
 exports.AttributeRedirect = AttributeRedirect;
 exports.Batch = StdBatch;
+exports.BatchDrawer = BatchDrawer;
 exports.BatchGenerator = StdBatchFactory;
+exports.BatchGeometry = BatchGeometry;
 exports.BatchGeometryFactory = BatchGeometryFactory;
 exports.BatchRenderer = BatchRenderer;
 exports.BatchRendererPluginFactory = BatchRendererPluginFactory;
 exports.BatchShaderFactory = BatchShaderFactory;
+exports.BufferPool = BufferPool;
 exports.Redirect = Redirect;
 exports.UniformRedirect = UniformRedirect;
 //# sourceMappingURL=pixi-batch-renderer.js.map

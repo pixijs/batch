@@ -1,0 +1,46 @@
+{
+  "name": "@pixi-pbr/diffy",
+  "version": "1.0.0",
+  "description": "Geometry factory that minimizes buffer uploads by tracking & updating only modified regions of data",
+  "main": "lib/geomf-diff.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pixijs/pixi-batch-renderer.git"
+  },
+  "keywords": [
+    "pixijs",
+    "batch",
+    "diff",
+    "geometry",
+    "bufferSubData",
+    "pixi-pbr"
+  ],
+  "author": "Shukant K. Pal <shukantpal@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pixijs/pixi-batch-renderer/issues"
+  },
+  "homepage": "https://github.com/pixijs/pixi-batch-renderer#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "pixi-batch-renderer": "~2.3.3"
+  },
+  "peerDependencies": {
+    "@pixi-essentials/object-pool": "~0.0.5"
+  },
+  "devDependencies": {
+    "@pixi/eslint-config": "~1.0.1",
+    "eslint": "~7.7.0",
+    "@typescript-eslint/eslint-plugin": "~3.10.1",
+    "@typescript-eslint/parser": "~3.10.1",
+    "@pixi/utils": "~5.3.3",
+    "@pixi/core": "~5.3.3",
+    "pixi.js": "~5.3.3",
+    "@pixi-essentials/object-pool": "~0.0.5"
+  }
+}

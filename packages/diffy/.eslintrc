@@ -14,5 +14,16 @@
     },
     "extends": [
         "@pixi/eslint-config"
-    ]
+    ],
+    "rules": {
+        "@typescript-eslint/triple-slash-reference": [
+            "off"
+        ],
+        "spaced-comment": [
+            "off"
+        ],
+        "no-duplicate-imports": [
+            "off"
+        ]
+    }
 }

@@ -2,10 +2,13 @@ export * from './redirects';
 export { StdBatchFactory as BatchGenerator } from './StdBatchFactory';
 export { BatchRenderer } from './BatchRenderer';
 export { BatchRendererPluginFactory } from './BatchRendererPluginFactory';
-export { BatchGeometryFactory } from './BatchGeometryFactory';
+export { BatchGeometryFactory, BatchGeometry } from './BatchGeometryFactory';
 export { Redirect } from './redirects/Redirect';
 export { BatchShaderFactory } from './BatchShaderFactory';
 export { StdBatch as Batch } from './StdBatch';
+export { BatchDrawer } from './BatchDrawer';
+
+export { BufferPool } from './utils/BufferPool';
 
 export * from './AggregateUniformsBatch';
 export * from './AggregateUniformsBatchFactory';

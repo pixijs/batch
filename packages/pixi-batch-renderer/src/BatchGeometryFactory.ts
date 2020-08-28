@@ -24,12 +24,14 @@ export class BatchGeometry extends PIXI.Geometry
         inBatchIDAttrib: string,
         uniformIDAttrib: string,
         masterIDAttrib: string,
+        attributeBuffer?: PIXI.Buffer,
+        indexBuffer?: PIXI.Buffer
     )
     {
         super();
 
-        const attributeBuffer = new PIXI.Buffer(null, false, false);
-        const indexBuffer = hasIndex ? new PIXI.Buffer(null, false, true) : null;
+        attributeBuffer = attributeBuffer || new PIXI.Buffer(null, false, false);
+        indexBuffer = indexBuffer || (hasIndex ? new PIXI.Buffer(null, false, true) : null);
 
         attributeRedirects.forEach((redirect) =>
         {

@@ -2,7 +2,7 @@
 
 /*!
  * pixi-batch-renderer
- * Compiled Sun, 09 Aug 2020 16:28:07 UTC
+ * Compiled Fri, 28 Aug 2020 15:53:25 UTC
  *
  * pixi-batch-renderer is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -191,10 +191,10 @@ class StdBatchFactory {
 }
 
 class BatchGeometry extends Geometry {
-    constructor(attributeRedirects, hasIndex, texIDAttrib, texturesPerObject, inBatchIDAttrib, uniformIDAttrib, masterIDAttrib) {
+    constructor(attributeRedirects, hasIndex, texIDAttrib, texturesPerObject, inBatchIDAttrib, uniformIDAttrib, masterIDAttrib, attributeBuffer, indexBuffer) {
         super();
-        const attributeBuffer = new Buffer(null, false, false);
-        const indexBuffer = hasIndex ? new Buffer(null, false, true) : null;
+        attributeBuffer = attributeBuffer || new Buffer(null, false, false);
+        indexBuffer = indexBuffer || (hasIndex ? new Buffer(null, false, true) : null);
         attributeRedirects.forEach((redirect) => {
             const { glslIdentifer, glType, glSize, normalize } = redirect;
             this.addAttribute(glslIdentifer, attributeBuffer, glSize, normalize, glType);
@@ -751,6 +751,28 @@ class BatchShaderFactory {
     }
 }
 
+class BufferPool {
+    constructor(bufferType) {
+        this._bufferPools = [];
+        this._bufferType = bufferType;
+    }
+    allocateBuffer(size) {
+        const roundedP2 = utils.nextPow2(size);
+        const roundedSizeIndex = utils.log2(roundedP2);
+        const roundedSize = roundedP2;
+        if (this._bufferPools.length <= roundedSizeIndex) {
+            this._bufferPools.length = roundedSizeIndex + 1;
+        }
+        let bufferPool = this._bufferPools[roundedSizeIndex];
+        if (!bufferPool) {
+            this._bufferPools[roundedSizeIndex] = bufferPool = [];
+        }
+        return bufferPool.pop() || new (this._bufferType)(roundedSize);
+    }
+    releaseBuffer(buffer) {
+    }
+}
+
 class AggregateUniformsBatch extends StdBatch {
     constructor(renderer, geometryOffset) {
         super(geometryOffset);
@@ -910,5 +932,5 @@ class AggregateUniformsBatchFactory extends StdBatchFactory {
     }
 }
 
-export { AggregateUniformsBatch, AggregateUniformsBatchFactory, AttributeRedirect, StdBatch as Batch, StdBatchFactory as BatchGenerator, BatchGeometryFactory, BatchRenderer, BatchRendererPluginFactory, BatchShaderFactory, Redirect, UniformRedirect };
+export { AggregateUniformsBatch, AggregateUniformsBatchFactory, AttributeRedirect, StdBatch as Batch, BatchDrawer, StdBatchFactory as BatchGenerator, BatchGeometry, BatchGeometryFactory, BatchRenderer, BatchRendererPluginFactory, BatchShaderFactory, BufferPool, Redirect, UniformRedirect };
 //# sourceMappingURL=pixi-batch-renderer.es.js.map
