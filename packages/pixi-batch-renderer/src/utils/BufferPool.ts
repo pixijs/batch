@@ -1,14 +1,12 @@
 import { ViewableBuffer } from 'pixi.js';
 import { utils} from 'pixi.js';
 
-export type BufferFormat = Uint16Array | ViewableBuffer;
-
-export class BufferPool<T extends BufferFormat>
+export class BufferPool<T extends ArrayLike<number>>
 {
     private _bufferPools: T[][];
-    private _bufferType: typeof Uint16Array | typeof ViewableBuffer;
+    private _bufferType: { new(size: number): ArrayLike<number> };
 
-    constructor(bufferType: typeof Uint16Array | typeof ViewableBuffer)
+    constructor(bufferType: { new(size: number): ArrayLike<number> })
     {
         this._bufferPools = [];
         this._bufferType = bufferType;

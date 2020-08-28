@@ -1,6 +1,5 @@
 import * as PIXI_2 from 'pixi.js';
 import { UniformGroup } from 'pixi.js';
-import { ViewableBuffer } from 'pixi.js';
 
 export declare class AggregateUniformsBatch extends Batch {
     renderer: BatchRenderer;
@@ -179,12 +178,12 @@ export declare class BatchShaderFactory {
     protected _generateShader(stringState: string, renderer: BatchRenderer): PIXI_2.Shader;
 }
 
-declare type BufferFormat = Uint16Array | ViewableBuffer;
-
-export declare class BufferPool<T extends BufferFormat> {
+export declare class BufferPool<T extends ArrayLike<number>> {
     private _bufferPools;
     private _bufferType;
-    constructor(bufferType: typeof Uint16Array | typeof ViewableBuffer);
+    constructor(bufferType: {
+        new (size: number): ArrayLike<number>;
+    });
     allocateBuffer(size: number): T;
     releaseBuffer(buffer: T): void;
 }
@@ -240,7 +239,7 @@ declare interface IBatchRendererStdOptions {
     BatchFactoryClass?: typeof BatchGenerator;
     BatchRendererClass?: typeof BatchRenderer;
     BatchGeometryFactoryClass?: typeof BatchGeometryFactory;
-    BatchDrawerFactoryClass?: typeof BatchDrawer;
+    BatchDrawerClass?: typeof BatchDrawer;
     uniformSet?: UniformRedirect[];
     uniformIDAttrib?: string;
 }

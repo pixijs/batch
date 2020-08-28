@@ -8,6 +8,19 @@ import type { BatchRenderer } from 'pixi-batch-renderer';
 import { BufferInvalidation, BufferInvalidationPool } from './utils/BufferInvalidation';
 import { DiffBuffer } from './DiffBuffer';
 
+// ViewableBuffer(ArrayBuffer) is introduced in the Compressed Textures PR in pixi.js, will be released ion 5.4.0
+// Cringe hack till then:
+function hackViewableBuffer(buffer: ArrayBuffer): ViewableBuffer
+{
+    const vbuf = new ViewableBuffer(0);
+
+    vbuf.rawBinaryData = buffer;
+    vbuf.float32View = new Float32Array(buffer);
+    vbuf.uint32View = new Uint32Array(buffer);
+
+    return vbuf;
+}
+
 export class DiffGeometryFactory extends BatchGeometryFactory
 {
     // typings from BGF
@@ -16,7 +29,7 @@ export class DiffGeometryFactory extends BatchGeometryFactory
     protected _geometryCache: DiffGeometry[];
     protected _geometryPipeline: DiffGeometry[];
 
-    attribPool: BufferPool<ViewableBuffer>;
+    attribPool: BufferPool<Float32Array>;
     indexPool: BufferPool<Uint16Array>;
 
     constructor(renderer: BatchRenderer)
@@ -32,6 +45,9 @@ export class DiffGeometryFactory extends BatchGeometryFactory
          * The geometries already rendered this frame.
          */
         this._geometryPipeline = [];
+
+        this.attribPool = new BufferPool(Float32Array);
+        this.indexPool = new BufferPool(Uint16Array);
 
         renderer.renderer.on('postrender', this.postrender, this);
     }
@@ -117,6 +133,11 @@ export class DiffGeometryFactory extends BatchGeometryFactory
             const c = cache[i];
             const d = data[i];
 
+            if (c !== d)
+            {
+                (cache as number[])[i] = d;
+            }
+
             if (c !== d && !inDiff)
             {
                 inDiff = true;
@@ -130,6 +151,12 @@ export class DiffGeometryFactory extends BatchGeometryFactory
                     BufferInvalidationPool.allocate()
                         .init(diffOffset, diffOffset, i - diffOffset));
             }
+        }
+
+        if (inDiff)
+        {
+            diffs.push(BufferInvalidationPool.allocate()
+                .init(diffOffset, diffOffset, length - diffOffset));
         }
 
         return diffs;
@@ -153,5 +180,18 @@ export class DiffGeometryFactory extends BatchGeometryFactory
     postrender(): void
     {
         this.releaseCache();
+    }
+
+    getAttributeBuffer(size: number): ViewableBuffer
+    {
+        const buffer = this.attribPool.allocateBuffer(size * this._vertexSize);
+        const vbuf = hackViewableBuffer(buffer);
+
+        return vbuf;
+    }
+
+    getIndexBuffer(size: number): Uint16Array
+    {
+        return this.indexPool.allocateBuffer(size);
     }
 }

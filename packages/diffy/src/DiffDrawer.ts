@@ -32,7 +32,7 @@ export class DiffDrawer extends BatchDrawer
             const buffer = (geom as any).buffers[i];
             const glBuffer = buffer._glBuffers[(renderer as any).CONTEXT_UID];
 
-            if (buffer._updateID !== glBuffer.updateID)
+            if (glBuffer && buffer._updateID !== glBuffer.updateID)
             {
                 (buffer as DiffBuffer)._updateQueue.length = 0;
             }

@@ -23,7 +23,7 @@ interface IBatchRendererStdOptions
     BatchFactoryClass?: typeof StdBatchFactory;
     BatchRendererClass?: typeof BatchRenderer;
     BatchGeometryFactoryClass?: typeof BatchGeometryFactory;
-    BatchDrawerFactoryClass?: typeof BatchDrawer;
+    BatchDrawerClass?: typeof BatchDrawer;
 
     uniformSet?: UniformRedirect[];
     uniformIDAttrib?: string;

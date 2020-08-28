@@ -12,7 +12,7 @@ export function uploadBuffer(geometrySystem: systems.GeometrySystem, buffer: any
 
     const type = buffer.index ? gl.ELEMENT_ARRAY_BUFFER : gl.ARRAY_BUFFER;
 
-    if (buffer._updateID === glBuffer._updateID && buffer._updateQueue.length === 0)
+    if (buffer._updateID === glBuffer.updateID && buffer._updateQueue.length === 0)
     {
         return;
     }
@@ -21,7 +21,7 @@ export function uploadBuffer(geometrySystem: systems.GeometrySystem, buffer: any
 
     (geometrySystem as any)._boundBuffer = glBuffer;
 
-    if (buffer._updateID !== glBuffer._updateID || renderer.context.webGLVersion === 1)
+    if (buffer._updateID !== glBuffer.updateID || renderer.context.webGLVersion === 1)
     {
         if (glBuffer.byteLength >= buffer.data.byteLength)
         {
@@ -35,11 +35,15 @@ export function uploadBuffer(geometrySystem: systems.GeometrySystem, buffer: any
             glBuffer.byteLength = buffer.data.byteLength;
             gl.bufferData(type, buffer.data, drawType);
         }
+
+        glBuffer.updateID = buffer._updateID;
     }
     else if (buffer._updateQueue.length > 0)
     {
         const queue = buffer._updateQueue;
-        const src = buffer.backData;
+        const src = buffer.data;
+
+        gl.bufferSubData(type, 0, buffer.data);
 
         for (let i = 0; i < queue.length; i++)
         {
@@ -49,8 +53,8 @@ export function uploadBuffer(geometrySystem: systems.GeometrySystem, buffer: any
                 type,
                 dstOffset * src.BYTES_PER_ELEMENT,
                 src,
-                srcOffset * src.BYTES_PER_ELEMENT,
-                queue.size,
+                srcOffset,
+                size,
             );
         }
     }
