@@ -1,6 +1,6 @@
 {
   "name": "@pixi-pbr/diffy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Geometry factory that minimizes buffer uploads by tracking & updating only modified regions of data",
   "main": "lib/diffy.js",
   "module": "lib/diffy.es.js",
@@ -34,7 +34,7 @@
     "access": "public"
   },
   "dependencies": {
-    "pixi-batch-renderer": "~2.3.3"
+    "pixi-batch-renderer": "~2.3.4"
   },
   "peerDependencies": {
     "@pixi/utils": "~5.3.3",

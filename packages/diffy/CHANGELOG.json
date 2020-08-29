@@ -1,0 +1,22 @@
+{
+  "name": "@pixi-pbr/diffy",
+  "entries": [
+    {
+      "version": "1.0.1",
+      "tag": "@pixi-pbr/diffy_v1.0.1",
+      "date": "Sat, 29 Aug 2020 19:02:11 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "First release, fully optimized for WebGL 2!"
+          }
+        ],
+        "dependency": [
+          {
+            "comment": "Updating dependency \"pixi-batch-renderer\" from `~2.3.3` to `~2.3.4`"
+          }
+        ]
+      }
+    }
+  ]
+}
