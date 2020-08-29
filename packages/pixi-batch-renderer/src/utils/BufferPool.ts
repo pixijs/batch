@@ -1,6 +1,8 @@
-import { ViewableBuffer } from 'pixi.js';
 import { utils} from 'pixi.js';
 
+/**
+ * Pool for any array-like type.
+ */
 export class BufferPool<T extends ArrayLike<any>>
 {
     private _bufferPools: T[][];
@@ -35,6 +37,9 @@ export class BufferPool<T extends ArrayLike<any>>
 
     releaseBuffer(buffer: T): void
     {
+        const roundedP2 = utils.nextPow2(buffer.length);
+        const roundedSizeIndex = utils.log2(roundedP2);
 
+        this._bufferPools[roundedSizeIndex].push(buffer);
     }
 }
