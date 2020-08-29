@@ -5,12 +5,13 @@
   "main": "lib/pixi-batch-renderer.js",
   "module": "lib/pixi-batch-renderer.es.js",
   "bundle": "dist/pixi-batch-renderer.js",
+  "namespace": "PIXI.brend",
   "scripts": {
     "build": "npm run compile; npm run docs",
     "docs": "jsdoc -c ./.jsdoc.conf.json --verbose -r README.md",
     "predeploy": "npm run docs",
     "deploy": "gh-pages -d docs",
-    "compile": "rollup -c",
+    "compile": "rollup -c --silent",
     "compile:types": "rm -rf compile && tsc; api-extractor run; echo Done",
     "prepublishOnly": "npm run build"
   },

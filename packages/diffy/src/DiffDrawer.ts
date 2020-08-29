@@ -34,7 +34,7 @@ export class DiffDrawer extends BatchDrawer
 
             if (glBuffer && buffer._updateID !== glBuffer.updateID)
             {
-                (buffer as DiffBuffer)._updateQueue.length = 0;
+                (buffer as DiffBuffer).updateQueue.clear();
             }
         }
 

@@ -178,11 +178,11 @@ export declare class BatchShaderFactory {
     protected _generateShader(stringState: string, renderer: BatchRenderer): PIXI_2.Shader;
 }
 
-export declare class BufferPool<T extends ArrayLike<number>> {
+export declare class BufferPool<T extends ArrayLike<any>> {
     private _bufferPools;
     private _bufferType;
     constructor(bufferType: {
-        new (size: number): ArrayLike<number>;
+        new (size: number): ArrayLike<any>;
     });
     allocateBuffer(size: number): T;
     releaseBuffer(buffer: T): void;

@@ -154,8 +154,7 @@ export abstract class IBatchGeometryFactory
  * index buffer.
  *
  * **Customization:** If you want to customize the batch geometry, then you must
- * also define your draw call issuer. This is not supported by pixi-batch-render
- * but is work-in-progress.
+ * also define your draw call issuer.
  *
  * **inBatchID Support**: If you specified an `inBatchID` attribute in the batch-renderer,
  * then this will support it automatically. The aggregate-uniforms pipeline doesn't need a custom

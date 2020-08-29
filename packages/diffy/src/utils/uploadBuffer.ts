@@ -2,6 +2,7 @@
 
 import { BufferInvalidationPool } from './BufferInvalidation';
 
+import type { BufferInvalidationQueue } from './BufferInvalidationQueue';
 import type { systems } from '@pixi/core';
 
 export function uploadBuffer(geometrySystem: systems.GeometrySystem, buffer: any): void
@@ -12,7 +13,7 @@ export function uploadBuffer(geometrySystem: systems.GeometrySystem, buffer: any
 
     const type = buffer.index ? gl.ELEMENT_ARRAY_BUFFER : gl.ARRAY_BUFFER;
 
-    if (buffer._updateID === glBuffer.updateID && buffer._updateQueue.length === 0)
+    if (buffer._updateID === glBuffer.updateID && buffer.updateQueue.length === 0)
     {
         return;
     }
@@ -38,30 +39,29 @@ export function uploadBuffer(geometrySystem: systems.GeometrySystem, buffer: any
 
         glBuffer.updateID = buffer._updateID;
     }
-    else if (buffer._updateQueue.length > 0)
+    else if (buffer.updateQueue.size > 0)
     {
-        const queue = buffer._updateQueue;
-        const src = buffer.data;
+        const queue: BufferInvalidationQueue = buffer.updateQueue;
+        const data = buffer.data;
 
-        gl.bufferSubData(type, 0, buffer.data);
+        queue.partition();
 
-        for (let i = 0; i < queue.length; i++)
+        for (let node = queue.start; node; node = node.next)
         {
-            const { srcOffset, dstOffset, size } = queue[i];
+            const { offset, size } = node;
 
             (gl as WebGL2RenderingContext).bufferSubData(
                 type,
-                dstOffset * src.BYTES_PER_ELEMENT,
-                src,
-                srcOffset,
+                offset * data.BYTES_PER_ELEMENT,
+                data,
+                offset,
                 size,
             );
         }
     }
 
-    if (buffer._updateQueue.length > 0)
+    if (buffer.updateQueue.size > 0)
     {
-        BufferInvalidationPool.releaseArray(buffer._updateQueue);
-        buffer._updateQueue.length = 0;
+        buffer.updateQueue.clear();
     }
 }

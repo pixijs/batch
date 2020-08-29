@@ -1,12 +1,12 @@
 import { ViewableBuffer } from 'pixi.js';
 import { utils} from 'pixi.js';
 
-export class BufferPool<T extends ArrayLike<number>>
+export class BufferPool<T extends ArrayLike<any>>
 {
     private _bufferPools: T[][];
-    private _bufferType: { new(size: number): ArrayLike<number> };
+    private _bufferType: { new(size: number): ArrayLike<any> };
 
-    constructor(bufferType: { new(size: number): ArrayLike<number> })
+    constructor(bufferType: { new(size: number): ArrayLike<any> })
     {
         this._bufferPools = [];
         this._bufferType = bufferType;

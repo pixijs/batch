@@ -1,12 +1,13 @@
 /// <reference path="./types.d.ts" />
 
 import { BatchGeometryFactory, BatchGeometry, BufferPool } from 'pixi-batch-renderer';
+import { BufferInvalidationPool } from './utils/BufferInvalidation';
+import { BufferInvalidationQueue } from './utils/BufferInvalidationQueue';
+import { DiffBuffer } from './DiffBuffer';
 import { DiffGeometry } from './DiffGeometry';
 import { ViewableBuffer } from '@pixi/core';
 
 import type { BatchRenderer } from 'pixi-batch-renderer';
-import { BufferInvalidation, BufferInvalidationPool } from './utils/BufferInvalidation';
-import { DiffBuffer } from './DiffBuffer';
 
 // ViewableBuffer(ArrayBuffer) is introduced in the Compressed Textures PR in pixi.js, will be released ion 5.4.0
 // Cringe hack till then:
@@ -37,12 +38,12 @@ export class DiffGeometryFactory extends BatchGeometryFactory
         super(renderer);
 
         /**
-         * Cache of the geometries uploaded & rendered in the last frame.
+         * Cache of the geometries drawn in the last frame.
          */
         this._geometryCache = [];
 
         /**
-         * The geometries already rendered this frame.
+         * The geometries already drawn this frame.
          */
         this._geometryPipeline = [];
 
@@ -98,68 +99,76 @@ export class DiffGeometryFactory extends BatchGeometryFactory
     ): void
     {
         const cachedBuffer = geometry[type].data as ArrayLike<number>;
+        const buffer = geometry[type] as DiffBuffer;
+        const bufferPool = this[type === 'attribBuffer' ? 'attribPool' : 'indexPool'];
 
         if (cachedBuffer.length < data.length)
         {
-            geometry[type].update(data);
-
-            this[type === 'attribBuffer' ? 'attribPool' : 'indexPool'].releaseBuffer(cachedBuffer as any);
+            buffer.update(data);
+            bufferPool.releaseBuffer(cachedBuffer as any);
 
             return;
         }
 
-        (geometry[type] as DiffBuffer)._updateQueue = this.diffCache(geometry[type].data as ArrayLike<number>, data);
-
-        this[type === 'attribBuffer' ? 'attribPool' : 'indexPool'].releaseBuffer(data as any);
+        this.diffCache(buffer.data as ArrayLike<number>, data, buffer.updateQueue);
+        bufferPool.releaseBuffer(data as any);
     }
 
     /**
-     * Calculates the regions different in the cached & updated versions of a buffer.
+     * Calculates the regions different in the cached & updated versions of a buffer. The cache is expected to not be smaller
+     * than the updated data.
      *
      * @param cache
      * @param data
      */
-    protected diffCache(cache: ArrayLike<number>, data: ArrayLike<number>): BufferInvalidation[]
+    protected diffCache(cache: ArrayLike<number>, data: ArrayLike<number>, diffQueue: BufferInvalidationQueue): void
     {
+        diffQueue.clear();
+
+        // NOTE: cache.length >= data.length expected!
         const length = Math.min(cache.length, data.length);
 
+        // Flags whether the loop is inside an invalidated interval
         let inDiff = false;
+
+        // Stores the offset of the current invalidated interval, if inDiff
         let diffOffset = 0;
 
-        const diffs: BufferInvalidation[] = [];
-
+        // Fill diffQueue
         for (let i = 0; i < length; i++)
         {
-            const c = cache[i];
-            const d = data[i];
+            const cachedElement = cache[i];
+            const dataElement = data[i];
 
-            if (c !== d)
+            if (cachedElement !== dataElement)
             {
-                (cache as number[])[i] = d;
+                (cache as number[])[i] = dataElement;
             }
 
-            if (c !== d && !inDiff)
+            if (cachedElement !== dataElement && !inDiff)
             {
                 inDiff = true;
                 diffOffset = i;
             }
-            else if (c === d && inDiff)
+            else if (cachedElement === dataElement && inDiff)
             {
                 inDiff = false;
 
-                diffs.push(
-                    BufferInvalidationPool.allocate()
-                        .init(diffOffset, diffOffset, i - diffOffset));
+                diffQueue.append(
+                    BufferInvalidationPool
+                        .allocate()
+                        .init(diffOffset, i - diffOffset),
+                );
             }
         }
 
         if (inDiff)
         {
-            diffs.push(BufferInvalidationPool.allocate()
-                .init(diffOffset, diffOffset, length - diffOffset));
+            diffQueue.append(
+                BufferInvalidationPool.allocate()
+                    .init(diffOffset, length - diffOffset),
+            );
         }
-
-        return diffs;
     }
 
     /**

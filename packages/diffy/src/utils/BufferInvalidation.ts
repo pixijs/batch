@@ -1,32 +1,48 @@
 import { ObjectPoolFactory } from '@pixi-essentials/object-pool';
 
+import type { ObjectPool } from '@pixi-essentials/object-pool';
+
+/* eslint-disable-next-line prefer-const */
+export let BufferInvalidationPool: ObjectPool<BufferInvalidation>;
+
 /**
  * A buffer invalidation records a region of data that has changed across frames.
+ *
+ * @ignore
+ * @internal
  */
 export class BufferInvalidation
 {
-    srcOffset: number;
-    dstOffset: number;
+    offset: number;
     size: number;
+    next: BufferInvalidation;
 
     constructor()
     {
-        this.srcOffset = 0;
-        this.dstOffset = 0;
+        this.offset = 0;
         this.size = 0;
+        this.next = null;
     }
 
     /**
      * Initialize the invalidation tracking data.
      */
-    init(srcStart: number, dstOffset: number, size: number): this
+    init(srcStart: number, size: number): this
     {
-        this.srcOffset = srcStart;
-        this.dstOffset = dstOffset;
+        this.offset = srcStart;
         this.size = size;
 
         return this;
     }
+
+    /**
+     * Clone this object, used for debugging only
+     */
+    clone(): BufferInvalidation
+    {
+        return BufferInvalidationPool.allocate()
+            .init(this.offset, this.size);
+    }
 }
 
-export const BufferInvalidationPool = ObjectPoolFactory.build(BufferInvalidation);
+BufferInvalidationPool = ObjectPoolFactory.build(BufferInvalidation);

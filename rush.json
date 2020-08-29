@@ -34,6 +34,12 @@
       "projectFolder": "packages/pixi-batch-renderer",
       "reviewCategory": "production",
       "shouldPublish": true
+    },
+    {
+      "packageName": "@pixi-pbr/unit-tests",
+      "projectFolder": "tools/unit-tests",
+      "reviewCategory": "development",
+      "shouldPublish": false
     }
   ]
 }

@@ -1,0 +1,30 @@
+{
+  "name": "@pixi-pbr/unit-tests",
+  "version": "1.0.0",
+  "description": "Unit testing for PixiJS Batch Rendering Library",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "build": "echo @pixi-essentials/unit-tests does not build!",
+    "test": "floss --path node_modules/@pixi-build-tools/floss-rush-monorepo --debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pixijs/pixi-batch-renderer.git"
+  },
+  "keywords": [
+    "pixijs",
+    "unit-tests",
+    "pixi-batch-renderer"
+  ],
+  "author": "Shukant K. Pal <shukantpal@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pixijs/pixi-batch-renderer/issues"
+  },
+  "homepage": "https://github.com/pixijs/pixi-batch-renderer#readme",
+  "dependencies": {
+    "floss": "~3.0.0",
+    "@pixi-build-tools/floss-rush-monorepo": "~1.0.1"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "pixi-pbr-monorepo",
+  "version": "1.0.0",
+  "description": "PixiJS Batch Rendering Library",
+  "private": true,
+  "scripts": {
+    "test": "node ./tools/unit-tests/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SukantPal/pixi-batch-renderer.git"
+  },
+  "keywords": [
+    "pixijs",
+    "batch-renderer",
+    "optimizations",
+    "webgl"
+  ],
+  "author": "Shukant K. Pal <shukantpal@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SukantPal/pixi-batch-renderer/issues"
+  },
+  "homepage": "https://github.com/SukantPal/pixi-batch-renderer#readme"
+}

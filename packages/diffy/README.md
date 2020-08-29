@@ -2,7 +2,7 @@
 
 This package can be used to minimize buffer upload overhead in vertex-bound applications. It exploits
 `bufferSubData` to upload only modified parts of the batched geometry. This trades off graphics memory
-for data transfers.
+for reducing data transfers.
 
 ## Installation :package:
 

@@ -2,32 +2,24 @@
 
 import { Buffer } from '@pixi/core';
 import { BufferInvalidationPool } from './utils/BufferInvalidation';
+import { BufferInvalidationQueue } from './utils/BufferInvalidationQueue';
 
 import type { BufferInvalidation } from './utils/BufferInvalidation';
 
 export class DiffBuffer extends Buffer
 {
-    backData: ArrayBufferView;
-    _updateQueue: BufferInvalidation[];
+    public updateQueue: BufferInvalidationQueue;
 
     constructor(data?: ArrayBuffer | ArrayBufferView, _static = false, index = false)
     {
         super(data, _static, index);
 
-        this.backData = null;
-
-        this._updateQueue = [];
+        this.updateQueue = new BufferInvalidationQueue();
     }
 
-    updateBack(data: ArrayBufferView): void
+    update(data?: ArrayBuffer | ArrayBufferView): void
     {
-        this.backData = data;
-    }
-
-    updatePartial(srcOffset: number, dstOffset: number, size: number): void
-    {
-        this._updateQueue.push(
-            BufferInvalidationPool.allocate()
-                .init(srcOffset, dstOffset, size));
+        super.update(data);
+        this.updateQueue.clear();
     }
 }
