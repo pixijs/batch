@@ -1,0 +1,8 @@
+compile
+api-extractor.json
+*.log
+tsconfig.json
+src
+*.json
+CHANGELOG.md
+docs
