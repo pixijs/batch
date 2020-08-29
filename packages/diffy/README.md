@@ -37,3 +37,5 @@ const YourRenderer = BatchRendererPluginFactory.from({
 ## Collaboration
 
 I'd like to thank [Strytegy](https://www.strytegy.com) for funding the initial development of this package.
+
+<a href="https://www.strytegy.com"><img src="https://i.imgur.com/3Ns1JJb.png" width="153.3px" /></a>
