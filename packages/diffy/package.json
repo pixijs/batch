@@ -1,6 +1,6 @@
 {
   "name": "@pixi-pbr/diffy",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Geometry factory that minimizes buffer uploads by tracking & updating only modified regions of data",
   "main": "lib/diffy.js",
   "module": "lib/diffy.es.js",

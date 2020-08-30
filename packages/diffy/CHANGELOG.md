@@ -1,6 +1,13 @@
 # Change Log - @pixi-pbr/diffy
 
-This log was last generated on Sun, 30 Aug 2020 15:11:17 GMT and should not be manually modified.
+This log was last generated on Sun, 30 Aug 2020 16:04:06 GMT and should not be manually modified.
+
+## 1.0.3
+Sun, 30 Aug 2020 16:04:06 GMT
+
+### Patches
+
+- Use Uint32Array comparision to avoid NaN, and diff only up till aIndex to prevent upload unused geometry
 
 ## 1.0.2
 Sun, 30 Aug 2020 15:11:17 GMT

@@ -2,6 +2,18 @@
   "name": "@pixi-pbr/diffy",
   "entries": [
     {
+      "version": "1.0.3",
+      "tag": "@pixi-pbr/diffy_v1.0.3",
+      "date": "Sun, 30 Aug 2020 16:04:06 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Use Uint32Array comparision to avoid NaN, and diff only up till aIndex to prevent upload unused geometry"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.2",
       "tag": "@pixi-pbr/diffy_v1.0.2",
       "date": "Sun, 30 Aug 2020 15:11:17 GMT",
