@@ -70,6 +70,8 @@ export class BufferInvalidationQueue
             this.start = node;
             this.end = node;
 
+            node.next = null;
+
             return;
         }
 
@@ -193,6 +195,7 @@ export class BufferInvalidationQueue
 
         // Delete successor from the queue
         node.next = successor.next;
+        successor.next = null;
 
         // Update end, if needed
         if (this.end === successor)

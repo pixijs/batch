@@ -114,6 +114,7 @@ export class DiffGeometryFactory extends BatchGeometryFactory
         const cachedBuffer = geometry[type].data as ArrayLike<number>;
         const buffer = geometry[type] as DiffBuffer;
         const bufferPool = this[type === 'attribBuffer' ? 'attribPool' : 'indexPool'];
+        const bufferLength = type === 'attribBuffer' ? this._aIndex / 4 : this._iIndex;
 
         if (cachedBuffer.length < data.length)
         {
@@ -123,7 +124,7 @@ export class DiffGeometryFactory extends BatchGeometryFactory
             return;
         }
 
-        this.diffCache(buffer.data as ArrayLike<number>, data, buffer.updateQueue);
+        this.diffCache(buffer.data as ArrayLike<number>, data, bufferLength, buffer.updateQueue);
         bufferPool.releaseBuffer(data as any);
     }
 
@@ -134,12 +135,13 @@ export class DiffGeometryFactory extends BatchGeometryFactory
      * @param cache
      * @param data
      */
-    protected diffCache(cache: ArrayLike<number>, data: ArrayLike<number>, diffQueue: BufferInvalidationQueue): void
+    protected diffCache(
+        cache: ArrayLike<number>,
+        data: ArrayLike<number>,
+        length: number,
+        diffQueue: BufferInvalidationQueue): void
     {
         diffQueue.clear();
-
-        // NOTE: cache.length >= data.length expected!
-        const length = this._aIndex * 4;
 
         // Flags whether the loop is inside an invalidated interval
         let inDiff = false;

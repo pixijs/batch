@@ -128,7 +128,7 @@ export declare class DiffGeometryFactory extends BatchGeometryFactory {
         super(renderer);
         this._geometryCache = [];
         this._geometryPipeline = [];
-        this.attribPool = new BufferPool(Float32Array);
+        this.attribPool = new BufferPool(Uint32Array);
         this.indexPool = new BufferPool(Uint16Array);
         renderer.renderer.on('postrender', this.postrender, this);
     }
@@ -136,11 +136,11 @@ export declare class DiffGeometryFactory extends BatchGeometryFactory {
         const cache = this._geometryCache.shift();
         const geom = cache || new DiffGeometry(this._attribRedirects, true, this._texIDAttrib, this._texturesPerObject, this._inBatchIDAttrib, this._uniformIDAttrib, this._masterIDAttrib);
         if (!cache) {
-            geom.attribBuffer.update(this._targetCompositeAttributeBuffer.float32View);
+            geom.attribBuffer.update(this._targetCompositeAttributeBuffer.uint32View);
             geom.indexBuffer.update(this._targetCompositeIndexBuffer);
         }
         else {
-            this.updateCache(cache, 'attribBuffer', this._targetCompositeAttributeBuffer.float32View);
+            this.updateCache(cache, 'attribBuffer', this._targetCompositeAttributeBuffer.uint32View);
             this.updateCache(cache, 'indexBuffer', this._targetCompositeIndexBuffer);
         }
         return geom;
@@ -162,7 +162,7 @@ export declare class DiffGeometryFactory extends BatchGeometryFactory {
     }
     diffCache(cache, data, diffQueue) {
         diffQueue.clear();
-        const length = Math.min(cache.length, data.length);
+        const length = this._aIndex * 4;
         let inDiff = false;
         let diffOffset = 0;
         for (let i = 0; i < length; i++) {
