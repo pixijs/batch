@@ -9,15 +9,15 @@ import { ViewableBuffer } from '@pixi/core';
 
 import type { BatchRenderer } from 'pixi-batch-renderer';
 
-declare interface HackedFloat32Array extends Float32Array {
+declare interface HackedUint32Array extends Uint32Array {
     viewableBuffer: ViewableBuffer;
 }
 
 // ViewableBuffer.constructor(ArrayBuffer) is introduced in the Compressed Textures PR in pixi.js, will be released ion 5.4.0
 // Cringe hack till then:
-function hackViewableBuffer(buffer: Float32Array): ViewableBuffer
+function hackViewableBuffer(buffer: Uint32Array): ViewableBuffer
 {
-    const hackedBuffer = buffer as HackedFloat32Array;
+    const hackedBuffer = buffer as HackedUint32Array;
 
     if (hackedBuffer.viewableBuffer)
     {
@@ -27,8 +27,8 @@ function hackViewableBuffer(buffer: Float32Array): ViewableBuffer
     const viewableBuffer = new ViewableBuffer(0);
 
     viewableBuffer.rawBinaryData = buffer.buffer;
-    viewableBuffer.float32View = buffer;
-    viewableBuffer.uint32View = new Uint32Array(buffer.buffer);
+    viewableBuffer.uint32View = buffer;
+    viewableBuffer.float32View = new Float32Array(buffer.buffer);
 
     hackedBuffer.viewableBuffer = viewableBuffer;
 
@@ -43,7 +43,7 @@ export class DiffGeometryFactory extends BatchGeometryFactory
     protected _geometryCache: DiffGeometry[];
     protected _geometryPipeline: DiffGeometry[];
 
-    attribPool: BufferPool<Float32Array>;
+    attribPool: BufferPool<Uint32Array>;
     indexPool: BufferPool<Uint16Array>;
 
     constructor(renderer: BatchRenderer)
@@ -60,7 +60,7 @@ export class DiffGeometryFactory extends BatchGeometryFactory
          */
         this._geometryPipeline = [];
 
-        this.attribPool = new BufferPool(Float32Array);
+        this.attribPool = new BufferPool(Uint32Array);
         this.indexPool = new BufferPool(Uint16Array);
 
         renderer.renderer.on('postrender', this.postrender, this);
@@ -82,12 +82,12 @@ export class DiffGeometryFactory extends BatchGeometryFactory
 
         if (!cache)
         {
-            geom.attribBuffer.update(this._targetCompositeAttributeBuffer.float32View);
+            geom.attribBuffer.update(this._targetCompositeAttributeBuffer.uint32View);
             geom.indexBuffer.update(this._targetCompositeIndexBuffer);
         }
         else
         {
-            this.updateCache(cache, 'attribBuffer', this._targetCompositeAttributeBuffer.float32View);
+            this.updateCache(cache, 'attribBuffer', this._targetCompositeAttributeBuffer.uint32View);
             this.updateCache(cache, 'indexBuffer', this._targetCompositeIndexBuffer);
         }
 
@@ -108,7 +108,7 @@ export class DiffGeometryFactory extends BatchGeometryFactory
     protected updateCache(
         geometry: BatchGeometry,
         type: 'attribBuffer' | 'indexBuffer',
-        data: Float32Array | Uint16Array,
+        data: Uint32Array | Uint16Array,
     ): void
     {
         const cachedBuffer = geometry[type].data as ArrayLike<number>;
@@ -139,7 +139,7 @@ export class DiffGeometryFactory extends BatchGeometryFactory
         diffQueue.clear();
 
         // NOTE: cache.length >= data.length expected!
-        const length = Math.min(cache.length, data.length);
+        const length = this._aIndex * 4;
 
         // Flags whether the loop is inside an invalidated interval
         let inDiff = false;

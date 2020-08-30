@@ -7,7 +7,10 @@ test
 # Tooling configuration
 *.log
 *.md
+.rush
 .eslintrc
+CHANGELOG.json
+CHANGELOG.md
 api-extractor.json
 jsdoc.conf.json
 webdoc.conf.json
