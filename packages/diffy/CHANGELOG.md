@@ -1,6 +1,13 @@
 # Change Log - @pixi-pbr/diffy
 
-This log was last generated on Sun, 30 Aug 2020 18:46:13 GMT and should not be manually modified.
+This log was last generated on Sun, 30 Aug 2020 19:00:04 GMT and should not be manually modified.
+
+## 1.0.5
+Sun, 30 Aug 2020 19:00:04 GMT
+
+### Patches
+
+- Fix crash when last node is coalesced in BufferInvalidationQueue#partition
 
 ## 1.0.4
 Sun, 30 Aug 2020 18:46:13 GMT
