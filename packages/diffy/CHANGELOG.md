@@ -1,6 +1,13 @@
 # Change Log - @pixi-pbr/diffy
 
-This log was last generated on Sun, 30 Aug 2020 16:04:06 GMT and should not be manually modified.
+This log was last generated on Sun, 30 Aug 2020 18:46:13 GMT and should not be manually modified.
+
+## 1.0.4
+Sun, 30 Aug 2020 18:46:13 GMT
+
+### Patches
+
+- Fix calculation of buffer length
 
 ## 1.0.3
 Sun, 30 Aug 2020 16:04:06 GMT

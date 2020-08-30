@@ -2,6 +2,18 @@
   "name": "@pixi-pbr/diffy",
   "entries": [
     {
+      "version": "1.0.4",
+      "tag": "@pixi-pbr/diffy_v1.0.4",
+      "date": "Sun, 30 Aug 2020 18:46:13 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix calculation of buffer length"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.3",
       "tag": "@pixi-pbr/diffy_v1.0.3",
       "date": "Sun, 30 Aug 2020 16:04:06 GMT",
