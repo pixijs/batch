@@ -2,6 +2,26 @@
   "name": "@pixi-pbr/diffy",
   "entries": [
     {
+      "version": "1.0.2",
+      "tag": "@pixi-pbr/diffy_v1.0.2",
+      "date": "Sun, 30 Aug 2020 15:11:17 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix memory leak in DiffGeometryFactory (specifically hackViewableBuffer was not recycling the ViewableBuffer, and created a new Float32Array buffer each time)"
+          }
+        ],
+        "dependency": [
+          {
+            "comment": "Updating dependency \"pixi-batch-renderer\" from `~2.3.5` to `~2.3.6`"
+          },
+          {
+            "comment": "Updating dependency \"pixi-batch-renderer\" from `~2.3.5` to `~2.3.6`"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.1",
       "tag": "@pixi-pbr/diffy_v1.0.1",
       "date": "Sat, 29 Aug 2020 19:02:11 GMT",

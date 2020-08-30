@@ -2,6 +2,18 @@
   "name": "pixi-batch-renderer",
   "entries": [
     {
+      "version": "2.3.6",
+      "tag": "pixi-batch-renderer_v2.3.6",
+      "date": "Sun, 30 Aug 2020 15:11:17 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Added unit-test for BufferPool, fixed crash when the an unallocated buffer was released."
+          }
+        ]
+      }
+    },
+    {
       "version": "2.3.5",
       "tag": "pixi-batch-renderer_v2.3.5",
       "date": "Sat, 29 Aug 2020 19:06:52 GMT",

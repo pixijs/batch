@@ -1,6 +1,13 @@
 # Change Log - pixi-batch-renderer
 
-This log was last generated on Sat, 29 Aug 2020 19:06:52 GMT and should not be manually modified.
+This log was last generated on Sun, 30 Aug 2020 15:11:17 GMT and should not be manually modified.
+
+## 2.3.6
+Sun, 30 Aug 2020 15:11:17 GMT
+
+### Patches
+
+- Added unit-test for BufferPool, fixed crash when the an unallocated buffer was released.
 
 ## 2.3.5
 Sat, 29 Aug 2020 19:06:52 GMT
