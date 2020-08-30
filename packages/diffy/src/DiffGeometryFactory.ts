@@ -9,17 +9,30 @@ import { ViewableBuffer } from '@pixi/core';
 
 import type { BatchRenderer } from 'pixi-batch-renderer';
 
-// ViewableBuffer(ArrayBuffer) is introduced in the Compressed Textures PR in pixi.js, will be released ion 5.4.0
+declare interface HackedFloat32Array extends Float32Array {
+    viewableBuffer: ViewableBuffer;
+}
+
+// ViewableBuffer.constructor(ArrayBuffer) is introduced in the Compressed Textures PR in pixi.js, will be released ion 5.4.0
 // Cringe hack till then:
-function hackViewableBuffer(buffer: ArrayBuffer): ViewableBuffer
+function hackViewableBuffer(buffer: Float32Array): ViewableBuffer
 {
-    const vbuf = new ViewableBuffer(0);
+    const hackedBuffer = buffer as HackedFloat32Array;
 
-    vbuf.rawBinaryData = buffer;
-    vbuf.float32View = new Float32Array(buffer);
-    vbuf.uint32View = new Uint32Array(buffer);
+    if (hackedBuffer.viewableBuffer)
+    {
+        return hackedBuffer.viewableBuffer;
+    }
 
-    return vbuf;
+    const viewableBuffer = new ViewableBuffer(0);
+
+    viewableBuffer.rawBinaryData = buffer.buffer;
+    viewableBuffer.float32View = buffer;
+    viewableBuffer.uint32View = new Uint32Array(buffer.buffer);
+
+    hackedBuffer.viewableBuffer = viewableBuffer;
+
+    return viewableBuffer;
 }
 
 export class DiffGeometryFactory extends BatchGeometryFactory

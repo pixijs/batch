@@ -40,6 +40,11 @@ export class BufferPool<T extends ArrayLike<any>>
         const roundedP2 = utils.nextPow2(buffer.length);
         const roundedSizeIndex = utils.log2(roundedP2);
 
+        if (!this._bufferPools[roundedSizeIndex])
+        {
+            this._bufferPools[roundedSizeIndex] = [];
+        }
+
         this._bufferPools[roundedSizeIndex].push(buffer);
     }
 }

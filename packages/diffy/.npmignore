@@ -1,8 +1,15 @@
+# Build-related
 compile
-api-extractor.json
-*.log
-tsconfig.json
-src
-*.json
-CHANGELOG.md
 docs
+src
+test
+
+# Tooling configuration
+*.log
+*.md
+.eslintrc
+api-extractor.json
+jsdoc.conf.json
+webdoc.conf.json
+tsconfig.json
+*.config.js
