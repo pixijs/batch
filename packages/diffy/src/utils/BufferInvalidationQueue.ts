@@ -144,6 +144,13 @@ export class BufferInvalidationQueue
             const idx = indices[i];
             const node = nodes[idx];
 
+            if (!node.next)
+            {
+                // You cannot coalesce the last node! So skip this one for now.
+                threshold = threshold > 0 ? threshold - 1 : 0;
+                continue;
+            }
+
             this.coalesce(node);
 
             // node (idx + 1) is deleted, but the new node is idx + 1 is just node (which becomes larger)

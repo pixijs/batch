@@ -35,6 +35,7 @@ export declare class BufferInvalidationQueue {
         if (!this.start) {
             this.start = node;
             this.end = node;
+            node.next = null;
             return;
         }
         this.end.next = node;
@@ -98,6 +99,7 @@ export declare class BufferInvalidationQueue {
         const size = successor.offset + successor.size - offset;
         node.size = size;
         node.next = successor.next;
+        successor.next = null;
         if (this.end === successor) {
             this.end = node;
         }
@@ -152,17 +154,17 @@ export declare class DiffGeometryFactory extends BatchGeometryFactory {
         const cachedBuffer = geometry[type].data;
         const buffer = geometry[type];
         const bufferPool = this[type === 'attribBuffer' ? 'attribPool' : 'indexPool'];
+        const bufferLength = type === 'attribBuffer' ? this._aIndex / 4 : this._iIndex;
         if (cachedBuffer.length < data.length) {
             buffer.update(data);
             bufferPool.releaseBuffer(cachedBuffer);
             return;
         }
-        this.diffCache(buffer.data, data, buffer.updateQueue);
+        this.diffCache(buffer.data, data, bufferLength, buffer.updateQueue);
         bufferPool.releaseBuffer(data);
     }
-    diffCache(cache, data, diffQueue) {
+    diffCache(cache, data, length, diffQueue) {
         diffQueue.clear();
-        const length = this._aIndex * 4;
         let inDiff = false;
         let diffOffset = 0;
         for (let i = 0; i < length; i++) {
