@@ -75,6 +75,10 @@ export declare class BufferInvalidationQueue {
         for (let i = 0; i < size - threshold; i++) {
             const idx = indices[i];
             const node = nodes[idx];
+            if (!node.next) {
+                threshold = threshold > 0 ? threshold - 1 : 0;
+                continue;
+            }
             this.coalesce(node);
             nodes[idx + 1] = node;
         }
