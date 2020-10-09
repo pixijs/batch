@@ -1,6 +1,13 @@
 # Change Log - @pixi-pbr/diffy
 
-This log was last generated on Fri, 09 Oct 2020 22:28:52 GMT and should not be manually modified.
+This log was last generated on Fri, 09 Oct 2020 22:54:02 GMT and should not be manually modified.
+
+## 1.0.7
+Fri, 09 Oct 2020 22:54:02 GMT
+
+### Patches
+
+- Clear indices properly to prevent garbage from causing errors
 
 ## 1.0.6
 Fri, 09 Oct 2020 22:28:52 GMT
