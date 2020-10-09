@@ -134,6 +134,11 @@ export class BufferInvalidationQueue
 
             node = next;
         }
+        // Clear rest of indices so those are not sorted back before size - 1
+        for (let i = size - 1; i < indices.length; i++)
+        {
+            indices[i] = undefined;
+        }
 
         // Sort indicies of nodes based on the distances to their successor
         indices.sort((i, j) => dists[i] - dists[j]);
