@@ -143,18 +143,15 @@ export class BufferInvalidationQueue
         {
             const idx = indices[i];
             const node = nodes[idx];
-
-            if (!node.next)
-            {
-                // You cannot coalesce the last node! So skip this one for now.
-                threshold = threshold > 0 ? threshold - 1 : 0;
-                continue;
-            }
+            const nextNode = nodes[idx + 1];
 
             this.coalesce(node);
 
-            // node (idx + 1) is deleted, but the new node is idx + 1 is just node (which becomes larger)
-            nodes[idx + 1] = node;
+            // Replace all references to nextNode with node.
+            for (let j = idx + 1; j < size && nodes[j] === nextNode; j++)
+            {
+                nodes[j] = node;
+            }
         }
 
         arrayPool.releaseBuffer(dists);
