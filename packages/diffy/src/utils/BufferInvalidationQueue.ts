@@ -145,6 +145,7 @@ export class BufferInvalidationQueue
             const node = nodes[idx];
             const nextNode = nodes[idx + 1];
 
+            // Merge modes
             this.coalesce(node);
 
             // Replace all references to nextNode with node.
