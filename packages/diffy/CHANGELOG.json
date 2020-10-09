@@ -2,6 +2,18 @@
   "name": "@pixi-pbr/diffy",
   "entries": [
     {
+      "version": "1.0.6",
+      "tag": "@pixi-pbr/diffy_v1.0.6",
+      "date": "Fri, 09 Oct 2020 22:28:52 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix critical bug in partitioning algorithm"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.5",
       "tag": "@pixi-pbr/diffy_v1.0.5",
       "date": "Sun, 30 Aug 2020 19:00:04 GMT",

@@ -1,6 +1,13 @@
 # Change Log - @pixi-pbr/diffy
 
-This log was last generated on Sun, 30 Aug 2020 19:00:04 GMT and should not be manually modified.
+This log was last generated on Fri, 09 Oct 2020 22:28:52 GMT and should not be manually modified.
+
+## 1.0.6
+Fri, 09 Oct 2020 22:28:52 GMT
+
+### Patches
+
+- Fix critical bug in partitioning algorithm
 
 ## 1.0.5
 Sun, 30 Aug 2020 19:00:04 GMT
