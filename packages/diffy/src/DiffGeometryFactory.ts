@@ -169,20 +169,13 @@ export class DiffGeometryFactory extends BatchGeometryFactory
             {
                 inDiff = false;
 
-                diffQueue.append(
-                    BufferInvalidationPool
-                        .allocate()
-                        .init(diffOffset, i - diffOffset),
-                );
+                diffQueue.append(diffOffset, i - diffOffset);
             }
         }
 
         if (inDiff)
         {
-            diffQueue.append(
-                BufferInvalidationPool.allocate()
-                    .init(diffOffset, length - diffOffset),
-            );
+            diffQueue.append(diffOffset, length - diffOffset);
         }
     }
 

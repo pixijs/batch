@@ -14,14 +14,14 @@ const arrayPool: BufferPool<Array<number | BufferInvalidation>> = new BufferPool
  *
  * @ignore
  */
-const SIG_REGION_LEN = 128;
+export const SIG_REGION_LEN = 128;
 
 /**
  * 20% of {@link SIG_REGION_LEN}
  *
  * @ignore
  */
-const INSIG_REGION_DIST = Math.ceil(0.2 * SIG_REGION_LEN);
+export const INSIG_REGION_DIST = Math.ceil(0.2 * SIG_REGION_LEN);
 
 /**
  * The maximum number of invalidations allowed per buffer.
@@ -55,14 +55,43 @@ export class BufferInvalidationQueue
     {
         return !this.start;
     }
-
     /**
      * Appends the invalidation-node to this queue
      *
      * @param node
      */
-    append(node: BufferInvalidation): void
+    append(node: BufferInvalidation): void;
+
+    /**
+     * Appends an invalidation from offset with the given size.
+     *
+     * @param offset
+     * @param size
+     */
+    append(offset: number, size: number): void;
+
+    append(offset: BufferInvalidation | number, size?: number): void
     {
+        // Merge nearby insignificant invalidations preliminarily to conserve memory usage.
+        if (typeof offset === 'number' && this.end)
+        {
+            const lastNode = this.end;
+            const lastEnd = lastNode.offset + lastNode.size;
+
+            if (lastNode.size < SIG_REGION_LEN && lastNode.offset - lastEnd < INSIG_REGION_DIST)
+            {
+                lastNode.size = offset + size - lastNode.offset;
+
+                return;
+            }
+        }
+
+        const node = typeof offset === 'number'
+            ? BufferInvalidationPool
+                .allocate()
+                .init(offset, size)
+            : offset;
+
         ++this.size;
 
         if (!this.start)
