@@ -1,6 +1,13 @@
 # Change Log - @pixi-pbr/diffy
 
-This log was last generated on Fri, 09 Oct 2020 22:54:02 GMT and should not be manually modified.
+This log was last generated on Tue, 13 Oct 2020 23:57:21 GMT and should not be manually modified.
+
+## 1.0.8
+Tue, 13 Oct 2020 23:57:21 GMT
+
+### Patches
+
+- Reduce BufferInvalidation allocations by merging insignificant ones preliminarily.
 
 ## 1.0.7
 Fri, 09 Oct 2020 22:54:02 GMT

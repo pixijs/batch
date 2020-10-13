@@ -2,6 +2,18 @@
   "name": "@pixi-pbr/diffy",
   "entries": [
     {
+      "version": "1.0.8",
+      "tag": "@pixi-pbr/diffy_v1.0.8",
+      "date": "Tue, 13 Oct 2020 23:57:21 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Reduce BufferInvalidation allocations by merging insignificant ones preliminarily."
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.7",
       "tag": "@pixi-pbr/diffy_v1.0.7",
       "date": "Fri, 09 Oct 2020 22:54:02 GMT",
