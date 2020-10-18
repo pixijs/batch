@@ -41,12 +41,11 @@ export class StdBatchFactory
     protected _putTexture: any;
 
     /**
-     * @param {PIXI.brend.BatchRenderer} renderer
+     * @param renderer
      */
     constructor(renderer: BatchRenderer)
     {
         /**
-         * @member {PIXI.brend.BatchRenderer}
          * @protected
          */
         this._renderer = renderer;
@@ -111,9 +110,9 @@ export class StdBatchFactory
     /**
      * Puts the display-object into the current batch, if possible.
      *
-     * @param targetObject {PIXI.DisplayObject} - object to add
-     * @param state {PIXI.State} - state required by that object
-     * @return {boolean} whether the object was added to the batch. If it wasn't, you should "build" it.
+     * @param targetObject - object to add
+     * @param state - state required by that object
+     * @return whether the object was added to the batch. If it wasn't, you should "build" it.
      */
     put(targetObject: PIXI.DisplayObject, state: PIXI.State): boolean
     {
@@ -149,7 +148,7 @@ export class StdBatchFactory
      * Creates the batch object and pushes it into the pool This also resets any state
      * so that a new batch can be started again.
      *
-     * @param batch {PIXI.brend.Batch}
+     * @param batch
      */
     build(geometryOffset: number): void
     {
@@ -205,7 +204,8 @@ export class StdBatchFactory
     /**
      * Should store any information from the display-object to be put into
      * the batch.
-     * @param {PIXI.DisplayObject} displayObject
+     *
+     * @param displayObject
      * @returns {boolean} - whether the display-object was "compatible" with
      *      other display-objects in the batch. If not, it should not have been
      *      added.
