@@ -497,7 +497,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
                 }
                 else
                 {
-                    vertexCount += resolveConstantOrProperty(targetObject, this._vertexCountProperty);
+                    vertexCount += this.calculateVertexCount(targetObject);
                 }
 
                 geometryFactory.append(targetObject, batch);

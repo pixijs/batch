@@ -5,6 +5,8 @@ import BatchRenderer from './BatchRenderer';
 import { StdBatch } from './StdBatch';
 import { AggregateUniformsBatch } from './AggregateUniformsBatch';
 
+import type { DisplayObject } from '@pixi/display';
+
 // BatchGeometryFactory uses this class internally to setup the attributes of
 // the batches.
 //
@@ -176,7 +178,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
     // Standard Pipeline
     _attribRedirects: AttributeRedirect[];
     _indexProperty: string;
-    _vertexCountProperty: string | number;
+    _vertexCountProperty: string | number | ((object: DisplayObject) => number);
     _vertexSize: number;
     _texturesPerObject: number;
     _textureProperty: string;
@@ -708,6 +710,11 @@ const GeometryMergerFactory = class
             // auto-calculate based on primary attribute
             return `__buffer_0.length / ${
                 this.packer._attribRedirects[0].size}`;
+        }
+
+        if (typeof this.packer._vertexCountProperty === 'function')
+        {
+            return `factory._vertexCountProperty[targetObject]`;
         }
 
         return (
