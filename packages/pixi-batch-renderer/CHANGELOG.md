@@ -1,6 +1,13 @@
 # Change Log - pixi-batch-renderer
 
-This log was last generated on Sun, 30 Aug 2020 15:11:17 GMT and should not be manually modified.
+This log was last generated on Sun, 18 Oct 2020 23:46:38 GMT and should not be manually modified.
+
+## 2.3.7
+Sun, 18 Oct 2020 23:46:38 GMT
+
+### Patches
+
+- Support passing vertexCountProperty as a functor.
 
 ## 2.3.6
 Sun, 30 Aug 2020 15:11:17 GMT

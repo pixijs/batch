@@ -2,6 +2,18 @@
   "name": "pixi-batch-renderer",
   "entries": [
     {
+      "version": "2.3.7",
+      "tag": "pixi-batch-renderer_v2.3.7",
+      "date": "Sun, 18 Oct 2020 23:46:38 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Support passing vertexCountProperty as a functor."
+          }
+        ]
+      }
+    },
+    {
       "version": "2.3.6",
       "tag": "pixi-batch-renderer_v2.3.6",
       "date": "Sun, 30 Aug 2020 15:11:17 GMT",
