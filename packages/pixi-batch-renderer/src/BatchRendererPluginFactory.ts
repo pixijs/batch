@@ -7,11 +7,13 @@ import * as PIXI from 'pixi.js';
 import { BatchDrawer } from './BatchDrawer';
 import { UniformRedirect } from './redirects';
 
+import type { DisplayObject } from '@pixi/display';
+
 // (Uniforms?)+Geometry+Textures is the standard pipeline in Pixi's AbstractBatchRenderer.
 interface IBatchRendererStdOptions
 {
     attribSet: AttributeRedirect[];
-    vertexCountProperty?: string | number;
+    vertexCountProperty?: string | number | ((object: DisplayObject) => number);
     indexProperty: string;
     textureProperty: string;
     texturesPerObject?: number;

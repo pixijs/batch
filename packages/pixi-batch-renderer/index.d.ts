@@ -1,3 +1,4 @@
+import type { DisplayObject } from '@pixi/display';
 import * as PIXI_2 from 'pixi.js';
 import { UniformGroup } from 'pixi.js';
 
@@ -129,7 +130,7 @@ export declare class BatchGeometryFactory extends IBatchGeometryFactory {
 export declare class BatchRenderer extends PIXI_2.ObjectRenderer {
     readonly _attribRedirects: AttributeRedirect[];
     readonly _indexProperty: string;
-    readonly _vertexCountProperty: string | number;
+    readonly _vertexCountProperty: string | number | ((object: DisplayObject) => number);
     readonly _textureProperty: string;
     readonly _texturesPerObject: number;
     readonly _texIDAttrib: string;
@@ -157,7 +158,7 @@ export declare class BatchRenderer extends PIXI_2.ObjectRenderer {
     render(displayObject: PIXI_2.DisplayObject): void;
     flush(): void;
     stop(): void;
-    protected _vertexCountFor(targetObject: PIXI_2.DisplayObject): number;
+    protected calculateVertexCount(object: PIXI_2.DisplayObject): number;
 }
 
 export declare class BatchRendererPluginFactory {
@@ -210,7 +211,7 @@ declare abstract class IBatchGeometryFactory {
 declare interface IBatchRendererOptions {
     attribSet: AttributeRedirect[];
     indexProperty: string;
-    vertexCountProperty?: string | number;
+    vertexCountProperty?: string | number | ((object: DisplayObject) => number);
     textureProperty: string;
     texturesPerObject?: number;
     texIDAttrib: string;
@@ -227,7 +228,7 @@ declare interface IBatchRendererOptions {
 
 declare interface IBatchRendererStdOptions {
     attribSet: AttributeRedirect[];
-    vertexCountProperty?: string | number;
+    vertexCountProperty?: string | number | ((object: DisplayObject) => number);
     indexProperty: string;
     textureProperty: string;
     texturesPerObject?: number;

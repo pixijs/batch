@@ -5,13 +5,16 @@ import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve'
 import { AttributeRedirect } from './redirects/AttributeRedirect';
 import { BatchDrawer } from './BatchDrawer';
 import { UniformRedirect } from './redirects/UniformRedirect';
+import { resolveProperty } from './utils/resolveProperty';
+
+import type { DisplayObject } from '@pixi/display';
 
 export interface IBatchRendererOptions
 {
     // Standard pipeline
     attribSet: AttributeRedirect[];
     indexProperty: string;
-    vertexCountProperty?: string | number;
+    vertexCountProperty?: string | number | ((object: DisplayObject) => number);
     textureProperty: string;
     texturesPerObject?: number;
     texIDAttrib: string;
@@ -110,7 +113,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     // Standard pipeline
     readonly _attribRedirects: AttributeRedirect[];
     readonly _indexProperty: string;
-    readonly _vertexCountProperty: string | number;
+    readonly _vertexCountProperty: string | number | ((object: DisplayObject) => number);
     readonly _textureProperty: string;
     readonly _texturesPerObject: number;
     readonly _texIDAttrib: string;
@@ -414,7 +417,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     {
         this._objectBuffer.push(displayObject);
 
-        this._bufferedVertices += this._vertexCountFor(displayObject);
+        this._bufferedVertices += this.calculateVertexCount(displayObject);
 
         if (this._indexProperty)
         {
@@ -524,14 +527,18 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         }
     }
 
-    // Should we document this?
-    protected _vertexCountFor(targetObject: PIXI.DisplayObject): number
+    /**
+     * Calculates the number of vertices in the display-object's geometry.
+     *
+     * @param object
+     */
+    protected calculateVertexCount(object: PIXI.DisplayObject): number
     {
-        return (this._vertexCountProperty)
-            ? resolveConstantOrProperty(targetObject, this._vertexCountProperty)
-            : resolveFunctionOrProperty(targetObject,
-                this._attribRedirects[0].source).length
-                    / (this._attribRedirects[0].size as number);
+        return resolveProperty(
+            object, 
+            this._vertexCountProperty,
+            this._attribRedirects[0].source.length / (this._attribRedirects[0].size as number)
+        );    
     }
 }
 
