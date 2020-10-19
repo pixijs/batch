@@ -1,6 +1,13 @@
 # Change Log - pixi-batch-renderer
 
-This log was last generated on Mon, 19 Oct 2020 00:17:18 GMT and should not be manually modified.
+This log was last generated on Mon, 19 Oct 2020 00:28:47 GMT and should not be manually modified.
+
+## 2.4.1
+Mon, 19 Oct 2020 00:28:47 GMT
+
+### Patches
+
+- Fixes the resolution of the vertex count if vertexCountProperty was not passed.
 
 ## 2.4.0
 Mon, 19 Oct 2020 00:17:18 GMT

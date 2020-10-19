@@ -2,6 +2,18 @@
   "name": "pixi-batch-renderer",
   "entries": [
     {
+      "version": "2.4.1",
+      "tag": "pixi-batch-renderer_v2.4.1",
+      "date": "Mon, 19 Oct 2020 00:28:47 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fixes the resolution of the vertex count if vertexCountProperty was not passed."
+          }
+        ]
+      }
+    },
+    {
       "version": "2.4.0",
       "tag": "pixi-batch-renderer_v2.4.0",
       "date": "Mon, 19 Oct 2020 00:17:18 GMT",
