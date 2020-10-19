@@ -1,6 +1,13 @@
 # Change Log - pixi-batch-renderer
 
-This log was last generated on Mon, 19 Oct 2020 00:28:47 GMT and should not be manually modified.
+This log was last generated on Mon, 19 Oct 2020 00:38:23 GMT and should not be manually modified.
+
+## 2.4.2
+Mon, 19 Oct 2020 00:38:23 GMT
+
+### Patches
+
+- Fixes the incorrect resolution of vertex count in geometry merging
 
 ## 2.4.1
 Mon, 19 Oct 2020 00:28:47 GMT

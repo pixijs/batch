@@ -2,6 +2,18 @@
   "name": "pixi-batch-renderer",
   "entries": [
     {
+      "version": "2.4.2",
+      "tag": "pixi-batch-renderer_v2.4.2",
+      "date": "Mon, 19 Oct 2020 00:38:23 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fixes the incorrect resolution of vertex count in geometry merging"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.4.1",
       "tag": "pixi-batch-renderer_v2.4.1",
       "date": "Mon, 19 Oct 2020 00:28:47 GMT",
