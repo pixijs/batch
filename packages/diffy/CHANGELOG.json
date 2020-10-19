@@ -2,6 +2,21 @@
   "name": "@pixi-pbr/diffy",
   "entries": [
     {
+      "version": "1.0.9",
+      "tag": "@pixi-pbr/diffy_v1.0.9",
+      "date": "Mon, 19 Oct 2020 00:17:18 GMT",
+      "comments": {
+        "dependency": [
+          {
+            "comment": "Updating dependency \"pixi-batch-renderer\" from `~2.3.7` to `~2.4.0`"
+          },
+          {
+            "comment": "Updating dependency \"pixi-batch-renderer\" from `~2.3.7` to `~2.4.0`"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.8",
       "tag": "@pixi-pbr/diffy_v1.0.8",
       "date": "Tue, 13 Oct 2020 23:57:21 GMT",

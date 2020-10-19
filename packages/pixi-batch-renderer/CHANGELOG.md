@@ -1,6 +1,13 @@
 # Change Log - pixi-batch-renderer
 
-This log was last generated on Sun, 18 Oct 2020 23:46:38 GMT and should not be manually modified.
+This log was last generated on Mon, 19 Oct 2020 00:17:18 GMT and should not be manually modified.
+
+## 2.4.0
+Mon, 19 Oct 2020 00:17:18 GMT
+
+### Minor changes
+
+- Support manual resolution of the number of indices to be batched.
 
 ## 2.3.7
 Sun, 18 Oct 2020 23:46:38 GMT

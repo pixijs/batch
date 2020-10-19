@@ -2,6 +2,18 @@
   "name": "pixi-batch-renderer",
   "entries": [
     {
+      "version": "2.4.0",
+      "tag": "pixi-batch-renderer_v2.4.0",
+      "date": "Mon, 19 Oct 2020 00:17:18 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Support manual resolution of the number of indices to be batched."
+          }
+        ]
+      }
+    },
+    {
       "version": "2.3.7",
       "tag": "pixi-batch-renderer_v2.3.7",
       "date": "Sun, 18 Oct 2020 23:46:38 GMT",
