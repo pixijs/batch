@@ -722,7 +722,7 @@ const GeometryMergerFactory = class
 
         if (typeof this.packer._vertexCountProperty === 'function')
         {
-            return `factory._vertexCountProperty[targetObject]`;
+            return `factory._vertexCountProperty(targetObject)`;
         }
 
         return (
