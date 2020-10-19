@@ -6,6 +6,7 @@ import { StdBatch } from './StdBatch';
 import { AggregateUniformsBatch } from './AggregateUniformsBatch';
 
 import type { DisplayObject } from '@pixi/display';
+import type { Resolvable } from './utils/resolveProperty';
 
 // BatchGeometryFactory uses this class internally to setup the attributes of
 // the batches.
@@ -411,6 +412,14 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
     }
 
     /**
+     * @protected
+     */
+    get _indexCountProperty(): Resolvable<number>
+    {
+        return this._renderer._indexCountProperty;
+    }
+
+    /**
      * Allocates an attribute buffer with sufficient capacity to hold `size` elements.
      *
      * @param {number} size
@@ -515,7 +524,7 @@ const GeometryMergerFactory = class
             packerBody += `
                 let __offset_${i} = 0;
                 const __buffer_${i} = (
-                    ${this._compileSourceBufferExpression(redirect, i)});
+                    ${this.generateSourceBufferExpr(redirect, i)});
             `;
         });
 
@@ -532,7 +541,7 @@ const GeometryMergerFactory = class
                 float32View,
             } = compositeAttributes;
 
-            const vertexCount = ${this._compileVertexCountExpression()};
+            const vertexCount = ${this.generateVertexCountExpr()};
 
             let adjustedAIndex = 0;
 
@@ -675,8 +684,8 @@ const GeometryMergerFactory = class
         if (this.packer._indexProperty)
         {
             packerBody += `
-    const verticesBefore = oldAIndex / ${this.packer._vertexSize}
-    const indexCount  = targetObject['${this.packer._indexProperty}'].length;
+    const verticesBefore = oldAIndex / ${this.packer._vertexSize};
+    const indexCount     = ${this.generateIndexCountExpr()};
 
     for (let j = 0; j < indexCount; j++)
     {
@@ -696,20 +705,19 @@ const GeometryMergerFactory = class
 
     // Returns an expression that fetches the attribute data source from
     // targetObject (DisplayObject).
-    _compileSourceBufferExpression(redirect: Redirect, i: number): string
+    generateSourceBufferExpr(redirect: Redirect, i: number): string
     {
         return (typeof redirect.source === 'string')
             ? `targetObject['${redirect.source}']`
             : `attributeRedirects[${i}].source(targetObject, factory._renderer)`;
     }
 
-    _compileVertexCountExpression(): string
+    generateVertexCountExpr(): string
     {
         if (!this.packer._vertexCountProperty)
         {
             // auto-calculate based on primary attribute
-            return `__buffer_0.length / ${
-                this.packer._attribRedirects[0].size}`;
+            return `__buffer_0.length / ${this.packer._attribRedirects[0].size}`;
         }
 
         if (typeof this.packer._vertexCountProperty === 'function')
@@ -722,6 +730,28 @@ const GeometryMergerFactory = class
                 ? `targetObject.${this.packer._vertexCountProperty}`
                 : `${this.packer._vertexCountProperty}`
         );
+    }
+
+    generateIndexCountExpr(): string
+    {
+        const idxCountProp = this.packer._indexCountProperty;
+        const idxProp = this.packer._indexProperty;
+
+        if (!idxCountProp)
+        {
+            return `targetObject['${idxProp}'].length`;
+        }
+
+        if (typeof idxCountProp === 'function')
+        {
+            return `factory._indexCountProperty(targetObject)`;
+        }
+        else if (typeof idxCountProp === 'string')
+        {
+            return `targetObject['${idxCountProp}']`;
+        }
+
+        return `${idxCountProp}`;
     }
 
     _sizeOf(i: number): number

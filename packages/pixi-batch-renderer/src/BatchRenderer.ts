@@ -5,15 +5,17 @@ import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve'
 import { AttributeRedirect } from './redirects/AttributeRedirect';
 import { BatchDrawer } from './BatchDrawer';
 import { UniformRedirect } from './redirects/UniformRedirect';
-import { resolveProperty } from './utils/resolveProperty';
+import { resolve } from './utils/resolveProperty';
 
 import type { DisplayObject } from '@pixi/display';
+import type { Resolvable } from './utils/resolveProperty';
 
 export interface IBatchRendererOptions
 {
     // Standard pipeline
     attribSet: AttributeRedirect[];
     indexProperty: string;
+    indexCountProperty?: string | number | ((object: DisplayObject) => number);
     vertexCountProperty?: string | number | ((object: DisplayObject) => number);
     textureProperty: string;
     texturesPerObject?: number;
@@ -111,8 +113,35 @@ export interface IBatchRendererOptions
 export class BatchRenderer extends PIXI.ObjectRenderer
 {
     // Standard pipeline
+    /**
+     * Attribute redirects
+     *
+     * @access protected
+     */
     readonly _attribRedirects: AttributeRedirect[];
+
+    /**
+     * Indices property
+     *
+     * @access protected
+     */
     readonly _indexProperty: string;
+
+    /**
+     * A manual resolution of the number of indicies in a display object's geometry. This is ignored if the
+     * index buffer is not used (see _indexProperty). If not provided, the index buffer's entire length
+     * is used.
+     * 
+     * @access protected
+     */
+    readonly _indexCountProperty: string | number | ((object: DisplayObject) => number);
+
+    /**
+     * A manual resolution of the number of vertices in a display object's geometry. If not provided, this is
+     * calculated as the number of element in the first attribute's buffer.
+     *
+     * @access protected
+     */
     readonly _vertexCountProperty: string | number | ((object: DisplayObject) => number);
     readonly _textureProperty: string;
     readonly _texturesPerObject: number;
@@ -182,28 +211,9 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     {
         super(renderer);
 
-        /**
-         * Attribute redirects
-         * @member {PIXI.brend.AttributeRedirect[]}
-         * @protected
-         * @readonly
-         */
         this._attribRedirects = options.attribSet;
-
-        /**
-         * Indices property
-         * @member {string}
-         * @protected
-         * @readonly
-         */
         this._indexProperty = options.indexProperty;
-
-        /**
-         * Vertex count property (optional)
-         * @member {string}
-         * @protected
-         * @readonly
-         */
+        this._indexCountProperty = options.indexCountProperty;
         this._vertexCountProperty = options.vertexCountProperty;
 
         /**
@@ -421,7 +431,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
         if (this._indexProperty)
         {
-            this._bufferedIndices += resolveConstantOrProperty(displayObject, this._indexProperty).length;
+            this._bufferedIndices += this.calculateIndexCount(displayObject);
         }
     }
 
@@ -493,7 +503,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
 
                 if (this._indexProperty)
                 {
-                    indexCount += resolveConstantOrProperty(targetObject, this._indexProperty).length;
+                    indexCount += this.calculateIndexCount(targetObject);
                 }
                 else
                 {
@@ -528,17 +538,36 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     }
 
     /**
-     * Calculates the number of vertices in the display-object's geometry.
+     * Calculates the number of vertices in the display object's geometry.
      *
      * @param object
      */
     protected calculateVertexCount(object: PIXI.DisplayObject): number
     {
-        return resolveProperty(
+        return resolve(
             object, 
             this._vertexCountProperty,
             this._attribRedirects[0].source.length / (this._attribRedirects[0].size as number)
         );    
+    }
+
+    /**
+     * Calculates the number of indices in the display object's geometry.
+     *
+     * @param object 
+     */
+    protected calculateIndexCount(object: DisplayObject): number
+    {
+        if (!this._indexProperty)
+        {
+            return 0;
+        }
+
+        return resolve(
+            object,
+            this._indexCountProperty,
+            resolve<Uint16Array>(object, this._indexProperty).length,
+        );
     }
 }
 
