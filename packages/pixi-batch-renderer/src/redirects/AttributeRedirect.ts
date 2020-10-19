@@ -1,10 +1,9 @@
 import * as PIXI from 'pixi.js';
 import { Redirect } from './Redirect';
-import type { BatchRenderer } from '../BatchRenderer';
 
 interface IAttributeRedirectOptions
 {
-    source: string | ((db: PIXI.DisplayObject, renderer: BatchRenderer) => any);
+    source: string | ((db: PIXI.DisplayObject) => any);
     attrib: string;
     type: string;
     size?: number | '%notarray%';

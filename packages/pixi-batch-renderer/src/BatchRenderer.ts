@@ -547,7 +547,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
         return resolve(
             object, 
             this._vertexCountProperty,
-            this._attribRedirects[0].source.length / (this._attribRedirects[0].size as number)
+            resolve<ArrayLike<number>>(object, this._attribRedirects[0].source).length / (this._attribRedirects[0].size as number)
         );    
     }
 

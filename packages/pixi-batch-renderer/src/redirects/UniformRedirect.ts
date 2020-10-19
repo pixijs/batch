@@ -1,10 +1,9 @@
 import * as PIXI from 'pixi.js';
 import { Redirect } from './Redirect';
-import type { BatchRenderer } from '../BatchRenderer';
 
 interface IUniformRedirectOptions
 {
-    source: string | ((displayObject: PIXI.DisplayObject, renderer: BatchRenderer) => any);
+    source: string | ((displayObject: PIXI.DisplayObject) => any);
     uniform: string;
 }
 

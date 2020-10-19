@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { BatchRenderer } from '../BatchRenderer';
 
 /**
  * Redirects are used to aggregate the resources needed by the WebGL pipeline to render
@@ -13,10 +12,10 @@ import { BatchRenderer } from '../BatchRenderer';
  */
 export abstract class Redirect
 {
-    public source: string | ((displayObject: PIXI.DisplayObject, source: BatchRenderer) => any);
+    public source: string | ((displayObject: PIXI.DisplayObject) => any);
     public glslIdentifer: string;
 
-    constructor(source: string | ((displayObject: PIXI.DisplayObject, source: BatchRenderer) => any), glslIdentifer: string)
+    constructor(source: string | ((displayObject: PIXI.DisplayObject) => any), glslIdentifer: string)
     {
         /**
          * The property on the display-object that holds the resource.
