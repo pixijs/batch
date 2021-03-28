@@ -6,6 +6,7 @@
   "module": "lib/pixi-batch-renderer.es.js",
   "bundle": "dist/pixi-batch-renderer.js",
   "namespace": "PIXI.brend",
+  "types": "index.d.ts",
   "scripts": {
     "build": "npm run compile",
     "compile": "rollup -c node_modules/@pixi-build-tools/rollup-configurator/index.js --silent",
