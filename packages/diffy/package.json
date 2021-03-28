@@ -8,11 +8,16 @@
   "namespace": "PIXI.brend",
   "types": "index.d.ts",
   "scripts": {
-    "build": "pnpm compile",
+    "build": "pnpm compile && pnpm compile:types",
     "compile": "rollup -c node_modules/@pixi-build-tools/rollup-configurator/index.js --silent",
     "compile:types": "rm -rf compile && tsc; api-extractor run; echo Done",
     "prepublishOnly": "pnpm compile && pnpm compile:types"
   },
+  "files": [
+    "lib",
+    "dist",
+    "index.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pixijs/pixi-batch-renderer.git"

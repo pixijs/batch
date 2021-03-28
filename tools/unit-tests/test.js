@@ -1,0 +1,1 @@
+require('@pixi-build-tools/floss-rush-monorepo');

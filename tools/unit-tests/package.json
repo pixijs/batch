@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/pixijs/pixi-batch-renderer#readme",
   "dependencies": {
-    "floss": "~3.0.0",
-    "@pixi-build-tools/floss-rush-monorepo": "~1.0.1"
+    "floss": "^5.0.0",
+    "@pixi-build-tools/floss-rush-monorepo": "~1.0.1",
+    "electron": "^12.0.0"
   }
 }

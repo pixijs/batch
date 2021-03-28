@@ -8,13 +8,18 @@
   "namespace": "PIXI.brend",
   "types": "index.d.ts",
   "scripts": {
-    "build": "npm run compile",
+    "build": "npm run compile && pnpm compile:types",
     "compile": "rollup -c node_modules/@pixi-build-tools/rollup-configurator/index.js --silent",
     "compile:types": "rm -rf compile && tsc; api-extractor run; echo Done",
     "prepublishOnly": "npm run build"
   },
   "author": "Shukant Pal <shukantpal@outlook.com>",
   "license": "MIT",
+  "files": [
+    "lib",
+    "dist",
+    "index.d.ts"
+  ],
   "keywords": [
     "pixi",
     "pixijs",
