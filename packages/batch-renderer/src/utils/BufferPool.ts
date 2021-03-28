@@ -1,4 +1,4 @@
-import { utils} from 'pixi.js';
+import { nextPow2, log2 } from '@pixi/utils';
 
 /**
  * Pool for any array-like type.
@@ -16,8 +16,8 @@ export class BufferPool<T extends ArrayLike<any>>
 
     allocateBuffer(size: number): T
     {
-        const roundedP2 = utils.nextPow2(size);
-        const roundedSizeIndex = utils.log2(roundedP2);
+        const roundedP2 = nextPow2(size);
+        const roundedSizeIndex = log2(roundedP2);
         const roundedSize = roundedP2;
 
         if (this._bufferPools.length <= roundedSizeIndex)
@@ -37,8 +37,8 @@ export class BufferPool<T extends ArrayLike<any>>
 
     releaseBuffer(buffer: T): void
     {
-        const roundedP2 = utils.nextPow2(buffer.length);
-        const roundedSizeIndex = utils.log2(roundedP2);
+        const roundedP2 = nextPow2(buffer.length);
+        const roundedSizeIndex = log2(roundedP2);
 
         if (!this._bufferPools[roundedSizeIndex])
         {

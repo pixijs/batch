@@ -1,9 +1,11 @@
 import { AttributeRedirect } from './redirects/AttributeRedirect';
-import * as PIXI from 'pixi.js';
 import Redirect from './redirects/Redirect';
 import BatchRenderer from './BatchRenderer';
+import { Buffer, Geometry, ViewableBuffer } from '@pixi/core';
 import { StdBatch } from './StdBatch';
+import { TYPES } from '@pixi/constants';
 import { AggregateUniformsBatch } from './AggregateUniformsBatch';
+import { nextPow2, log2 } from '@pixi/utils';
 
 import type { DisplayObject } from '@pixi/display';
 import type { Resolvable } from './utils/resolveProperty';
@@ -12,13 +14,13 @@ import type { Resolvable } from './utils/resolveProperty';
 // the batches.
 //
 // Supports Uniforms+Standard Pipeline's in-batch/uniform ID.
-export class BatchGeometry extends PIXI.Geometry
+export class BatchGeometry extends Geometry
 {
     // Interleaved attribute data buffer
-    attribBuffer: PIXI.Buffer;
+    attribBuffer: Buffer;
 
     // Batched indicies
-    indexBuffer: PIXI.Buffer;
+    indexBuffer: Buffer;
 
     constructor(attributeRedirects: AttributeRedirect[],
         hasIndex: boolean,
@@ -27,14 +29,14 @@ export class BatchGeometry extends PIXI.Geometry
         inBatchIDAttrib: string,
         uniformIDAttrib: string,
         masterIDAttrib: string,
-        attributeBuffer?: PIXI.Buffer,
-        indexBuffer?: PIXI.Buffer
+        attributeBuffer?: Buffer,
+        indexBuffer?: Buffer
     )
     {
         super();
 
-        attributeBuffer = attributeBuffer || new PIXI.Buffer(null, false, false);
-        indexBuffer = indexBuffer || (hasIndex ? new PIXI.Buffer(null, false, true) : null);
+        attributeBuffer = attributeBuffer || new Buffer(null, false, false);
+        indexBuffer = indexBuffer || (hasIndex ? new Buffer(null, false, true) : null);
 
         attributeRedirects.forEach((redirect) =>
         {
@@ -47,20 +49,20 @@ export class BatchGeometry extends PIXI.Geometry
         {
             if (texIDAttrib && texturesPerObject > 0)
             {
-                this.addAttribute(texIDAttrib, attributeBuffer, texturesPerObject, true, PIXI.TYPES.FLOAT);
+                this.addAttribute(texIDAttrib, attributeBuffer, texturesPerObject, true, TYPES.FLOAT);
             }
             if (inBatchIDAttrib)
             {
-                this.addAttribute(inBatchIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+                this.addAttribute(inBatchIDAttrib, attributeBuffer, 1, false, TYPES.FLOAT);
             }
             if (uniformIDAttrib)
             {
-                this.addAttribute(uniformIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+                this.addAttribute(uniformIDAttrib, attributeBuffer, 1, false, TYPES.FLOAT);
             }
         }
         else
         {
-            this.addAttribute(masterIDAttrib, attributeBuffer, 1, false, PIXI.TYPES.FLOAT);
+            this.addAttribute(masterIDAttrib, attributeBuffer, 1, false, TYPES.FLOAT);
         }
 
         if (hasIndex)
@@ -87,9 +89,9 @@ export abstract class IBatchGeometryFactory
     }
 
     abstract init(verticesBatched: number, indiciesBatched: number): void;
-    abstract append(displayObject: PIXI.DisplayObject, batch: any): void;
-    abstract build(): PIXI.Geometry;
-    abstract release(geom: PIXI.Geometry): void;
+    abstract append(displayObject: DisplayObject, batch: any): void;
+    abstract build(): Geometry;
+    abstract release(geom: Geometry): void;
 }
 
 /**
@@ -98,7 +100,6 @@ export abstract class IBatchGeometryFactory
  *
  * The constructor of an implementation should take only one argument - the batch renderer.
  *
- * @memberof PIXI.brend
  * @interface IBatchGeometryFactory
  */
 
@@ -106,7 +107,7 @@ export abstract class IBatchGeometryFactory
  * Called before the batch renderer starts feeding the display-objects. This can be used
  * to pre-allocated space for the batch geometry.
  *
- * @memberof PIXI.brend.IBatchGeometryFactory#
+ * @memberof IBatchGeometryFactory#
  * @method init
  * @param {number} verticesBatched
  * @param {number}[indiciesBatched] - optional when display-object's don't use a index buffer
@@ -120,7 +121,7 @@ export abstract class IBatchGeometryFactory
  * textures, then the texture-ID is an array of indices into `uSamplers`. The texture-attrib
  * passed to the batch renderer sets the name of the texture-ID attribute (defualt is `aTextureId`).
  *
- * @memberof PIXI.brend.IBatchGeometryFactory#
+ * @memberof IBatchGeometryFactory#
  * @method append
  * @param {PIXI.DisplayObject} displayObject
  * @param {object} batch - the batch
@@ -129,7 +130,7 @@ export abstract class IBatchGeometryFactory
 /**
  * This should wrap up the batch geometry in a `PIXI.Geometry` object.
  *
- * @memberof PIXI.brend.IBatchGeometryFactory#
+ * @memberof IBatchGeometryFactory#
  * @method build
  * @returns {PIXI.Geometry} batch geometry
  */
@@ -138,7 +139,7 @@ export abstract class IBatchGeometryFactory
  * This is used to return a batch geometry so it can be pooled and reused in a future `build()`
  * call.
  *
- * @memberof PIXI.brend.IBatchGeometryFactory#
+ * @memberof IBatchGeometryFactory#
  * @method release
  * @param {PIXI.Geometry} geom
  */
@@ -162,14 +163,10 @@ export abstract class IBatchGeometryFactory
  * **inBatchID Support**: If you specified an `inBatchID` attribute in the batch-renderer,
  * then this will support it automatically. The aggregate-uniforms pipeline doesn't need a custom
  * geometry factory.
- *
- * @memberof PIXI.brend
- * @class
- * @implements PIXI.brend.IBatchGeometryFactory
  */
 export class BatchGeometryFactory extends IBatchGeometryFactory
 {
-    _targetCompositeAttributeBuffer: PIXI.ViewableBuffer;
+    _targetCompositeAttributeBuffer: ViewableBuffer;
     _targetCompositeIndexBuffer: Uint16Array;
     _aIndex: number;
     _iIndex: number;
@@ -198,15 +195,15 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
         invoking geometryMerger(). */
     protected _texID: number | number[];
 
-    protected _aBuffers: PIXI.ViewableBuffer[];
+    protected _aBuffers: ViewableBuffer[];
     protected _iBuffers: Uint16Array[];
 
-    protected _geometryPool: Array<PIXI.Geometry>;
+    protected _geometryPool: Array<Geometry>;
 
-    _geometryMerger: (displayObject: PIXI.DisplayObject, factory: BatchGeometryFactory) => void;
+    _geometryMerger: (displayObject: DisplayObject, factory: BatchGeometryFactory) => void;
 
     /**
-     * @param {PIXI.brend.BatchRenderer} renderer
+     * @param renderer
      */
     constructor(renderer: BatchRenderer)
     {
@@ -265,7 +262,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
          *
          * @member {PIXI.Geometry}
          * @protected
-         * @see PIXI.brend.IBatchGeometryFactory#release
+         * @see IBatchGeometryFactory#release
          */
         this._geometryPool = [];
     }
@@ -294,11 +291,8 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
      * Append's the display-object geometry to this batch's geometry. You must override
      * this you need to "modify" the geometry of the display-object before merging into
      * the composite geometry (for example, adding an ID to a special uniform)
-     *
-     * @param {PIXI.DisplayObject} targetObject
-     * @param {number} batch
      */
-    append(targetObject: PIXI.DisplayObject, batch_: any): void
+    append(targetObject: DisplayObject, batch_: any): void
     {
         const batch: StdBatch = batch_ as StdBatch;
         const tex = (targetObject as any)[this._textureProperty];
@@ -355,7 +349,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
      *      return geom;
      * }
      */
-    build(): PIXI.Geometry
+    build(): Geometry
     {
         const geom: BatchGeometry = (this._geometryPool.pop() || new BatchGeometry(
             this._attribRedirects,
@@ -380,7 +374,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
      *  that it is not used externally again.
      * @override
      */
-    release(geom: PIXI.Geometry): void
+    release(geom: Geometry): void
     {
         this._geometryPool.push(geom);
     }
@@ -391,11 +385,11 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
      * and pushes its geometry to the batch geometry.
      *
      * You can overwrite this property with a custom geometry-merger function
-     * if customizing `PIXI.brend.BatchGeometryFactory`.
+     * if customizing `BatchGeometryFactory`.
      *
-     * @member {PIXI.brend#IGeometryMerger}
+     * @member {IGeometryMerger}
      */
-    protected get geometryMerger(): (displayObject: PIXI.DisplayObject, factory: BatchGeometryFactory) => void
+    protected get geometryMerger(): (displayObject: DisplayObject, factory: BatchGeometryFactory) => void
     {
         if (!this._geometryMerger)
         {
@@ -406,7 +400,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
         return this._geometryMerger;
     }
     // eslint-disable-next-line require-jsdoc
-    protected set geometryMerger(func: (displayObject: PIXI.DisplayObject, factory: BatchGeometryFactory) => void)
+    protected set geometryMerger(func: (displayObject: DisplayObject, factory: BatchGeometryFactory) => void)
     {
         this._geometryMerger = func;
     }
@@ -425,10 +419,10 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
      * @param {number} size
      * @protected
      */
-    protected getAttributeBuffer(size: number): PIXI.ViewableBuffer
+    protected getAttributeBuffer(size: number): ViewableBuffer
     {
-        const roundedP2 = PIXI.utils.nextPow2(size);
-        const roundedSizeIndex = PIXI.utils.log2(roundedP2);
+        const roundedP2 = nextPow2(size);
+        const roundedSizeIndex = log2(roundedP2);
         const roundedSize = roundedP2;
 
         if (this._aBuffers.length <= roundedSizeIndex)
@@ -440,7 +434,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
 
         if (!buffer)
         {
-            this._aBuffers[roundedSizeIndex] = buffer = new PIXI.ViewableBuffer(roundedSize * this._vertexSize);
+            this._aBuffers[roundedSizeIndex] = buffer = new ViewableBuffer(roundedSize * this._vertexSize);
         }
 
         return buffer;
@@ -455,8 +449,8 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
     protected getIndexBuffer(size: number): Uint16Array
     {
         // 12 indices is enough for 2 quads
-        const roundedP2 = PIXI.utils.nextPow2(Math.ceil(size / 12));
-        const roundedSizeIndex = PIXI.utils.log2(roundedP2);
+        const roundedP2 = nextPow2(Math.ceil(size / 12));
+        const roundedSizeIndex = log2(roundedP2);
         const roundedSize = roundedP2 * 12;
 
         if (this._iBuffers.length <= roundedSizeIndex)
@@ -503,7 +497,7 @@ const GeometryMergerFactory = class
         this.packer = packer;
     }
 
-    compile(): (displayObject: PIXI.DisplayObject, factory: BatchGeometryFactory) => void
+    compile(): (displayObject: DisplayObject, factory: BatchGeometryFactory) => void
     {
         const packer = this.packer;
 
@@ -700,7 +694,7 @@ const GeometryMergerFactory = class
         return new Function(
             ...CompilerConstants.packerArguments,
             packerBody) as
-        (displayObject: PIXI.DisplayObject, factory: BatchGeometryFactory) => void;
+        (displayObject: DisplayObject, factory: BatchGeometryFactory) => void;
     }
 
     // Returns an expression that fetches the attribute data source from
@@ -757,7 +751,7 @@ const GeometryMergerFactory = class
     _sizeOf(i: number): number
     {
         // @ts-ignore
-        return PIXI.ViewableBuffer.sizeOf(
+        return ViewableBuffer.sizeOf(
             this.packer._attribRedirects[i].type);
     }
 };

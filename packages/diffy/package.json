@@ -6,12 +6,18 @@
   "module": "lib/diffy.es.js",
   "bundle": "dist/diffy.js",
   "namespace": "PIXI.brend",
+  "types": "index.d.ts",
   "scripts": {
-    "build": "pnpm compile",
+    "build": "pnpm compile && pnpm compile:types",
     "compile": "rollup -c node_modules/@pixi-build-tools/rollup-configurator/index.js --silent",
     "compile:types": "rm -rf compile && tsc; api-extractor run; echo Done",
     "prepublishOnly": "pnpm compile && pnpm compile:types"
   },
+  "files": [
+    "lib",
+    "dist",
+    "index.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pixijs/pixi-batch-renderer.git"
@@ -35,19 +41,18 @@
   },
   "peerDependencies": {
     "pixi-batch-renderer": "~2.4.2",
-    "@pixi/utils": "~5.3.3",
-    "@pixi/core": "~5.3.3",
-    "@pixi-essentials/object-pool": "~0.0.5"
+    "@pixi/utils": "^6.0.0",
+    "@pixi/core": "^6.0.0",
+    "@pixi-essentials/object-pool": "^0.1.0"
   },
   "devDependencies": {
     "@pixi/eslint-config": "~1.0.1",
     "eslint": "~7.7.0",
     "@typescript-eslint/eslint-plugin": "~3.10.1",
     "@typescript-eslint/parser": "~3.10.1",
-    "@pixi/utils": "~5.3.3",
-    "@pixi/core": "~5.3.3",
-    "pixi.js": "~5.3.3",
-    "@pixi-essentials/object-pool": "~0.0.5",
+    "@pixi/utils": "^6.0.0",
+    "@pixi/core": "^6.0.0",
+    "@pixi-essentials/object-pool": "^0.1.0",
     "rollup": "~2.26.7",
     "@pixi-build-tools/rollup-configurator": "~1.0.4",
     "pixi-batch-renderer": "~2.4.2"

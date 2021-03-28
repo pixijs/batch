@@ -5,6 +5,7 @@ docs
 compile
 lib
 dist
+index.d.ts
 
 # Logs
 *.log

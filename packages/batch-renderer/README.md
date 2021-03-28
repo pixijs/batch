@@ -9,6 +9,18 @@
 
 `pixi-batch-renderer` is a PixiJS plugin that allows you to add batch rendering to your custom display objects. I have documented each class in the `PIXI.brend` namespace.
 
+## Usage
+
+In browser:
+```js
+PIXI.brend.BatchRenderer
+```
+
+Using ES:
+```js
+import { BatchRenderer } from 'pixi-batch-renderer';
+```
+
 ## Concepts
 
 [Batch rendering](https://medium.com/swlh/inside-pixijs-batch-rendering-system-fad1b466c420) objects involves aggregating them into groups/batches and rendering them together with one WebGL draw call. PixiJS supports batch rendering its internal display objects - `PIXI.Sprite`, `PIXI.Graphics`, and `PIXI.Mesh`. However, it is difficult to extend that to custom-built display objects; it wasn't designed as an exposable API.

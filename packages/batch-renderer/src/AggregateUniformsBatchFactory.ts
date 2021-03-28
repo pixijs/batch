@@ -1,19 +1,21 @@
-import { StdBatchFactory } from './StdBatchFactory';
 import { AggregateUniformsBatch } from './AggregateUniformsBatch';
-import BatchRenderer from './BatchRenderer';
-import * as PIXI from 'pixi.js';
+import { BaseTexture } from '@pixi/core';
+import { BatchRenderer } from './BatchRenderer';
+import { Matrix, Point } from '@pixi/math';
+import { StdBatchFactory } from './StdBatchFactory';
+
+import type { DisplayObject } from '@pixi/display';
+import type { UniformGroup } from '@pixi/core';
 
 /**
  * Factory for producing aggregate-uniforms batches. This is useful for shaders that
  * **must** use uniforms.
- *
- * @memberof PIXI.brend
  */
 export class AggregateUniformsBatchFactory extends StdBatchFactory
 {
     MAX_UNIFORMS: number;
 
-    protected uniformBuffer: { [id: string]: Array<PIXI.UniformGroup> };
+    protected uniformBuffer: { [id: string]: Array<UniformGroup> };
     protected uniformMap: Array<number>;
     protected uniformLength: number;
 
@@ -59,7 +61,7 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
      * If you want to override this, be sure to return beforehand if `super._put` returns
      * false:
      * ```
-     * _put(displayObject: PIXI.DisplayObject): boolean
+     * _put(displayObject: DisplayObject): boolean
      * {
      *      if (!super._put(displayObject))
      *      {
@@ -71,10 +73,9 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
      * ```
      *
      * @protected
-     * @param {PIXI.DisplayObject} displayObject
-     * @returns {boolean} - whether uniforms can be buffered
+     * @returns Whether uniforms can be buffered
      */
-    protected _put(displayObject: PIXI.DisplayObject): boolean
+    protected _put(displayObject: DisplayObject): boolean
     {
         if (!this._renderer._uniformIDAttrib)
         {
@@ -163,9 +164,9 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
      *
      * @returns - the object created (the uniform buffer)
      */
-    private _createUniformBuffer(): { [id: string]: Array<PIXI.UniformGroup> }
+    private _createUniformBuffer(): { [id: string]: Array<UniformGroup> }
     {
-        const buffer: { [id: string]: Array<PIXI.UniformGroup> } = {};
+        const buffer: { [id: string]: Array<UniformGroup> } = {};
 
         for (let i = 0, j = this._renderer._uniformRedirects.length; i < j; i++)
         {
@@ -181,7 +182,7 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
      * Resets each array in the uniform buffer
      * @param {object} buffer
      */
-    private _resetUniformBuffer(buffer: { [id: string]: Array<PIXI.UniformGroup> }): void
+    private _resetUniformBuffer(buffer: { [id: string]: Array<UniformGroup> }): void
     {
         for (let i = 0, j = this._renderer._uniformRedirects.length; i < j; i++)
         {
@@ -208,7 +209,7 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
 
                 const value = typeof source === 'string'
                     ? displayObject[source]
-                    : source(displayObject as PIXI.DisplayObject, this._renderer);
+                    : source(displayObject as DisplayObject, this._renderer);
 
                 if (!this._compareUniforms(value, this.uniformBuffer[glslIdentifer][i]))
                 {
@@ -266,11 +267,11 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
             return true;
         }
 
-        if (u1 instanceof PIXI.Point && u2 instanceof PIXI.Point)
+        if (u1 instanceof Point && u2 instanceof Point)
         {
             return u1.x === u2.x && u1.y === u2.y;
         }
-        if (u1 instanceof PIXI.Matrix && u2 instanceof PIXI.Matrix)
+        if (u1 instanceof Matrix && u2 instanceof Matrix)
         {
             return u1.a === u2.a && u1.b === u2.b
                 && u1.c === u2.c && u1.d === u2.d
@@ -278,7 +279,7 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
         }
 
         // Unlikely for batch rendering
-        if (u1 instanceof PIXI.BaseTexture && u2 instanceof PIXI.BaseTexture)
+        if (u1 instanceof BaseTexture && u2 instanceof BaseTexture)
         {
             // @ts-ignore
             return u1.uid === u2.uid;

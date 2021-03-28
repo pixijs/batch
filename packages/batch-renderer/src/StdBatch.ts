@@ -1,23 +1,24 @@
-import * as PIXI from 'pixi.js';
+import type {
+    BaseTexture,
+    Renderer,
+    State,
+} from '@pixi/core';
+import type { DisplayObject } from '@pixi/display';
 
 /**
  * Resources that need to be uploaded to WebGL to render one batch.
  *
  * To customize batches, you must create your own batch factory by extending the
- * `PIXI.brend.StdBatchFactory` class.
- *
- * @memberof PIXI.brend
- * @class
- * @see PIXI.brend.StdBatchFactory
+ * {@link StdBatchFactory} class.
  */
 export class StdBatch
 {
     geometryOffset: number;
     uidMap: any;
-    state: PIXI.State;
+    state: State;
 
-    batchBuffer: Array<PIXI.DisplayObject>;
-    textureBuffer: Array<PIXI.BaseTexture>;
+    batchBuffer: Array<DisplayObject>;
+    textureBuffer: Array<BaseTexture>;
 
     constructor(geometryOffset?: number)
     {
@@ -56,7 +57,7 @@ export class StdBatch
      *
      * @param {PIXI.Renderer} renderer
      */
-    upload(renderer: PIXI.Renderer): void
+    upload(renderer: Renderer): void
     {
         this.textureBuffer.forEach((tex, i) =>
         {

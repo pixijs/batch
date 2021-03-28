@@ -1,6 +1,7 @@
-import * as PIXI from 'pixi.js';
-import BatchRenderer from './BatchRenderer';
 import { AggregateUniformsBatchFactory } from './AggregateUniformsBatchFactory';
+import { Shader } from '@pixi/core';
+
+import type { BatchRenderer } from './BatchRenderer';
 
 // This file might need a cleanup :)
 
@@ -37,9 +38,6 @@ const INJECTORS = {
  * * `%texturesPerBatch%`: replaced by the max. textures allowed by WebGL context
  *
  * * `%uniformsPerBatch%`: replaced by the (aggregate-uniforms) batch factory's `MAX_UNIFORMS` property.
- *
- * @memberof PIXI.brend
- * @class
  */
 export class BatchShaderFactory
 {
@@ -60,7 +58,7 @@ export class BatchShaderFactory
      * @param {string} vertexShaderTemplate
      * @param {string} fragmentShaderTemplate
      * @param {UniformGroup | Map<string, object>} uniforms
-     * @param {Object.<String, PIXI.brend.InjectorFunction>} [templateInjectors]
+     * @param {Object.<String, InjectorFunction>} [templateInjectors]
      * @param {boolean} [disableVertexShaderTemplate=true] - turn off (true)
      *      if you aren't using macros in the vertex shader
      */
@@ -108,7 +106,7 @@ export class BatchShaderFactory
          *
          * @private
          * @member {Object.<String, String>}
-         * @see {PIXI.brend.ShaderGenerator#_generateInjectorBasedState}
+         * @see {ShaderGenerator#_generateInjectorBasedState}
          */
         this._cState = null;
     }
@@ -119,9 +117,9 @@ export class BatchShaderFactory
      *
      * @return shader function that can be given to the batch renderer
      */
-    derive(): (brend: BatchRenderer) => PIXI.Shader
+    derive(): (brend: BatchRenderer) => Shader
     {
-        return (batchRenderer: BatchRenderer): PIXI.Shader =>
+        return (batchRenderer: BatchRenderer): Shader =>
         {
             const stringState = this._generateInjectorBasedState(batchRenderer);
             const cachedShader = this._cache[stringState];
@@ -152,7 +150,7 @@ export class BatchShaderFactory
         return state;
     }
 
-    protected _generateShader(stringState: string, renderer: BatchRenderer): PIXI.Shader
+    protected _generateShader(stringState: string, renderer: BatchRenderer): Shader
     {
         let vertexShaderTemplate = this._vertexShaderTemplate.slice(0);
 
@@ -170,7 +168,7 @@ export class BatchShaderFactory
                 injectorTemplate, this._cState[injectorTemplate]);
         }
 
-        const shader = PIXI.Shader.from(vertexShaderTemplate,
+        const shader = Shader.from(vertexShaderTemplate,
             fragmentShaderTemplate, this._uniforms);
 
         const textures = new Array(renderer.MAX_TEXTURES);

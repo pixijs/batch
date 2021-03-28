@@ -1,4 +1,5 @@
-const floss = require('floss');
+const { floss } = require('floss');
+const path = require('path');
 
 function done()
 {
@@ -7,6 +8,6 @@ function done()
 }
 
 floss({
-    path: 'node_modules/@pixi-build-tools/floss-rush-monorepo',
+    path: path.join(__dirname, './test.js'),
     quiet: false,
 }, done);

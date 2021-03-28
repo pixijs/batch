@@ -1,6 +1,6 @@
-import * as PIXI from 'pixi.js';
+import type { DisplayObject } from '@pixi/display';
 
-export function resolveConstantOrProperty(targetObject: PIXI.DisplayObject, property: string | number): any
+export function resolveConstantOrProperty(targetObject: DisplayObject, property: string | number): any
 {
     return (typeof property === 'string')
     // @ts-ignore

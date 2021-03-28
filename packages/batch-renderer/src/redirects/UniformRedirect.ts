@@ -1,9 +1,10 @@
-import * as PIXI from 'pixi.js';
 import { Redirect } from './Redirect';
 
-interface IUniformRedirectOptions
+import type { DisplayObject } from '@pixi/display';
+
+export interface IUniformRedirectOptions
 {
-    source: string | ((displayObject: PIXI.DisplayObject) => any);
+    source: string | ((displayObject: DisplayObject) => any);
     uniform: string;
 }
 
@@ -11,12 +12,9 @@ interface IUniformRedirectOptions
  * This redirect is used to aggregate & upload uniforms required for shading the
  * display-object.
  *
- * @memberof PIXI.brend
- * @class
- * @extends PIXI.brend.Redirect
  * @example
  * // The data-type of this uniform is defined in your shader.
- * new PIXI.brend.UniformRedirect({
+ * new UniformRedirect({
  *      source: (dob: PIXI.DisplayObject) => dob.transform.worldTransform,
  *      uniform: "transform"
  * });

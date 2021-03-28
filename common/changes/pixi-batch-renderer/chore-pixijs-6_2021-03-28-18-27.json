@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "pixi-batch-renderer",
+      "comment": "Upgrade to PixiJS 6",
+      "type": "minor"
+    }
+  ],
+  "packageName": "pixi-batch-renderer",
+  "email": "sukantk2002@outlook.com"
+}

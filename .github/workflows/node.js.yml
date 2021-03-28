@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x]
+        node-version: [14.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -24,6 +24,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build
-    - run: npm run compile:types
+    - uses: pnpm/action-setup@v1.2.1
+      with:
+        version: 5.17.2
+    - run: pnpm install -g @microsoft/rush
+    - run: rush install
+    - run: rush rebuild
+    - uses: GabrielBB/xvfb-action@v1.0
+      with:
+        run: rush unit-test

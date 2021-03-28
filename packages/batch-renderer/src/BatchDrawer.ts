@@ -1,21 +1,16 @@
-import BatchRenderer from './BatchRenderer';
+import { BatchRenderer } from './BatchRenderer';
 
 /**
  * Executes the final stage of batch rendering - drawing. The drawer can assume that
  * all display-objects have been into the batch-factory and the batch-geometry factory.
- *
- * @memberof PIXI.brend
- * @class
  */
 export class BatchDrawer
 {
+    /** The batch renderer */
     renderer: BatchRenderer;
 
     constructor(renderer: BatchRenderer)
     {
-        /**
-         * @member {PIXI.brend.BatchRenderer}
-         */
         this.renderer = renderer;
     }
 
