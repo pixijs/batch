@@ -2,6 +2,18 @@
   "name": "pixi-batch-renderer",
   "entries": [
     {
+      "version": "2.5.1",
+      "tag": "pixi-batch-renderer_v2.5.1",
+      "date": "Sun, 28 Mar 2021 19:51:30 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix vertexSizeFor crashing pixi-batch-renderer due to dangling reference to PIXI."
+          }
+        ]
+      }
+    },
+    {
       "version": "2.5.0",
       "tag": "pixi-batch-renderer_v2.5.0",
       "date": "Sun, 28 Mar 2021 19:20:49 GMT",

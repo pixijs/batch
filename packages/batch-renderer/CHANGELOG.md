@@ -1,6 +1,13 @@
 # Change Log - pixi-batch-renderer
 
-This log was last generated on Sun, 28 Mar 2021 19:20:49 GMT and should not be manually modified.
+This log was last generated on Sun, 28 Mar 2021 19:51:30 GMT and should not be manually modified.
+
+## 2.5.1
+Sun, 28 Mar 2021 19:51:30 GMT
+
+### Patches
+
+- Fix vertexSizeFor crashing pixi-batch-renderer due to dangling reference to PIXI.
 
 ## 2.5.0
 Sun, 28 Mar 2021 19:20:49 GMT
