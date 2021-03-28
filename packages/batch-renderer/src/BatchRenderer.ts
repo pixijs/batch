@@ -3,7 +3,7 @@ import { BatchGeometryFactory } from './BatchGeometryFactory';
 import { AttributeRedirect } from './redirects/AttributeRedirect';
 import { BatchDrawer } from './BatchDrawer';
 import { ENV } from '@pixi/constants';
-import { ObjectRenderer } from '@pixi/core';
+import { ObjectRenderer, State } from '@pixi/core';
 import { UniformRedirect } from './redirects/UniformRedirect';
 import { resolve } from './utils/resolveProperty';
 import { resolveFunctionOrProperty } from './resolve';
@@ -11,8 +11,7 @@ import { settings } from '@pixi/settings';
 
 import type {
     Renderer,
-    Shader,
-    State
+    Shader
 } from '@pixi/core';
 import type { DisplayObject } from '@pixi/display';
 
@@ -262,8 +261,7 @@ export class BatchRenderer extends ObjectRenderer
          * @protected
          * @readonly
          */
-        // @ts-ignore 
-        this._stateFunction = options.stateFunction || ((): PIXI.State => PIXI.State.for2d());
+        this._stateFunction = options.stateFunction || ((): State => State.for2d());
 
         /**
          * Shader generating function (takes the batch renderer)
@@ -348,7 +346,6 @@ export class BatchRenderer extends ObjectRenderer
 
         // Although the runners property is not a public API, it is required to
         // handle contextChange events.
-        // @ts-ignore
         this.renderer.runners.contextChange.add(this);
 
         // If the WebGL context has already been created, initialization requires a

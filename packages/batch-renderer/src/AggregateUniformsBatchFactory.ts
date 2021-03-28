@@ -281,7 +281,6 @@ export class AggregateUniformsBatchFactory extends StdBatchFactory
         // Unlikely for batch rendering
         if (u1 instanceof BaseTexture && u2 instanceof BaseTexture)
         {
-            // @ts-ignore
             return u1.uid === u2.uid;
         }
 

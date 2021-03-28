@@ -750,7 +750,6 @@ const GeometryMergerFactory = class
 
     _sizeOf(i: number): number
     {
-        // @ts-ignore
         return ViewableBuffer.sizeOf(
             this.packer._attribRedirects[i].type);
     }

@@ -120,7 +120,6 @@ export class StdBatchFactory
         {
             this._state = state;
         }
-        // @ts-ignore
         else if (this._state.data !== state.data)
         {
             return false;
@@ -210,8 +209,7 @@ export class StdBatchFactory
      *      added.
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // @ts-ignore
-    protected _put(displayObject: DisplayObject): boolean
+    protected _put(_displayObject: DisplayObject): boolean
     {
         // Override this
         return true;
@@ -282,21 +280,18 @@ export class StdBatchFactory
 
         const baseTexture: BaseTexture = texture as BaseTexture;
 
-        // @ts-ignore
         if (this._textureBuffer[baseTexture.uid])
         {
             return true;
         }
         else if (this._textureBufferLength + 1 <= this._textureLimit)
         {
-            // @ts-ignore
             this._textureBuffer[baseTexture.uid] = texture;
             this._textureBufferLength += 1;
 
             const newLength = this._textureIndexedBuffer.push(baseTexture);
             const index = newLength - 1;
 
-            // @ts-ignore
             this._textureIndexMap[baseTexture.uid] = index;
 
             return true;
@@ -305,17 +300,16 @@ export class StdBatchFactory
         return false;
     }
 
-    private _putAllTextures(textureArray: Array<Texture>): boolean
+    private _putAllTextures(textureArray: Array<Texture | BaseTexture>): boolean
     {
         let deltaBufferLength = 0;
 
         for (let i = 0; i < textureArray.length; i++)
         {
-            const texture: BaseTexture = (textureArray[i].baseTexture
-                ? textureArray[i].baseTexture
+            const texture: BaseTexture = ('baseTexture' in textureArray[i]
+                ? (textureArray[i] as Texture).baseTexture
                 : textureArray[i]) as BaseTexture;
 
-            // @ts-ignore
             if (!this._textureBuffer[texture.uid])
             {
                 ++deltaBufferLength;
@@ -329,22 +323,18 @@ export class StdBatchFactory
 
         for (let i = 0; i < textureArray.length; i++)
         {
-            const texture = textureArray[i].baseTexture
-                ? textureArray[i].baseTexture
-                : textureArray[i];
+            const texture: BaseTexture = 'baseTexture' in textureArray[i]
+                ? (textureArray[i] as Texture).baseTexture
+                : (textureArray[i] as BaseTexture);
 
-            // @ts-ignore
             if (!this._textureBuffer[texture.uid])
             {
-                // @ts-ignore
                 this._textureBuffer[texture.uid] = texture;
                 this._textureBufferLength += 1;
 
-                // @ts-ignore
                 const newLength = this._textureIndexedBuffer.push(texture);
                 const index = newLength - 1;
 
-                // @ts-ignore
                 this._textureIndexMap[texture.uid] = index;
             }
         }
