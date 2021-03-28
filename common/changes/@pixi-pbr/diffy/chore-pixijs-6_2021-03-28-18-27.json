@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@pixi-pbr/diffy",
+      "comment": "Upgrade to PixiJS 6",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@pixi-pbr/diffy",
+  "email": "sukantk2002@outlook.com"
+}
