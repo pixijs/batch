@@ -1,4 +1,4 @@
-# PixiJS Batch Rendering Library
+# PixiJS Batch Rendering Kit
 
 <p align="center">
 <img src="https://i.imgur.com/e94suKJ.png" height="512px"></img>
