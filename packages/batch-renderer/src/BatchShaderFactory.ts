@@ -143,7 +143,6 @@ export class BatchShaderFactory
             const val = this._templateInjectors[injectorMacro](batchRenderer);
 
             state += val;
-            // @ts-ignore
             cState[injectorMacro] = val;
         }
 
