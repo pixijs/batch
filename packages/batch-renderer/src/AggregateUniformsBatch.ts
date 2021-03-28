@@ -42,7 +42,6 @@ export class AggregateUniformsBatch extends StdBatch
 
         /**
          * Renderer holding the uniform redirects
-         * @member {PIXI.brend.BatchRenderer}
          */
         this.renderer = renderer;
 

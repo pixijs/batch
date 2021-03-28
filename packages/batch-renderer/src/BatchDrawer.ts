@@ -6,13 +6,11 @@ import { BatchRenderer } from './BatchRenderer';
  */
 export class BatchDrawer
 {
+    /** The batch renderer */
     renderer: BatchRenderer;
 
     constructor(renderer: BatchRenderer)
     {
-        /**
-         * @member {PIXI.brend.BatchRenderer}
-         */
         this.renderer = renderer;
     }
 

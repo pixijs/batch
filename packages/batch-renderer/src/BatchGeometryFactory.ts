@@ -262,7 +262,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
          *
          * @member {PIXI.Geometry}
          * @protected
-         * @see PIXI.brend.IBatchGeometryFactory#release
+         * @see IBatchGeometryFactory#release
          */
         this._geometryPool = [];
     }

@@ -34,8 +34,6 @@ export interface IBatchRendererStdOptions
 /**
  * Factory class for creating a batch-renderer.
  *
- * @memberof PIXI.brend
- * @class
  * @example
  *  import * as PIXI from 'pixi.js';
  *  import { AttributeRedirect, BatchShaderFactory, BatchRendererPluginFactory } from 'pixi-batch-renderer';
@@ -132,7 +130,7 @@ export class BatchRendererPluginFactory
      * for non-uniform based display-objects.
      *
      * @param {object} options
-     * @param {PIXI.brend.AttributeRedirect[]} options.attribSet - set of geometry attributes
+     * @param {AttributeRedirect[]} options.attribSet - set of geometry attributes
      * @param {string | Array<number>} options.indexProperty - no. of indices on display-object
      * @param {string | number | function(DisplayObject): number}[options.vertexCountProperty] - no. of vertices on display-object
      * @param {string | number | function(DisplayObject): number}[options.indexCountProperty] - no. of indicies on display object

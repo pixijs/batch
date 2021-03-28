@@ -14,7 +14,7 @@ export interface IUniformRedirectOptions
  *
  * @example
  * // The data-type of this uniform is defined in your shader.
- * new PIXI.brend.UniformRedirect({
+ * new UniformRedirect({
  *      source: (dob: PIXI.DisplayObject) => dob.transform.worldTransform,
  *      uniform: "transform"
  * });

@@ -38,9 +38,6 @@ const INJECTORS = {
  * * `%texturesPerBatch%`: replaced by the max. textures allowed by WebGL context
  *
  * * `%uniformsPerBatch%`: replaced by the (aggregate-uniforms) batch factory's `MAX_UNIFORMS` property.
- *
- * @memberof PIXI.brend
- * @class
  */
 export class BatchShaderFactory
 {
@@ -61,7 +58,7 @@ export class BatchShaderFactory
      * @param {string} vertexShaderTemplate
      * @param {string} fragmentShaderTemplate
      * @param {UniformGroup | Map<string, object>} uniforms
-     * @param {Object.<String, PIXI.brend.InjectorFunction>} [templateInjectors]
+     * @param {Object.<String, InjectorFunction>} [templateInjectors]
      * @param {boolean} [disableVertexShaderTemplate=true] - turn off (true)
      *      if you aren't using macros in the vertex shader
      */
@@ -109,7 +106,7 @@ export class BatchShaderFactory
          *
          * @private
          * @member {Object.<String, String>}
-         * @see {PIXI.brend.ShaderGenerator#_generateInjectorBasedState}
+         * @see {ShaderGenerator#_generateInjectorBasedState}
          */
         this._cState = null;
     }

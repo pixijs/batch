@@ -26,7 +26,7 @@ export interface IAttributeRedirectOptions
  * // Furthermore, the color is uploaded as four bytes (`attribute vec4 aTint`) while the
  * // source returns an integer. This is done by splitting the 32-bit integer into four
  * // 8-bit bytes.
- * new PIXI.brend.AttributeRedirect({
+ * new AttributeRedirect({
  *     source: (tgt: ExampleDisplay) => (tgt.alpha < 1.0 && tgt.tintMode === PREMULTIPLY)
  *          ? premultiplyTint(tgt.rgb, tgt.alpha)
  *          : tgt.rgb + (tgt.alpha << 24);

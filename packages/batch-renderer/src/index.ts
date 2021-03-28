@@ -21,14 +21,14 @@ export * from './AggregateUniformsBatchFactory';
  *
  * @function IGeometryMerger
  * @param {PIXI.DisplayObject} displayObject
- * @param {PIXI.brend.BatchGeometryFactory} factory
- * @see PIXI.brend.BatchGeometryFactory#geometryMerger
+ * @param {BatchGeometryFactory} factory
+ * @see BatchGeometryFactory#geometryMerger
  */
 
 /**
  * @function
  * @name InjectorFunction
  *
- * @param {PIXI.brend.BatchRenderer} batchRenderer
+ * @param {BatchRenderer} batchRenderer
  * @return {string} value of the macro for this renderer
  */

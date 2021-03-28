@@ -54,14 +54,14 @@ export interface IBatchRendererOptions
  *
  * * **Batch Generation**: In a sliding window, display-object batches are generated based off of certain
  * constraints like GPU texture units and the uniforms used in each display-object. This is done using an
- * instance of {@link PIXI.brend.BatchFactory}.
+ * instance of {@link BatchFactory}.
  *
  * * **Geometry Composition**: The geometries of all display-objects are merged together in a
- * composite geometry. This is done using an instance of {@link PIXI.brend.BatchGeometryFactory}.
+ * composite geometry. This is done using an instance of {@link BatchGeometryFactory}.
  *
  * * **Drawing**: Each batch is rendered in-order using `gl.draw*`. The textures and
  * uniforms of each display-object are uploaded as arrays. This is done using an instance of
- * {@link PIXI.brend.BatchDrawer}.
+ * {@link BatchDrawer}.
  *
  * Each stage in this pipeline can be configured by overriding the appropriate component and passing that
  * class to `BatchRendererPluginFactory.from*`.
@@ -74,7 +74,7 @@ export interface IBatchRendererOptions
  * shaders are generated at runtime by processing shader templates. A shader templates has "%macros%"
  * that are replaced by constants at runtime.
  *
- * To use shader templates, simply use {@link PIXI.brend.BatchShaderFactory#derive}. This will generate a
+ * To use shader templates, simply use {@link BatchShaderFactory#derive}. This will generate a
  * function that derives a shader from your template at runtime.
  *
  * ### Textures
@@ -193,11 +193,11 @@ export class BatchRenderer extends ObjectRenderer
     /**
      * Creates a batch renderer the renders display-objects with the described geometry.
      *
-     * To register a batch-renderer plugin, you must use the API provided by `PIXI.brend.BatchRendererPluginFactory`.
+     * To register a batch-renderer plugin, you must use the API provided by `BatchRendererPluginFactory`.
      *
      * @param {PIXI.Renderer} renderer - renderer to attach to
      * @param {object} options
-     * @param {PIXI.brend.AttributeRedirect[]} options.attribSet
+     * @param {AttributeRedirect[]} options.attribSet
      * @param {string | null} options.indexProperty
      * @param {string | number} [options.vertexCountProperty]
      * @param {string | null} options.textureProperty
@@ -205,13 +205,13 @@ export class BatchRenderer extends ObjectRenderer
      * @param {string} options.texIDAttrib - name of texture-id attribute variable
      * @param {Function}[options.stateFunction=PIXI.State.for2d()] - returns a `PIXI.State` for an object
      * @param {Function} options.shaderFunction - generates a shader given this instance
-     * @param {Class} [options.BatchGeometryFactory=PIXI.brend.BatchGeometry]
-     * @param {Class} [options.BatchFactoryClass=PIXI.brend.StdBatchFactory]
-     * @param {Class} [options.BatchDrawer=PIXI.brend.BatchDrawer]
-     * @see PIXI.brend.BatchShaderFactory
-     * @see PIXI.brend.StdBatchFactory
-     * @see PIXI.brend.BatchGeometryFactory
-     * @see PIXI.brend.BatchDrawer
+     * @param {Class} [options.BatchGeometryFactory=BatchGeometry]
+     * @param {Class} [options.BatchFactoryClass=StdBatchFactory]
+     * @param {Class} [options.BatchDrawer=BatchDrawer]
+     * @see BatchShaderFactory
+     * @see StdBatchFactory
+     * @see BatchGeometryFactory
+     * @see BatchDrawer
      */
     constructor(renderer: Renderer, options: IBatchRendererOptions)
     {
@@ -269,7 +269,7 @@ export class BatchRenderer extends ObjectRenderer
          * Shader generating function (takes the batch renderer)
          * @member {Function}
          * @protected
-         * @see PIXI.brend.BatchShaderFactory
+         * @see BatchShaderFactory
          * @readonly
          */
         this._shaderFunction = options.shaderFunction;
@@ -278,7 +278,7 @@ export class BatchRenderer extends ObjectRenderer
          * Batch-factory class.
          * @member {Class}
          * @protected
-         * @default PIXI.brend.StdBatchFactory
+         * @default StdBatchFactory
          * @readonly
          */
         this._BatchFactoryClass = options.BatchFactoryClass || StdBatchFactory;
@@ -287,7 +287,7 @@ export class BatchRenderer extends ObjectRenderer
          * Batch-geometry factory class. Its constructor takes one argument - this batch renderer.
          * @member {Class}
          * @protected
-         * @default PIXI.brend.BatchGeometryFactory
+         * @default BatchGeometryFactory
          * @readonly
          */
         this._BatchGeometryFactoryClass = options.BatchGeometryFactoryClass || BatchGeometryFactory;
@@ -296,15 +296,15 @@ export class BatchRenderer extends ObjectRenderer
          * Batch drawer class. Its constructor takes one argument - this batch renderer.
          * @member {Class}
          * @protected
-         * @default PIXI.brend.BatchDrawer
+         * @default BatchDrawer
          * @readonly
          */
         this._BatchDrawerClass = options.BatchDrawerClass || BatchDrawer;
 
         /**
          * Uniform redirects. If you use uniforms in your shader, be sure to use one the compatible
-         * batch factories (like `PIXI.brend.AggregateUniformsBatchFactory`).
-         * @member {PIXI.brend.UniformRedirect[]}
+         * batch factories (like {@link AggregateUniformsBatchFactory}).
+         * @member {UniformRedirect[]}
          * @protected
          * @default null
          * @readonly
