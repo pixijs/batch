@@ -1,4 +1,5 @@
 import { Redirect } from './Redirect';
+import { ViewableBuffer } from '@pixi/core';
 
 import type { DisplayObject } from '@pixi/display';
 import type { TYPES } from '@pixi/constants';
@@ -118,8 +119,7 @@ export class AttributeRedirect extends Redirect
     {
         return attributeRedirects.reduce(
             (acc, redirect) =>
-                // @ts-ignore
-                (PIXI.ViewableBuffer.sizeOf(redirect.type)
+                (ViewableBuffer.sizeOf(redirect.type)
                     * redirect.properSize)
                 + acc,
             0);
