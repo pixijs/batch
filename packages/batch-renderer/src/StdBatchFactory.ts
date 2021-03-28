@@ -1,6 +1,9 @@
 import { StdBatch } from './StdBatch';
 import BatchRenderer from './BatchRenderer';
 
+import type { BaseTexture, State, Texture } from '@pixi/core';
+import type { DisplayObject } from '@pixi/display';
+
 /**
  * Factory for producing "standard" (based on state, geometry, & textures) batches of
  * display-objects.
@@ -12,10 +15,6 @@ import BatchRenderer from './BatchRenderer';
  * then that base-texture is not uploaded twice. This allows for more better batch density
  * when you use texture atlases (textures with same base-texture). This is one reason why
  * textures are treated as "special" uniforms.
- *
- * @memberof PIXI.brend
- * @class
- * @see PIXI.brend.AggregateUniformsBatchFactory
  */
 export class StdBatchFactory
 {
@@ -26,12 +25,12 @@ export class StdBatchFactory
     protected _textureProperty: string;
 
     /** @internal */
-    public _batchBuffer: Array<PIXI.DisplayObject>;
-    protected _state: PIXI.State;
+    public _batchBuffer: Array<DisplayObject>;
+    protected _state: State;
 
     protected _textureBuffer: any;
     protected _textureBufferLength: number;
-    protected _textureIndexedBuffer: Array<PIXI.BaseTexture>;
+    protected _textureIndexedBuffer: Array<BaseTexture>;
     protected _textureIndexMap: any;
 
     protected _batchPool: any[];
@@ -114,7 +113,7 @@ export class StdBatchFactory
      * @param state - state required by that object
      * @return whether the object was added to the batch. If it wasn't, you should "build" it.
      */
-    put(targetObject: PIXI.DisplayObject, state: PIXI.State): boolean
+    put(targetObject: DisplayObject, state: State): boolean
     {
         // State compat
         if (!this._state)
@@ -212,7 +211,7 @@ export class StdBatchFactory
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     // @ts-ignore
-    protected _put(displayObject: PIXI.DisplayObject): boolean
+    protected _put(displayObject: DisplayObject): boolean
     {
         // Override this
         return true;
@@ -274,14 +273,14 @@ export class StdBatchFactory
     }
 
     // Optimized _putTexture case.
-    private _putSingleTexture(texture: PIXI.BaseTexture | PIXI.Texture): boolean
+    private _putSingleTexture(texture: BaseTexture | Texture): boolean
     {
         if ('baseTexture' in texture)
         {
             texture = texture.baseTexture;
         }
 
-        const baseTexture: PIXI.BaseTexture = texture as PIXI.BaseTexture;
+        const baseTexture: BaseTexture = texture as BaseTexture;
 
         // @ts-ignore
         if (this._textureBuffer[baseTexture.uid])
@@ -306,15 +305,15 @@ export class StdBatchFactory
         return false;
     }
 
-    private _putAllTextures(textureArray: Array<PIXI.Texture>): boolean
+    private _putAllTextures(textureArray: Array<Texture>): boolean
     {
         let deltaBufferLength = 0;
 
         for (let i = 0; i < textureArray.length; i++)
         {
-            const texture: PIXI.BaseTexture = (textureArray[i].baseTexture
+            const texture: BaseTexture = (textureArray[i].baseTexture
                 ? textureArray[i].baseTexture
-                : textureArray[i]) as PIXI.BaseTexture;
+                : textureArray[i]) as BaseTexture;
 
             // @ts-ignore
             if (!this._textureBuffer[texture.uid])

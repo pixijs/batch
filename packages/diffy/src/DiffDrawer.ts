@@ -1,5 +1,3 @@
-/// <reference path="types.d.ts" />
-
 import { BatchDrawer } from 'pixi-batch-renderer';
 import { uploadBuffer } from './utils/uploadBuffer';
 

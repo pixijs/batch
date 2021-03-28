@@ -1,6 +1,7 @@
 import { StdBatch } from './StdBatch';
-import { UniformGroup } from 'pixi.js';
-import BatchRenderer from './BatchRenderer';
+
+import type { BatchRenderer } from './BatchRenderer';
+import type { Renderer, UniformGroup } from '@pixi/core';
 
 /**
  * Allows usage of uniforms when rendering display-objects in batches. It expects you to
@@ -26,10 +27,6 @@ import BatchRenderer from './BatchRenderer';
  * may cost a lot of memory if your uniforms don't really change a lot. For these cases, you can
  * disable uniform aggregation by not passing a `uniformIDAttrib`. This will make batches **only**
  * have one value for each uniform. The uniforms will still be uploaded as 1-element arrays, however.
- *
- * @memberof PIXI.brend
- * @class
- * @extends PIXI.brend.StdBatch
  */
 export class AggregateUniformsBatch extends StdBatch
 {
@@ -68,11 +65,7 @@ export class AggregateUniformsBatch extends StdBatch
         this.uniformLength = 0;
     }
 
-    /**
-     * @param {PIXI.Renderer} renderer
-     * @override
-     */
-    upload(renderer: PIXI.Renderer): void
+    upload(renderer: Renderer): void
     {
         super.upload(renderer);
 

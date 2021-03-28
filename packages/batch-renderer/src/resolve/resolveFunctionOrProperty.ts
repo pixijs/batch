@@ -1,6 +1,6 @@
-import * as PIXI from 'pixi.js';
+import type { DisplayObject } from '@pixi/display';
 
-export function resolveFunctionOrProperty(targetObject: PIXI.DisplayObject, property: Function | string): any
+export function resolveFunctionOrProperty(targetObject: DisplayObject, property: Function | string): any
 {
     return (typeof property === 'string')
     // @ts-ignore

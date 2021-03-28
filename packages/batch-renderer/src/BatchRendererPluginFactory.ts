@@ -3,25 +3,24 @@ import { AttributeRedirect } from './redirects/AttributeRedirect';
 import BatchGeometryFactory from './BatchGeometryFactory';
 import StdBatchFactory from './StdBatchFactory';
 
-import * as PIXI from 'pixi.js';
-import { BatchDrawer } from './BatchDrawer';
-import { UniformRedirect } from './redirects';
-
+import type { BatchDrawer } from './BatchDrawer';
 import type { DisplayObject } from '@pixi/display';
+import type { Renderer } from '@pixi/core';
+import type { UniformRedirect } from './redirects';
 
 // (Uniforms?)+Geometry+Textures is the standard pipeline in Pixi's AbstractBatchRenderer.
-interface IBatchRendererStdOptions
+export interface IBatchRendererStdOptions
 {
     attribSet: AttributeRedirect[];
     vertexCountProperty?: string | number | ((object: DisplayObject) => number);
-    indexCountProperty?: string | number | ((object: PIXI.DisplayObject) => number);
+    indexCountProperty?: string | number | ((object: DisplayObject) => number);
     indexProperty: string;
     textureProperty: string;
     texturesPerObject?: number;
     texIDAttrib: string;
     inBatchIDAttrib?: string;
     styleIDAttrib?: string;
-    stateFunction?: (brend: PIXI.DisplayObject) => any;
+    stateFunction?: (brend: DisplayObject) => any;
     shaderFunction: (brend: BatchRenderer) => any;
     BatchFactoryClass?: typeof StdBatchFactory;
     BatchRendererClass?: typeof BatchRenderer;
@@ -159,7 +158,7 @@ export class BatchRendererPluginFactory
         // This class wraps around BatchRendererClass's constructor and passes the options from the outer scope.
         return class extends (options.BatchRendererClass || BatchRenderer)
         {
-            constructor(renderer: PIXI.Renderer)
+            constructor(renderer: Renderer)
             {
                 super(renderer, options);
             }

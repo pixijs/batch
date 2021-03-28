@@ -1,6 +1,7 @@
-import * as PIXI from 'pixi.js';
-import BatchRenderer from './BatchRenderer';
 import { AggregateUniformsBatchFactory } from './AggregateUniformsBatchFactory';
+import { Shader } from '@pixi/core';
+
+import type { BatchRenderer } from './BatchRenderer';
 
 // This file might need a cleanup :)
 
@@ -119,9 +120,9 @@ export class BatchShaderFactory
      *
      * @return shader function that can be given to the batch renderer
      */
-    derive(): (brend: BatchRenderer) => PIXI.Shader
+    derive(): (brend: BatchRenderer) => Shader
     {
-        return (batchRenderer: BatchRenderer): PIXI.Shader =>
+        return (batchRenderer: BatchRenderer): Shader =>
         {
             const stringState = this._generateInjectorBasedState(batchRenderer);
             const cachedShader = this._cache[stringState];
@@ -152,7 +153,7 @@ export class BatchShaderFactory
         return state;
     }
 
-    protected _generateShader(stringState: string, renderer: BatchRenderer): PIXI.Shader
+    protected _generateShader(stringState: string, renderer: BatchRenderer): Shader
     {
         let vertexShaderTemplate = this._vertexShaderTemplate.slice(0);
 
@@ -170,7 +171,7 @@ export class BatchShaderFactory
                 injectorTemplate, this._cState[injectorTemplate]);
         }
 
-        const shader = PIXI.Shader.from(vertexShaderTemplate,
+        const shader = Shader.from(vertexShaderTemplate,
             fragmentShaderTemplate, this._uniforms);
 
         const textures = new Array(renderer.MAX_TEXTURES);

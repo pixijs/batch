@@ -1,14 +1,20 @@
 import { StdBatchFactory } from './StdBatchFactory';
 import { BatchGeometryFactory } from './BatchGeometryFactory';
-import * as PIXI from 'pixi.js';
-import { resolveConstantOrProperty, resolveFunctionOrProperty } from './resolve';
 import { AttributeRedirect } from './redirects/AttributeRedirect';
 import { BatchDrawer } from './BatchDrawer';
+import { ENV } from '@pixi/constants';
+import { ObjectRenderer } from '@pixi/core';
 import { UniformRedirect } from './redirects/UniformRedirect';
 import { resolve } from './utils/resolveProperty';
+import { resolveFunctionOrProperty } from './resolve';
+import { settings } from '@pixi/settings';
 
+import type {
+    Renderer,
+    Shader,
+    State
+} from '@pixi/core';
 import type { DisplayObject } from '@pixi/display';
-import type { Resolvable } from './utils/resolveProperty';
 
 export interface IBatchRendererOptions
 {
@@ -22,8 +28,8 @@ export interface IBatchRendererOptions
     texIDAttrib: string;
     inBatchIDAttrib?: string;
     masterIDAttrib?: string;
-    stateFunction?: (renderer: PIXI.DisplayObject) => PIXI.State;
-    shaderFunction: (renderer: BatchRenderer) => PIXI.Shader;
+    stateFunction?: (renderer: DisplayObject) => State;
+    shaderFunction: (renderer: BatchRenderer) => Shader;
 
     // Components
     BatchFactoryClass?: typeof StdBatchFactory;
@@ -89,9 +95,6 @@ export interface IBatchRendererOptions
  *
  * 2. [PIXI.AbstractBatchRenderer]{@link http://pixijs.download/release/docs/PIXI.AbstractBatchRenderer.html}
  *
- * @memberof PIXI.brend
- * @class
- * @extends PIXI.ObjectRenderer
  * @example
  * import * as PIXI from 'pixi.js';
  * import { BatchRendererPluginFactory } from 'pixi-batch-renderer';
@@ -110,8 +113,11 @@ export interface IBatchRendererOptions
  *     }
  * }
  */
-export class BatchRenderer extends PIXI.ObjectRenderer
+export class BatchRenderer extends ObjectRenderer
 {
+    /** @protected */
+    public renderer: Renderer;
+
     // Standard pipeline
     /**
      * Attribute redirects
@@ -166,12 +172,12 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     _drawer: BatchDrawer;
 
     // Display-object buffering
-    _objectBuffer: PIXI.DisplayObject[];
+    _objectBuffer: DisplayObject[];
     _bufferedVertices: number;
     _bufferedIndices: number;
 
     // Drawer
-    _shader: PIXI.Shader;
+    _shader: Shader;
 
     // WebGL Context config
     MAX_TEXTURES: number;
@@ -207,7 +213,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
      * @see PIXI.brend.BatchGeometryFactory
      * @see PIXI.brend.BatchDrawer
      */
-    constructor(renderer: PIXI.Renderer, options: IBatchRendererOptions)
+    constructor(renderer: Renderer, options: IBatchRendererOptions)
     {
         super(renderer);
 
@@ -365,13 +371,13 @@ export class BatchRenderer extends PIXI.ObjectRenderer
     {
         const gl = this.renderer.gl;
 
-        if (PIXI.settings.PREFER_ENV === PIXI.ENV.WEBGL_LEGACY)
+        if (settings.PREFER_ENV === ENV.WEBGL_LEGACY)
         {
             this.MAX_TEXTURES = 1;
         }
         else
         {
-            this.MAX_TEXTURES = Math.min(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS), PIXI.settings.SPRITE_MAX_TEXTURES);
+            this.MAX_TEXTURES = Math.min(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS), settings.SPRITE_MAX_TEXTURES);
         }
 
         /**
@@ -420,10 +426,9 @@ export class BatchRenderer extends PIXI.ObjectRenderer
      * <BatchRenderer>.render(this);
      * ```
      *
-     * @param {PIXI.DisplayObject} displayObject
      * @override
      */
-    render(displayObject: PIXI.DisplayObject): void
+    render(displayObject: DisplayObject): void
     {
         this._objectBuffer.push(displayObject);
 
@@ -542,7 +547,7 @@ export class BatchRenderer extends PIXI.ObjectRenderer
      *
      * @param object
      */
-    protected calculateVertexCount(object: PIXI.DisplayObject): number
+    protected calculateVertexCount(object: DisplayObject): number
     {
         return resolve(
             object, 

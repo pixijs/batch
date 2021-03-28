@@ -1,4 +1,5 @@
 import type { DisplayObject } from '@pixi/display';
+import type { BatchRenderer } from '../BatchRenderer';
 
 /**
  * A resolvable configures specific settings of how a display-object is rendered by a batch renderer. It
@@ -6,7 +7,7 @@ import type { DisplayObject } from '@pixi/display';
  * 
  * @ignore
  */
-export type Resolvable<T> = string | T | ((object: DisplayObject) => number);
+export type Resolvable<T> = string | T | ((object: DisplayObject, renderer: BatchRenderer) => T);
 
 /**
  * Resolves a resolvable for the passed {@link DisplayObject}. It is expected to evaluate to a
@@ -28,9 +29,9 @@ export function resolve<T>(
     switch(typeof prop)
     {
         case 'string':
-            return object[prop];
+            return (object as any)[prop];
         case 'function':
-            return prop(object);
+            return (prop as ((object: DisplayObject) => T))(object);
         case 'undefined':
             return def;
     }

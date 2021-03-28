@@ -1,9 +1,11 @@
-import * as PIXI from 'pixi.js';
 import { Redirect } from './Redirect';
 
-interface IAttributeRedirectOptions
+import type { DisplayObject } from '@pixi/display';
+import type { TYPES } from '@pixi/constants';
+
+export interface IAttributeRedirectOptions
 {
-    source: string | ((db: PIXI.DisplayObject) => any);
+    source: string | ((db: DisplayObject) => any);
     attrib: string;
     type: string;
     size?: number | '%notarray%';
@@ -17,9 +19,6 @@ interface IAttributeRedirectOptions
  * data is expected to be stored in a `PIXI.ViewableBuffer`, in an array, or (if
  * just one element) as the property itself.
  *
- * @memberof PIXI.brend
- * @class
- * @extends PIXI.brend.Redirect
  * @example
  * // This attribute redirect calculates the tint used on top of a texture. Since the
  * // tintMode can change anytime, it is better to use a derived source (function).
@@ -41,12 +40,56 @@ interface IAttributeRedirectOptions
  */
 export class AttributeRedirect extends Redirect
 {
+    /**
+     * The type of data stored in the source buffer. This can be any of: `int8`, `uint8`,
+     * `int16`, `uint16`, `int32`, `uint32`, or (by default) `float32`.
+     *
+     * @member {string}
+     * @see [PIXI.ViewableBuffer#view]{@link https://pixijs.download/dev/docs/PIXI.ViewableBuffer.html}
+     * @default 'float32'
+     */
     public type: string;
+    
+    /**
+     * Number of elements to extract out of `source` with
+     * the given view type, for one vertex.
+     *
+     * If source isn't an array (only one element), then
+     * you can set this to `'%notarray%'`.
+     *
+     * @member {number | '%notarray%'}
+     */
     public size: number | '%notarray%';
-    public glType: PIXI.TYPES;
+
+    /**
+     * Type of attribute, when uploading.
+     *
+     * Normally, you would use the corresponding type for
+     * the view on source. However, to speed up uploads
+     * you can aggregate attribute values in larger data
+     * types. For example, an RGBA vec4 (byte-sized channels)
+     * can be represented as one `Uint32`, while having
+     * a `glType` of `UNSIGNED_BYTE`.
+     */
+    public glType: TYPES;
+
+    /**
+     * Size of attribute in terms of `glType`.
+     *
+     * Note that `glSize * glType <= size * type`
+     *
+     * @readonly
+     */
     public glSize: number;
+
+    /**
+     * Whether to normalize the attribute values.
+     *
+     * @readonly
+     */
     public normalize: boolean;
 
+    /** This is equal to `size` or 1 if size is `%notarray%`. */
     public properSize: number;
 
     /**
@@ -63,63 +106,11 @@ export class AttributeRedirect extends Redirect
     {
         super(options.source, options.attrib);
 
-        /**
-         * The type of data stored in the source buffer. This can be any of: `int8`, `uint8`,
-         * `int16`, `uint16`, `int32`, `uint32`, or (by default) `float32`.
-         *
-         * @member {string}
-         * @see [PIXI.ViewableBuffer#view]{@link https://pixijs.download/dev/docs/PIXI.ViewableBuffer.html}
-         * @default 'float32'
-         */
         this.type = options.type;
-
-        /**
-         * Number of elements to extract out of `source` with
-         * the given view type, for one vertex.
-         *
-         * If source isn't an array (only one element), then
-         * you can set this to `'%notarray%'`.
-         *
-         * @member {number | '%notarray%'}
-         */
         this.size = options.size;
-
-        /**
-         * This is equal to `size` or 1 if size is `%notarray%`.
-         *
-         * @member {number}
-         */
         this.properSize = (options.size === '%notarray%' || options.size === undefined) ? 1 : options.size;
-
-        /**
-         * Type of attribute, when uploading.
-         *
-         * Normally, you would use the corresponding type for
-         * the view on source. However, to speed up uploads
-         * you can aggregate attribute values in larger data
-         * types. For example, an RGBA vec4 (byte-sized channels)
-         * can be represented as one `Uint32`, while having
-         * a `glType` of `UNSIGNED_BYTE`.
-         *
-         * @member {PIXI.TYPES}
-         */
         this.glType = options.glType;
-
-        /**
-         * Size of attribute in terms of `glType`.
-         *
-         * Note that `glSize * glType <= size * type`
-         *
-         * @readonly
-         */
         this.glSize = options.glSize;
-
-        /**
-         * Whether to normalize the attribute values.
-         *
-         * @member {boolean}
-         * @readonly
-         */
         this.normalize = !!options.normalize;
     }
 

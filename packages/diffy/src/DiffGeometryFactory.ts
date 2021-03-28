@@ -1,7 +1,4 @@
-/// <reference path="./types.d.ts" />
-
 import { BatchGeometryFactory, BatchGeometry, BufferPool } from 'pixi-batch-renderer';
-import { BufferInvalidationPool } from './utils/BufferInvalidation';
 import { BufferInvalidationQueue } from './utils/BufferInvalidationQueue';
 import { DiffBuffer } from './DiffBuffer';
 import { DiffGeometry } from './DiffGeometry';
