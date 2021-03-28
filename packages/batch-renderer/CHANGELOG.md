@@ -1,6 +1,13 @@
 # Change Log - pixi-batch-renderer
 
-This log was last generated on Mon, 19 Oct 2020 00:38:23 GMT and should not be manually modified.
+This log was last generated on Sun, 28 Mar 2021 19:20:49 GMT and should not be manually modified.
+
+## 2.5.0
+Sun, 28 Mar 2021 19:20:49 GMT
+
+### Minor changes
+
+- Upgrade to PixiJS 6
 
 ## 2.4.2
 Mon, 19 Oct 2020 00:38:23 GMT

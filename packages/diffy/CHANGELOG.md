@@ -1,6 +1,13 @@
 # Change Log - @pixi-pbr/diffy
 
-This log was last generated on Mon, 19 Oct 2020 00:17:18 GMT and should not be manually modified.
+This log was last generated on Sun, 28 Mar 2021 19:20:49 GMT and should not be manually modified.
+
+## 1.1.0
+Sun, 28 Mar 2021 19:20:49 GMT
+
+### Minor changes
+
+- Upgrade to PixiJS 6
 
 ## 1.0.9
 Mon, 19 Oct 2020 00:17:18 GMT
