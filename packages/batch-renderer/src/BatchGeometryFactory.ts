@@ -312,7 +312,7 @@ export class BatchGeometryFactory extends IBatchGeometryFactory
             {
                 _tex = tex[k];
 
-                const texUID = _tex.BaseTexture ? _tex.baseTexture.uid : _tex.uid;
+                const texUID = _tex.baseTexture ? _tex.baseTexture.uid : _tex.uid;
 
                 (this._texID as number[])[k] = batch.uidMap[texUID];
             }
