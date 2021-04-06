@@ -1,6 +1,13 @@
 # Change Log - pixi-batch-renderer
 
-This log was last generated on Sun, 28 Mar 2021 19:51:30 GMT and should not be manually modified.
+This log was last generated on Tue, 06 Apr 2021 13:59:04 GMT and should not be manually modified.
+
+## 2.5.3
+Tue, 06 Apr 2021 13:59:04 GMT
+
+### Patches
+
+- Fix texture-lookup attribute not being filled correctly for multi-texture geometres (i.e. texturesPerObject > 1)
 
 ## 2.5.1
 Sun, 28 Mar 2021 19:51:30 GMT

@@ -2,6 +2,18 @@
   "name": "pixi-batch-renderer",
   "entries": [
     {
+      "version": "2.5.3",
+      "tag": "pixi-batch-renderer_v2.5.3",
+      "date": "Tue, 06 Apr 2021 13:59:04 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix texture-lookup attribute not being filled correctly for multi-texture geometres (i.e. texturesPerObject > 1)"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.5.1",
       "tag": "pixi-batch-renderer_v2.5.1",
       "date": "Sun, 28 Mar 2021 19:51:30 GMT",
