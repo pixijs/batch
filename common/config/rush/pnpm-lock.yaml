@@ -4,11 +4,6 @@ specifiers:
   '@microsoft/api-extractor': ^7.7.13
   '@pixi-build-tools/floss-rush-monorepo': ~1.0.1
   '@pixi-essentials/object-pool': ^0.1.0
-  '@pixi/constants': ^6.0.0
-  '@pixi/core': ^6.0.0
-  '@pixi/display': ^6.0.0
-  '@pixi/math': ^6.0.0
-  '@pixi/utils': ^6.0.0
   '@rush-temp/diffy': file:./projects/diffy.tgz
   '@rush-temp/pixi-batch-renderer': file:./projects/pixi-batch-renderer.tgz
   '@rush-temp/unit-tests': file:./projects/unit-tests.tgz
@@ -27,11 +22,6 @@ dependencies:
   '@microsoft/api-extractor': 7.13.2
   '@pixi-build-tools/floss-rush-monorepo': 1.0.1
   '@pixi-essentials/object-pool': 0.1.0
-  '@pixi/constants': 6.0.1
-  '@pixi/core': 6.0.1
-  '@pixi/display': 6.0.1
-  '@pixi/math': 6.0.1
-  '@pixi/utils': 6.0.1
   '@rush-temp/diffy': file:projects/diffy.tgz_@types+node@12.20.7
   '@rush-temp/pixi-batch-renderer': file:projects/pixi-batch-renderer.tgz
   '@rush-temp/unit-tests': file:projects/unit-tests.tgz_nyc@15.1.0
@@ -411,27 +401,25 @@ packages:
       '@pixi/ticker': ^6.0.0
     dev: false
 
-  /@pixi/constants/6.0.1:
-    resolution: {integrity: sha512-uui0o0CqmUM4DQUQtt2BQIEI4AfMzh8FNTGmG7nmyxyuX8kzF8Bj9Kr7VvbZqHTOtkEIvkldmfmTJ2JPSn062g==}
+  /@pixi/constants/7.1.4:
+    resolution: {integrity: sha512-mSXWnpNQ9h73RMHZoavmHHVnLprLhrWZnJtt0jqF0e4i7nVfU6WGB9wHfhk29TI9MWcZ487qHgdLHpDgUaulSw==}
     dev: false
 
-  /@pixi/core/6.0.1:
-    resolution: {integrity: sha512-NI3ymQVRNa6G24mYM4dR0mFa6BWyHnc+WqTgtsnV1MJPj7c5JvetwiK1JDy7uXYfBnXp99f3PWwOgDssuzpEmQ==}
+  /@pixi/core/7.1.4:
+    resolution: {integrity: sha512-0QBVJK00qaqd5bf+Wv6pwTjGkwYuxjS/kbhyacuGM23XyoMr6Xqaa4jZiy7g5Ug3iW7HFALAPDnjyyzeeeTRsQ==}
     dependencies:
-      '@pixi/constants': 6.0.1
-      '@pixi/math': 6.0.1
-      '@pixi/runner': 6.0.1
-      '@pixi/settings': 6.0.1
-      '@pixi/ticker': 6.0.1
-      '@pixi/utils': 6.0.1
+      '@pixi/constants': 7.1.4
+      '@pixi/extensions': 7.1.4
+      '@pixi/math': 7.1.4
+      '@pixi/runner': 7.1.4
+      '@pixi/settings': 7.1.4
+      '@pixi/ticker': 7.1.4
+      '@pixi/utils': 7.1.4
+      '@types/offscreencanvas': 2019.7.0
     dev: false
 
-  /@pixi/display/6.0.1:
-    resolution: {integrity: sha512-dk3Yq4YGZvaO4+9XsOi2BY3xsxpNxgJtxbNysApf1cTmgDk8e2yMMmg0gJtGFrMHsVuKimztwZdavMGaKuoCeQ==}
-    dependencies:
-      '@pixi/math': 6.0.1
-      '@pixi/settings': 6.0.1
-      '@pixi/utils': 6.0.1
+  /@pixi/display/7.1.4:
+    resolution: {integrity: sha512-vdRvydZZp0HXQuJF9A6GPoV+D4ya3775cB1TxLC5/7Wtgvjo/LuZjfpaYXU7Or4HZ5mu5LaUAmAQ71fiwrZOXg==}
     dev: false
 
   /@pixi/eslint-config/1.0.1_5neczbiczgsnxptuvu4j52xkga:
@@ -460,34 +448,41 @@ packages:
       - supports-color
     dev: false
 
-  /@pixi/math/6.0.1:
-    resolution: {integrity: sha512-tETa11mjYks3JdUlMkk3KbGr2UQprgKiiq4mhhwVeVwslrYJgVBrOMZwdDq0Hm+z6tdVzVyHviRvtih/c59JSA==}
+  /@pixi/extensions/7.1.4:
+    resolution: {integrity: sha512-slyfaLfV+LwPeFpJsRuDThHFH6jJLe5I/v+y381YJtA8CanxdQZt2JeA0wCJDIj3/FrZ73IrTbpiW6sw4f2Fmg==}
     dev: false
 
-  /@pixi/runner/6.0.1:
-    resolution: {integrity: sha512-l1NJUMP4IcvrFeIhthKVAbfHtqPx9LDFP0ItnrsBMrBAkIx7ymMlJju7p1RFOTnKHWOI7FVbmOy28utg3kgimg==}
+  /@pixi/math/7.1.4:
+    resolution: {integrity: sha512-BK5aT5HfMw1WPoIl46hX0eWf3jBVUYExOj5JGmGDbpdA/RLyz2YBR3Ueegrl4H+iFY7d7He/hUq3a6vLpu0hMA==}
     dev: false
 
-  /@pixi/settings/6.0.1:
-    resolution: {integrity: sha512-Sacsaz9VSzuUC/JuSKs3s/+qEbeinq9uv1dzx69D6P8xj7gc+ne6ogSUmovQGokTh/CCUroEXg7yxRR8jeGKOg==}
+  /@pixi/runner/7.1.4:
+    resolution: {integrity: sha512-HJLnA2ToQWWqDRRPqFGshDVeBzS0wzWkdD0e9M5SgzGodZdSLDqfPq8Z7ZeeJbP6tH4nYfvpemmGN5Gxvoaitg==}
+    dev: false
+
+  /@pixi/settings/7.1.4:
+    resolution: {integrity: sha512-T+ksa5t7X8Y/cUO6hgXwM+YyHJR5m+yv1Rhf/MKkniRsDDB2Qg3U7UNr6snOemAXIg6BTw/wwzIFz4ZguG9wqg==}
     dependencies:
-      ismobilejs: 1.1.1
+      '@pixi/constants': 7.1.4
+      '@types/css-font-loading-module': 0.0.7
     dev: false
 
-  /@pixi/ticker/6.0.1:
-    resolution: {integrity: sha512-5cjGyvOU6RrAFz69w760x/7Uv5CZuZogs9nyi6HXUIKK0gy1pDW/bfWHUQm34Uh4baIU1k0qQOic0yfZOGO9qg==}
+  /@pixi/ticker/7.1.4:
+    resolution: {integrity: sha512-u9pS3KAiQ14mN6PmiCEF+Ocmli/lAJLm/tzLcaBrBeBQqJ3jCZreoSbZ8znRY29YkdWMazPk+anUEGX1EsU5sg==}
     dependencies:
-      '@pixi/settings': 6.0.1
+      '@pixi/extensions': 7.1.4
+      '@pixi/settings': 7.1.4
+      '@pixi/utils': 7.1.4
     dev: false
 
-  /@pixi/utils/6.0.1:
-    resolution: {integrity: sha512-RcbbvlGCsE4G0Rj8TpjWz+JndUAPmuLzKyUtWbIn9sLCLaNRezoMCA0iR68oGjkNkGOBLbpubii60IAfQokiXg==}
+  /@pixi/utils/7.1.4:
+    resolution: {integrity: sha512-n02nsAWcOp8+2yWFQ7CjWctVnGFs8jpD9A8H+RFcvdy2kdjApAU8+HsuJIrl/wfrwnTRxUzYatTRejz0jD9bKA==}
     dependencies:
-      '@pixi/constants': 6.0.1
-      '@pixi/settings': 6.0.1
+      '@pixi/constants': 7.1.4
+      '@pixi/settings': 7.1.4
       '@types/earcut': 2.1.1
-      earcut: 2.2.2
-      eventemitter3: 3.1.2
+      earcut: 2.2.4
+      eventemitter3: 4.0.7
       url: 0.11.0
     dev: false
 
@@ -764,6 +759,10 @@ packages:
     resolution: {integrity: sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA==}
     dev: false
 
+  /@types/css-font-loading-module/0.0.7:
+    resolution: {integrity: sha512-nl09VhutdjINdWyXxHWN/w9zlNCfr60JUqJbd24YXUuCwgeL0TpFSdElCwb6cxfB6ybE19Gjj4g0jsgkXxKv1Q==}
+    dev: false
+
   /@types/earcut/2.1.1:
     resolution: {integrity: sha512-w8oigUCDjElRHRRrMvn/spybSMyX8MTkKA5Dv+tS1IE/TgmNZPqUYtvYBXGY8cieSE66gm+szeK+bnbxC2xHTQ==}
     dev: false
@@ -794,6 +793,10 @@ packages:
 
   /@types/node/14.14.37:
     resolution: {integrity: sha512-XYmBiy+ohOR4Lh5jE379fV2IU+6Jn4g5qASinhitfyO71b/sCo6MKsMLF5tc7Zf2CE8hViVQyYSobJNke8OvUw==}
+    dev: false
+
+  /@types/offscreencanvas/2019.7.0:
+    resolution: {integrity: sha512-PGcyveRIpL1XIqK8eBsmRBt76eFgtzuPiSTyKHZxnGemp2yzGzWpjYKAfK3wIMiU7eH+851yEpiuP8JZerTmWg==}
     dev: false
 
   /@types/resolve/0.0.8:
@@ -1738,8 +1741,8 @@ packages:
     resolution: {integrity: sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=}
     dev: false
 
-  /earcut/2.2.2:
-    resolution: {integrity: sha512-eZoZPPJcUHnfRZ0PjLvx2qBordSiO8ofC3vt+qACLM95u+4DovnbYNpQtJh0DNsWj8RnxrQytD4WA8gj5cRIaQ==}
+  /earcut/2.2.4:
+    resolution: {integrity: sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==}
     dev: false
 
   /electron-to-chromium/1.3.701:
@@ -2046,8 +2049,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /eventemitter3/3.1.2:
-    resolution: {integrity: sha512-tvtQIeLVHjDkJYnzf2dgVMxfuSGJeM/7UCG17TT4EumTfNtF+0nebF/4zWOIkCreAbtNqhGEboB6BWrwqNaw4Q==}
+  /eventemitter3/4.0.7:
+    resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
     dev: false
 
   /external-editor/3.1.0:
@@ -2718,10 +2721,6 @@ packages:
 
   /isexe/2.0.0:
     resolution: {integrity: sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=}
-    dev: false
-
-  /ismobilejs/1.1.1:
-    resolution: {integrity: sha512-VaFW53yt8QO61k2WJui0dHf4SlL8lxBofUuUmwBo0ljPk0Drz2TiuDW4jo3wDcv41qy/SxrJ+VAzJ/qYqsmzRw==}
     dev: false
 
   /istanbul-lib-coverage/3.0.0:
@@ -3583,7 +3582,7 @@ packages:
     dev: false
 
   /punycode/1.3.2:
-    resolution: {integrity: sha1-llOgNvt8HuQjQvIyXM7v6jkmxI0=}
+    resolution: {integrity: sha512-RofWgt/7fL5wP1Y7fxE7/EmTLzQVnB0ycyibJ0OOHIlJqTNzglYFxVwETOcIoJqJmpDXJ9xImDv+Fq34F/d4Dw==}
     dev: false
 
   /punycode/2.1.1:
@@ -3600,8 +3599,9 @@ packages:
     dev: false
 
   /querystring/0.2.0:
-    resolution: {integrity: sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=}
+    resolution: {integrity: sha512-X/xY82scca2tau62i9mDyU9K+I+djTMUsvwf7xnUX5GLvVzgJybOJf4Y6o9Zx3oJK/LSXg5tTZBjwzqVPaPO2g==}
     engines: {node: '>=0.4.x'}
+    deprecated: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
     dev: false
 
   /queue-microtask/1.2.3:
@@ -4485,7 +4485,7 @@ packages:
     dev: false
 
   /url/0.11.0:
-    resolution: {integrity: sha1-ODjpfPxgUh63PFJajlW/3Z4uKPE=}
+    resolution: {integrity: sha512-kbailJa29QrtXnxgq+DdCEGlbTeYM2eJUxsz6vjZavrCYPMIFHMKQmSKYAIuUK2i7hgPm28a8piX5NTUtM/LKQ==}
     dependencies:
       punycode: 1.3.2
       querystring: 0.2.0
@@ -4701,16 +4701,16 @@ packages:
     dev: false
 
   file:projects/diffy.tgz_@types+node@12.20.7:
-    resolution: {integrity: sha512-wT6PwXMZVYOjdvwzRHvngfu1OGDYfvAkwINrhJkpfVCxwF1YqJcj8vM/L04vu8PRB8s5vZsYLArkNqos8nVWaw==, tarball: file:projects/diffy.tgz}
+    resolution: {integrity: sha512-uZxJBjwSMZzYtjdtGiTmjYyX4kx7OAaA2ilLzc08uXaJa9UlKEL/78k5J9Bia5nEykWJJCl3soYhLUr+4GCEtw==, tarball: file:projects/diffy.tgz}
     id: file:projects/diffy.tgz
     name: '@rush-temp/diffy'
     version: 0.0.0
     dependencies:
       '@pixi-build-tools/rollup-configurator': 1.0.11_zhlra62nb6vdkqyihox46ghlce
       '@pixi-essentials/object-pool': 0.1.0
-      '@pixi/core': 6.0.1
+      '@pixi/core': 7.1.4
       '@pixi/eslint-config': 1.0.1_5neczbiczgsnxptuvu4j52xkga
-      '@pixi/utils': 6.0.1
+      '@pixi/utils': 7.1.4
       '@typescript-eslint/eslint-plugin': 3.10.1_5m6nvjkvatshmrzmt7xlkga7sq
       '@typescript-eslint/parser': 3.10.1_5neczbiczgsnxptuvu4j52xkga
       eslint: 7.7.0
@@ -4724,19 +4724,19 @@ packages:
     dev: false
 
   file:projects/pixi-batch-renderer.tgz:
-    resolution: {integrity: sha512-MWj3KLUU8Vjs9WYKEFZVLsxx7VVb1xmWCXpxsfvJt83Bbrn5gLWntXUqDHtifIxXgVNYiPp10ttmH5W0VHq2aA==, tarball: file:projects/pixi-batch-renderer.tgz}
+    resolution: {integrity: sha512-MgICa+eRMT0UYFMPXuO5vQvJ119K9lEb0zLSu9GLwJtZZLwHTRd5RtUbq7Hifyopdds8YVcsqf+HUw2RhTVxvg==, tarball: file:projects/pixi-batch-renderer.tgz}
     name: '@rush-temp/pixi-batch-renderer'
     version: 0.0.0
     dependencies:
       '@microsoft/api-extractor': 7.13.2
       '@pixi-build-tools/rollup-configurator': 1.0.11_undalivrn773tttzahasxqo2le
-      '@pixi/constants': 6.0.1
-      '@pixi/core': 6.0.1
-      '@pixi/display': 6.0.1
+      '@pixi/constants': 7.1.4
+      '@pixi/core': 7.1.4
+      '@pixi/display': 7.1.4
       '@pixi/eslint-config': 1.0.1_ctsd2flwymlv6mmuvfrerpxqom
-      '@pixi/math': 6.0.1
-      '@pixi/settings': 6.0.1
-      '@pixi/utils': 6.0.1
+      '@pixi/math': 7.1.4
+      '@pixi/settings': 7.1.4
+      '@pixi/utils': 7.1.4
       '@types/node': 12.20.7
       electron: 12.0.2
       eslint: 6.8.0

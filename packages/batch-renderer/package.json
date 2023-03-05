@@ -33,21 +33,16 @@
     "url": "https://github.com/SukantPal/pixi-batch-renderer"
   },
   "peerDependencies": {
-    "@pixi/constants": "^6.0.0",
-    "@pixi/core": "^6.0.0",
-    "@pixi/display": "^6.0.0",
-    "@pixi/math": "^6.0.0",
-    "@pixi/settings": "^6.0.0",
-    "@pixi/utils": "^6.0.0"
+    "@pixi/constants": "^7.0.0",
+    "@pixi/core": "^7.0.0",
+    "@pixi/display": "^7.0.0",
+    "@pixi/math": "^7.0.0",
+    "@pixi/settings": "^7.0.0",
+    "@pixi/utils": "^7.0.0"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.7.13",
     "@pixi/eslint-config": "^1.0.1",
-    "@pixi/constants": "^6.0.0",
-    "@pixi/core": "^6.0.0",
-    "@pixi/display": "^6.0.0",
-    "@pixi/math": "^6.0.0",
-    "@pixi/utils": "^6.0.0",
     "@pixi-build-tools/rollup-configurator": "~1.0.11",
     "eslint": "^6.8.0",
     "eslint-plugin-jsdoc": "^15.12.2",
