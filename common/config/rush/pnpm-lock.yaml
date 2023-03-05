@@ -15,6 +15,7 @@ specifiers:
   floss: ^5.0.0
   gh-pages: ^2.2.0
   nyc: 15.1.0
+  pixi-batch-renderer: ~2.5.3
   tslib: ^2.0.0
   typescript: ~4.9.5
 
@@ -33,6 +34,7 @@ dependencies:
   floss: 5.0.0_electron@12.0.2+nyc@15.1.0
   gh-pages: 2.2.0
   nyc: 15.1.0
+  pixi-batch-renderer: 2.5.3
   tslib: 2.1.0
   typescript: 4.9.5
 
@@ -3526,6 +3528,31 @@ packages:
       node-modules-regexp: 1.0.0
     dev: false
 
+  /pixi-batch-renderer/2.5.3:
+    resolution: {integrity: sha512-YI1FQZMjFAmQxqnc1FGNowyuQ5JQidO15By1Vz1xzrnBDCvFhIDiav5phPCZ8Bdza+j1rVWmzPn/3nxd6SV1PA==}
+    peerDependencies:
+      '@pixi/constants': ^6.0.0
+      '@pixi/core': ^6.0.0
+      '@pixi/display': ^6.0.0
+      '@pixi/math': ^6.0.0
+      '@pixi/settings': ^6.0.0
+      '@pixi/utils': ^6.0.0
+    dev: false
+
+  /pixi-batch-renderer/2.5.3_xhg57wmgipb4bytpl4ygyes6fa:
+    resolution: {integrity: sha512-YI1FQZMjFAmQxqnc1FGNowyuQ5JQidO15By1Vz1xzrnBDCvFhIDiav5phPCZ8Bdza+j1rVWmzPn/3nxd6SV1PA==}
+    peerDependencies:
+      '@pixi/constants': ^6.0.0
+      '@pixi/core': ^6.0.0
+      '@pixi/display': ^6.0.0
+      '@pixi/math': ^6.0.0
+      '@pixi/settings': ^6.0.0
+      '@pixi/utils': ^6.0.0
+    dependencies:
+      '@pixi/core': 7.1.4
+      '@pixi/utils': 7.1.4
+    dev: false
+
   /pkg-dir/4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
@@ -4701,7 +4728,7 @@ packages:
     dev: false
 
   file:projects/diffy.tgz_@types+node@12.20.7:
-    resolution: {integrity: sha512-uZxJBjwSMZzYtjdtGiTmjYyX4kx7OAaA2ilLzc08uXaJa9UlKEL/78k5J9Bia5nEykWJJCl3soYhLUr+4GCEtw==, tarball: file:projects/diffy.tgz}
+    resolution: {integrity: sha512-NmaKMIjjrCtGOpvhFpHAQr9ct7WvHpwsrq2uHmVw1JKio8YErowvIHDTWpL0wfrg1ANUFrxDFZPn/59dm1H2+w==, tarball: file:projects/diffy.tgz}
     id: file:projects/diffy.tgz
     name: '@rush-temp/diffy'
     version: 0.0.0
@@ -4714,9 +4741,13 @@ packages:
       '@typescript-eslint/eslint-plugin': 3.10.1_5m6nvjkvatshmrzmt7xlkga7sq
       '@typescript-eslint/parser': 3.10.1_5neczbiczgsnxptuvu4j52xkga
       eslint: 7.7.0
+      pixi-batch-renderer: 2.5.3_xhg57wmgipb4bytpl4ygyes6fa
       rollup: 2.26.11
       typescript: 4.9.5
     transitivePeerDependencies:
+      - '@pixi/constants'
+      - '@pixi/display'
+      - '@pixi/math'
       - '@pixi/settings'
       - '@pixi/ticker'
       - '@types/node'

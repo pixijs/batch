@@ -1,13 +1,11 @@
-/// <reference path="../types.d.ts" />
-
-import { BufferInvalidationPool } from './BufferInvalidation';
-
 import type { BufferInvalidationQueue } from './BufferInvalidationQueue';
-import type { systems } from '@pixi/core';
+import type { GeometrySystem } from '@pixi/core';
 
-export function uploadBuffer(geometrySystem: systems.GeometrySystem, buffer: any): void
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function uploadBuffer(geometrySystem: GeometrySystem, buffer: any): void
 {
-    const renderer = geometrySystem.renderer;
+    // eslint-disable-next-line dot-notation
+    const renderer = geometrySystem['renderer'];
     const gl = renderer.gl;
     const glBuffer = buffer._glBuffers[(renderer as any).CONTEXT_UID];
 
