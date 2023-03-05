@@ -136,7 +136,7 @@ export class BatchShaderFactory
     protected _generateInjectorBasedState(batchRenderer: BatchRenderer): string
     {
         let state = '';
-        const cState = this._cState = {};
+        const cState: any = this._cState = {};
 
         for (const injectorMacro in this._templateInjectors)
         {
